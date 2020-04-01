@@ -1,6 +1,8 @@
 <template>
   <div class="pixel-scaler-top">
-    <div class="input-image"></div>
+    <div class="input-image">
+      画像をドロップもしくは選択ボタンから読み込む。
+    </div>
     <div class="transform-arrow"></div>
     <div class="output-image"></div>
   </div>
@@ -8,13 +10,12 @@
 
 <style lang="scss">
 .pixel-scaler-top {
-  position: relative;
   @include flex-centering(row);
-  // height: 500px;
+  height: 400px;
   background: #ddd;
 }
 .input-image {
-  margin: 20px;
+  margin: 40px 20px;
   height: 256px;
   width: 256px;
   background: #666;

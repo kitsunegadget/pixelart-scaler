@@ -18,9 +18,9 @@
   color: $color-white;
 
   .title {
-    font-size: 2em;
+    font-size: 1.7em;
     margin: 10px;
-    line-height: 1.1em;
+    line-height: 1.3em;
     cursor: default;
   }
 }
