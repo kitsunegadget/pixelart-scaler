@@ -1,0 +1,11 @@
+$color-white: #fff;
+$color-black0: #000;
+$color-black6: #666;
+$color-green: #60d3a3;
+
+@mixin flex-centering($flexdir) {
+    display: flex;
+    flex-direction: $flexdir;
+    justify-content: center;
+    align-items: center;
+}
