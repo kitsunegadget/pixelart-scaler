@@ -20,6 +20,8 @@
   .title {
     font-size: 2em;
     margin: 10px;
+    line-height: 1.1em;
+    cursor: default;
   }
 }
 </style>

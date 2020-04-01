@@ -2,20 +2,40 @@
   <div class="content">
     <div class="container">
       <div class="content-inside">
+        <PixelScaler />
         <div class="description">
           <span>ドット絵の色々なスケーリングを試してみよう！</span>
-          <p>入力最大解像度は 512x512 まで。</p>
-          <p>現在png形式のみ対応しています。</p>
+          <ul v-for="note in description" :key="note" class="description-note">
+            <li>{{ note }}</li>
+          </ul>
         </div>
       </div>
     </div>
   </div>
 </template>
 
+<script lang="ts">
+import Vue from 'vue'
+import PixelScaler from './content/PixelScaler.vue'
+
+export default Vue.extend({
+  components: {
+    PixelScaler
+  },
+  data() {
+    return {
+      description: [
+        '入力最大解像度は 512x512 まで。',
+        '現在png形式のみ対応しています。'
+      ]
+    }
+  }
+})
+</script>
 <style lang="scss">
 .content {
   width: 100%;
-  height: 500px;
+  min-height: 500px;
   background-color: $color-white;
 }
 .description {
@@ -29,12 +49,18 @@
 
   > span {
     @include flex-centering(row);
+    margin: 10px 0;
     font-size: 1.4em;
     color: $color-black6;
   }
-  > p {
-    margin: 5px 10px;
-    font-size: 0.9em;
+
+  &-note {
+    margin: 0;
+
+    > li {
+      margin: 5px 10px;
+      font-size: 0.9em;
+    }
   }
 }
 </style>
