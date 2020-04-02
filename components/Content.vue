@@ -4,8 +4,12 @@
       <div class="content-inside">
         <PixelScaler />
         <div class="description">
-          <span>ドット絵の色々なスケーリングを試してみよう！</span>
-          <ul v-for="note in description" :key="note" class="description-note">
+          <span>{{ description.title }}</span>
+          <ul
+            v-for="note in description.notes"
+            :key="note"
+            class="description-note"
+          >
             <li>{{ note }}</li>
           </ul>
         </div>
@@ -24,10 +28,13 @@ export default Vue.extend({
   },
   data() {
     return {
-      description: [
-        '入力最大解像度は 512x512 まで。',
-        '現在png形式のみ対応しています。'
-      ]
+      description: {
+        title: 'ドット絵の色々なスケーリングを試してみよう！',
+        notes: [
+          '入力最大解像度は 512x512 まで。',
+          '現在png形式のみ対応しています。'
+        ]
+      }
     }
   }
 })

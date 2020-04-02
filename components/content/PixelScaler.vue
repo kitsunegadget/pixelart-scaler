@@ -6,45 +6,38 @@
         変換したいドット画像をドロップ
       </div>
     </div>
-    <PixelScalerTop class="dragArea" />
-    <div class="pixel-scaler-bottom dragArea">
-      <div class="scale-style dragArea">
-        スケーリング形式 { トグルメニュー } 変換ボタン
-      </div>
-    </div>
+    <PixelScalerTop class="dragArea" :input-data="inputData" />
+    <PixelScalerBottom class="dragArea" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import PixelScalerTop from './PixelScalerTop.vue'
+import PixelScalerBottom from './PixelScalerBottom.vue'
 
 export default Vue.extend({
   components: {
-    PixelScalerTop
+    PixelScalerTop,
+    PixelScalerBottom
   },
   data() {
     return {
-      isShowOverlay: false
+      isShowOverlay: false,
+      inputData: ''
     }
   },
   mounted() {
     document.addEventListener(
-      'dragenter',
+      'dragover',
       (event: DragEvent) => {
+        event.preventDefault()
         if (event !== null && event.target !== null) {
           const elem = event.target as HTMLElement
           if (elem.className.includes('dragArea')) {
             this.isShowOverlay = true
           }
         }
-      },
-      false
-    )
-    document.addEventListener(
-      'dragover',
-      event => {
-        event.preventDefault()
       },
       false
     )
@@ -64,10 +57,22 @@ export default Vue.extend({
       'drop',
       (event: DragEvent) => {
         event.preventDefault()
-        if (event !== null && event.target !== null) {
-          const elem = event.target as HTMLElement
-          if (elem.className.includes('dragArea')) {
-            this.isShowOverlay = false
+        if (event !== null) {
+          if (event.target !== null) {
+            const elem = event.target as HTMLElement
+            if (elem.className.includes('dragArea')) {
+              this.isShowOverlay = false
+            }
+          }
+          if (
+            event.dataTransfer !== null &&
+            event.dataTransfer.files[0] !== undefined
+          ) {
+            const data = event.dataTransfer.files[0]
+            if (data.type === 'image/png') {
+              const blob = data.slice(0, data.size, data.type)
+              this.inputData = URL.createObjectURL(blob)
+            }
           }
         }
       },
@@ -98,10 +103,5 @@ export default Vue.extend({
   &-cover {
     @include absolute-centering;
   }
-}
-.pixel-scaler-bottom {
-  height: 100px;
-  background: #3333dd;
-  color: white;
 }
 </style>
