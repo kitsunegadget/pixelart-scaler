@@ -1,10 +1,7 @@
 <template>
   <div class="pixel-scaler-bottom">
-    <div class="load-button">
-      <input id="inputFile" type="file" />
-    </div>
     <div class="scale-style dragArea">
-      スケーリング形式 { トグルメニュー } 変換ボタン
+      スケーリング形式
     </div>
   </div>
 </template>
@@ -18,6 +15,7 @@ export default Vue.extend({
 
 <style lang="scss">
 .pixel-scaler-bottom {
+  width: 100%;
   display: flex;
   flex-direction: row;
   height: 100px;

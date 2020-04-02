@@ -6,6 +6,25 @@
         変換したいドット画像をドロップ
       </div>
     </div>
+
+    <div class="load-button dragArea">
+      <input
+        id="fileElem"
+        ref="fileInput"
+        type="file"
+        :accept="inputAccept"
+        style="display: none;"
+        @change="inputChanged($event)"
+      />
+      <Button
+        id="fileSelect"
+        class="btn btn-outline-info"
+        @click="fileSelect()"
+      >
+        画像を選択
+      </Button>
+    </div>
+
     <PixelScalerTop class="dragArea" :input-data="inputData" />
     <PixelScalerBottom class="dragArea" />
   </div>
@@ -24,6 +43,7 @@ export default Vue.extend({
   data() {
     return {
       isShowOverlay: false,
+      inputAccept: 'image/png',
       inputData: ''
     }
   },
@@ -31,6 +51,7 @@ export default Vue.extend({
     document.addEventListener(
       'dragover',
       (event: DragEvent) => {
+        event.stopPropagation()
         event.preventDefault()
         if (event !== null && event.target !== null) {
           const elem = event.target as HTMLElement
@@ -56,6 +77,7 @@ export default Vue.extend({
     document.addEventListener(
       'drop',
       (event: DragEvent) => {
+        event.stopPropagation()
         event.preventDefault()
         if (event !== null) {
           if (event.target !== null) {
@@ -70,14 +92,29 @@ export default Vue.extend({
           ) {
             const data = event.dataTransfer.files[0]
             if (data.type === 'image/png') {
-              const blob = data.slice(0, data.size, data.type)
-              this.inputData = URL.createObjectURL(blob)
+              // const blob = data.slice(0, data.size, data.type)
+              this.inputData = URL.createObjectURL(data)
             }
           }
         }
       },
       false
     )
+  },
+  methods: {
+    fileSelect() {
+      const elem = this.$refs.fileInput as HTMLElement
+      elem.click()
+    },
+    inputChanged(event: any) {
+      if (event !== null && event.target.files[0] !== undefined) {
+        const data = event.target.files[0]
+        if (data.type === 'image/png') {
+          // const blob = data.slice(0, data.size, data.type)
+          this.inputData = URL.createObjectURL(data)
+        }
+      }
+    }
   }
 })
 </script>
@@ -85,6 +122,7 @@ export default Vue.extend({
 <style lang="scss">
 .pixel-scaler {
   position: relative;
+  @include flex-centering(column);
 }
 .drag-overlay {
   @include absolute-centering;
@@ -103,5 +141,9 @@ export default Vue.extend({
   &-cover {
     @include absolute-centering;
   }
+}
+.load-button {
+  margin-top: 30px;
+  margin-bottom: 10px;
 }
 </style>

@@ -2,7 +2,9 @@
   <div class="pixel-scaler-top" draggable="false">
     <div class="input-image">
       <span v-show="!imageChanged">
-        画像をドロップもしくは選択ボタンから読み込む。
+        <p>ドラッグ＆ドロップ</p>
+        <p>もしくは</p>
+        <p>画像を選択から読み込む</p>
       </span>
       <img
         v-show="imageChanged"
@@ -41,25 +43,32 @@ export default Vue.extend({
 <style lang="scss">
 .pixel-scaler-top {
   @include flex-centering(row);
-  height: 400px;
+  min-height: 350px;
+  margin: 0px 0;
   // background: #ddd;
 }
 .input-image {
-  margin: 40px 20px;
   height: 256px;
   width: 256px;
-  background: #666;
+  // background: #666;
+  border: solid 1px $color-green;
 
   #image {
     width: 100%;
     height: 100%;
     object-fit: contain;
   }
+
+  > span {
+    @include flex-centering(column);
+    height: 100%;
+    color: $color-black6;
+  }
 }
 .transform-arrow {
   height: 50px;
   width: 50px;
-  margin: 20px;
+  margin: 0 40px;
   background: #222;
 }
 .output-image {
