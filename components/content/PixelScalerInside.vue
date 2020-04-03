@@ -1,10 +1,6 @@
 <template>
-  <div class="pixel-scaler-main">
-    <div
-      class="pixel-scaler-top"
-      draggable="false"
-      v-bind="{ loaded: imageLoaded }"
-    >
+  <div class="pixel-scaler-inside">
+    <div class="pixel-scaler-top dragArea" draggable="false">
       <div class="input-image">
         <span v-show="!imageLoaded">
           <p>ドラッグ＆ドロップ</p>
@@ -22,7 +18,7 @@
       <div class="output-image"></div>
     </div>
 
-    <div class="pixel-scaler-bottom" draggable="false">
+    <div class="pixel-scaler-bottom dragArea" draggable="false">
       <div class="scale-style">
         スケーリング形式
       </div>
@@ -48,20 +44,19 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-.pixel-scaler-main {
+.pixel-scaler-inside {
+  display: flex;
+  flex-flow: column nowrap;
   width: 100%;
-  height: 500px;
+  height: 100%;
 }
 .pixel-scaler-top {
-  margin: 10px;
+  flex: 2;
+  margin: 50px 0;
   @include flex-centering(row);
   flex-wrap: wrap;
   // background: #ddd;
   transition: all 1s ease;
-
-  &[loaded] {
-    min-height: 350px;
-  }
 }
 .input-image {
   height: 256px;
@@ -92,10 +87,9 @@ export default Vue.extend({
 }
 
 .pixel-scaler-bottom {
-  width: 100%;
+  flex: 1;
   display: flex;
   flex-direction: row;
-  height: 100px;
   background: #3333dd;
   color: white;
 }

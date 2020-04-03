@@ -1,5 +1,5 @@
 <template>
-  <div class="description" v-bind="{ loaded: imageLoaded }">
+  <div class="description">
     <h2>{{ description.title }}</h2>
     <div class="description-note">
       <ul v-for="note in description.notes" :key="note">
@@ -12,11 +12,6 @@
 <script lang="ts">
 import Vue from 'vue'
 export default Vue.extend({
-  props: {
-    imageLoaded: {
-      type: Boolean
-    }
-  },
   data() {
     return {
       description: {

@@ -1,5 +1,5 @@
 <template>
-  <div class="pixel-scaler dragArea" draggable="false">
+  <div class="pixel-scaler" draggable="false">
     <div v-show="isShowOverlay" class="drag-overlay dragArea">
       <div class="drag-overlay-cover dragArea" />
       <div class="drag-overlay-inside dragArea">
@@ -8,17 +8,14 @@
     </div>
 
     <LoadButton
+      class="dragArea"
       :input-accept="inputAccept"
       :image-loaded="imageLoaded"
       @input-changed="inputChanged"
     />
 
     <transition name="fade" mode="out-in">
-      <Description
-        v-if="!imageLoaded"
-        class="dragArea"
-        :image-loaded="imageLoaded"
-      />
+      <Description v-if="!imageLoaded" class="dragArea" />
       <PixelScalerInside
         v-else
         class="dragArea"
@@ -50,6 +47,10 @@ export default Vue.extend({
     }
   },
   mounted() {
+    // document.addEventListener('dragenter', (event: DragEvent) => {
+    //   event.stopPropagation()
+    //   console.log(event.target)
+    // })
     document.addEventListener(
       'dragover',
       (event: DragEvent) => {
@@ -59,6 +60,8 @@ export default Vue.extend({
           const elem = event.target as HTMLElement
           if (elem.className.includes('dragArea')) {
             this.isShowOverlay = true
+          } else if (event.dataTransfer !== null) {
+            event.dataTransfer.dropEffect = 'none'
           }
         }
       },
@@ -67,6 +70,8 @@ export default Vue.extend({
     document.addEventListener(
       'dragleave',
       (event: DragEvent) => {
+        event.stopPropagation()
+        event.preventDefault()
         if (event !== null && event.target !== null) {
           const elem = event.target as HTMLElement
           if (elem.className.includes('drag-overlay-cover')) {

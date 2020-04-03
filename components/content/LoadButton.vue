@@ -47,7 +47,7 @@ export default Vue.extend({
   height: 100px;
 
   &[loaded] {
-    margin-top: 30px;
+    transform: translateY(-200px);
   }
 
   > p {
