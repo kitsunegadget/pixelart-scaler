@@ -1,5 +1,5 @@
 <template>
-  <div class="pixel-scaler dragArea">
+  <div class="pixel-scaler dragArea" draggable="false">
     <div v-show="isShowOverlay" class="drag-overlay dragArea">
       <div class="drag-overlay-cover dragArea" />
       <div class="drag-overlay-inside dragArea">
@@ -7,44 +7,46 @@
       </div>
     </div>
 
-    <div class="load-button dragArea">
-      <input
-        id="fileElem"
-        ref="fileInput"
-        type="file"
-        :accept="inputAccept"
-        style="display: none;"
-        @change="inputChanged($event)"
-      />
-      <Button
-        id="fileSelect"
-        class="btn btn-outline-info"
-        @click="fileSelect()"
-      >
-        画像を選択
-      </Button>
-    </div>
+    <LoadButton
+      :input-accept="inputAccept"
+      :image-loaded="imageLoaded"
+      @input-changed="inputChanged"
+    />
 
-    <PixelScalerTop class="dragArea" :input-data="inputData" />
-    <PixelScalerBottom class="dragArea" />
+    <transition name="fade" mode="out-in">
+      <Description
+        v-if="!imageLoaded"
+        class="dragArea"
+        :image-loaded="imageLoaded"
+      />
+      <PixelScalerInside
+        v-else
+        class="dragArea"
+        :input-data="inputData"
+        :image-loaded="imageLoaded"
+      />
+    </transition>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import PixelScalerTop from './PixelScalerTop.vue'
-import PixelScalerBottom from './PixelScalerBottom.vue'
+import Description from './Description.vue'
+import LoadButton from './LoadButton.vue'
+import PixelScalerInside from './PixelScalerInside.vue'
 
 export default Vue.extend({
   components: {
-    PixelScalerTop,
-    PixelScalerBottom
+    Description,
+    LoadButton,
+    PixelScalerInside
   },
   data() {
     return {
       isShowOverlay: false,
       inputAccept: 'image/png',
-      inputData: ''
+      inputData: '',
+      imageLoaded: false
     }
   },
   mounted() {
@@ -84,16 +86,18 @@ export default Vue.extend({
             const elem = event.target as HTMLElement
             if (elem.className.includes('dragArea')) {
               this.isShowOverlay = false
-            }
-          }
-          if (
-            event.dataTransfer !== null &&
-            event.dataTransfer.files[0] !== undefined
-          ) {
-            const data = event.dataTransfer.files[0]
-            if (data.type === 'image/png') {
-              // const blob = data.slice(0, data.size, data.type)
-              this.inputData = URL.createObjectURL(data)
+
+              if (
+                event.dataTransfer !== null &&
+                event.dataTransfer.files[0] !== undefined
+              ) {
+                const data = event.dataTransfer.files[0]
+                if (data.type === 'image/png') {
+                  // const blob = data.slice(0, data.size, data.type)
+                  this.inputData = URL.createObjectURL(data)
+                  this.imageLoaded = true
+                }
+              }
             }
           }
         }
@@ -102,16 +106,13 @@ export default Vue.extend({
     )
   },
   methods: {
-    fileSelect() {
-      const elem = this.$refs.fileInput as HTMLElement
-      elem.click()
-    },
     inputChanged(event: any) {
       if (event !== null && event.target.files[0] !== undefined) {
         const data = event.target.files[0]
         if (data.type === 'image/png') {
           // const blob = data.slice(0, data.size, data.type)
           this.inputData = URL.createObjectURL(data)
+          this.imageLoaded = true
         }
       }
     }
@@ -122,10 +123,14 @@ export default Vue.extend({
 <style lang="scss">
 .pixel-scaler {
   position: relative;
+  height: 500px;
+  width: 100%;
+  margin: 10px 0;
   @include flex-centering(column);
 }
 .drag-overlay {
   @include absolute-centering;
+  z-index: 2;
   padding: 10px;
   opacity: 0.9;
   background: #fff;
@@ -142,8 +147,14 @@ export default Vue.extend({
     @include absolute-centering;
   }
 }
-.load-button {
-  margin-top: 30px;
-  margin-bottom: 10px;
+
+.fade-enter {
+  opacity: 0;
+}
+.fade-enter-active {
+  transition: opacity 1s ease;
+}
+.fade-enter-to {
+  opacity: 1;
 }
 </style>
