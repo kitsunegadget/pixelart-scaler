@@ -1,0 +1,31 @@
+# for GAE yaml!
+
+# execution runtime
+runtime: nodejs10
+# use instance class
+instance_class: F2
+# scaling option
+automatic_scaling:
+  min_instances: 0
+  target_cpu_utilization: 0.7
+
+# url handle
+handlers:
+- url: /_nuxt
+  static_dir: .nuxt/dist/client
+  secure: always
+
+- url: /(.*\.(gif|png|jpg|ico|txt))$
+  static_files: static/\1
+  upload: static/.*\.(gif|png|jpg|ico|txt)$
+  secure: always
+
+- url: /.*
+  secure: always
+  # redirect_http_responce_code: 301
+  script: auto
+
+# environment
+env_variables:
+  HOST: '0.0.0.0'
+  NODE_ENV: 'production'
