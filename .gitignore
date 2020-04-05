@@ -90,3 +90,4 @@ sw.*
 *.swp
 
 README_default.md
+.firebase
