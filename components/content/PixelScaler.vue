@@ -11,6 +11,7 @@
       class="dragArea"
       :input-accept="inputAccept"
       :image-loaded="imageLoaded"
+      :image-transformed="imageTransformed"
       @input-changed="inputChanged"
     />
 
@@ -20,7 +21,9 @@
         v-else
         class="dragArea"
         :input-data="inputData"
+        :output-data="outputData"
         :image-loaded="imageLoaded"
+        :image-transformed="imageTransformed"
       />
     </transition>
   </div>
@@ -43,7 +46,9 @@ export default Vue.extend({
       isShowOverlay: false,
       inputAccept: 'image/png',
       inputData: '',
-      imageLoaded: false
+      outputData: '',
+      imageLoaded: false,
+      imageTransformed: false
     }
   },
   mounted() {
@@ -99,7 +104,16 @@ export default Vue.extend({
                 const data = event.dataTransfer.files[0]
                 if (data.type === 'image/png') {
                   // const blob = data.slice(0, data.size, data.type)
-                  this.inputData = URL.createObjectURL(data)
+                  const reader = new FileReader()
+                  reader.onload = () => {
+                    if (reader.result !== null) {
+                      this.inputData = reader.result as string
+                    }
+                  }
+                  reader.readAsDataURL(data)
+
+                  // URL.revokeObjectURL(this.inputData)
+                  // this.inputData = URL.createObjectURL(data)
                   this.imageLoaded = true
                 }
               }
@@ -116,10 +130,22 @@ export default Vue.extend({
         const data = event.target.files[0]
         if (data.type === 'image/png') {
           // const blob = data.slice(0, data.size, data.type)
-          this.inputData = URL.createObjectURL(data)
+          const reader = new FileReader()
+          reader.onload = () => {
+            if (reader.result !== null) {
+              this.inputData = reader.result as string
+            }
+          }
+          reader.readAsDataURL(data)
+
+          // URL.revokeObjectURL(this.inputData)
+          // this.inputData = URL.createObjectURL(data)
           this.imageLoaded = true
         }
       }
+    },
+    createImageElement() {
+      return document.createElement('img')
     }
   }
 })
