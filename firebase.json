@@ -11,13 +11,8 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "function": "helloWorld"
-      }
     ]
+    
   },
   "emulators": {
     "functions": {
