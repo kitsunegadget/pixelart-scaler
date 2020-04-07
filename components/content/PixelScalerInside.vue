@@ -14,9 +14,19 @@
           draggable="false"
         />
       </div>
-      <div class="transform-arrow"></div>
+      <div class="transform-arrow">
+        <div
+          v-show="converting"
+          ref="converting"
+          class="spinner-border text-success"
+          role="status"
+        >
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
       <div class="output-image">
         <canvas id="output-canvas" ref="outputCanvas"></canvas>
+        <canvas id="output-canvas" ref="outputCanvas2"></canvas>
         <img
           v-show="imageTransformed"
           class="image"
@@ -43,6 +53,7 @@
 <script lang="ts">
 import Vue from 'vue'
 // import axios from 'axios'
+import Imagenize from '@/plugins/imagenize'
 
 export default Vue.extend({
   props: {
@@ -65,6 +76,11 @@ export default Vue.extend({
       required: true
     }
   },
+  data() {
+    return {
+      converting: false
+    }
+  },
   watch: {
     inputData() {
       const canvas = this.$refs.outputCanvas as HTMLCanvasElement
@@ -76,60 +92,40 @@ export default Vue.extend({
   },
   methods: {
     convertClick(type: Number) {
-      const invert = function(data: Uint8ClampedArray) {
-        for (let i = 0; i < data.length; i += 4) {
-          data[i] = 255 - data[i] // R
-          data[i + 1] = 255 - data[i + 1] // G
-          data[i + 2] = 255 - data[i + 2] // B
-        }
-      }
-      const grayscale = function(data: Uint8ClampedArray) {
-        for (let i = 0; i < data.length; i += 4) {
-          const avg = (data[i] + data[i + 1] + data[i + 2]) / 3
-          data[i] = avg
-          data[i + 1] = avg
-          data[i + 2] = avg
-        }
-      }
+      this.converting = true
+      setTimeout(() => {
+        // 仮想DOMのレンダーから逃れるためのタイムアウト
+        const canvas = this.$refs.outputCanvas as HTMLCanvasElement
+        const img = new Image()
+        img.src = this.inputData
+        img.onload = async () => {
+          const ctx = canvas.getContext('2d')
+          if (ctx) {
+            ctx.imageSmoothingEnabled = false
+            // 入力画像とキャンバスサイズを合わせないと
+            // ImageDataでcanvasをオーバーした画素が取得出来ない
+            canvas.width = img.width
+            canvas.height = img.height
+            ctx.drawImage(img, 0, 0)
+            img.style.display = 'none'
+            const imageData = ctx.getImageData(0, 0, img.width, img.height)
+            const data = imageData.data
 
-      const canvas = this.$refs.outputCanvas as HTMLCanvasElement
-      let img = new Image()
-      img.src = this.inputData
-      img.onload = () => {
-        const ctx = canvas.getContext('2d')
-        if (ctx) {
-          ctx.drawImage(img, 0, 0)
-          img.style.display = 'none'
-          const imageData = ctx.getImageData(0, 0, img.width, img.height)
-
-          // スケール処理によって出力される大きさを予め与える
-          canvas.width = imageData.width
-          canvas.height = imageData.height
-        }
-      }
-      // 動的なキャンバスの大きさが1回目で反映出来ないため
-      // ダブルバッファリングのようにもう一度Imageをつくって処理する
-      img = new Image()
-      img.src = this.inputData
-      img.onload = () => {
-        const ctx = canvas.getContext('2d')
-        if (ctx) {
-          ctx.drawImage(img, 0, 0)
-          img.style.display = 'none'
-          const imageData = ctx.getImageData(0, 0, img.width, img.height)
-          const data = imageData.data
-
-          if (type === 1) {
-            invert(data)
-          } else if (type === 2) {
-            grayscale(data)
+            const n = new Imagenize(data, img.width)
+            if (type === 1) {
+              const newData = await n.invert()
+              const newImageData = new ImageData(newData[0], newData[1])
+              ctx.putImageData(newImageData, 0, 0)
+              this.converting = false
+            } else if (type === 2) {
+              const newData = await n.grayScale()
+              const newImageData = new ImageData(newData[0], newData[1])
+              ctx.putImageData(newImageData, 0, 0)
+              this.converting = false
+            }
           }
-          canvas.width = imageData.width
-          canvas.height = imageData.height
-          ctx.putImageData(imageData, 0, 0)
         }
-      }
-
+      }, 100)
       // const dataURI = this.inputData.split(',')
       // const dataType = dataURI[0].split(';')[0].slice(5)
       // const baseData = dataURI[1]
@@ -203,7 +199,7 @@ export default Vue.extend({
   height: 50px;
   width: 50px;
   margin: 0 40px;
-  background: #222;
+  // background: #222;
 }
 .output-image {
   @extend .input-image;
