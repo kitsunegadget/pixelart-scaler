@@ -1,7 +1,23 @@
-// ImageDataを2次元配列として扱えるように変換
+/* eslint-disable unicorn/number-literal-case */
+// canvasとimgから画像を編集
 export class Imagenize {
   protected v = new Array(0)
-  constructor(data: Uint8ClampedArray, width: number) {
+  protected unit: Uint32Array
+  constructor(ctx: CanvasRenderingContext2D, img: HTMLImageElement) {
+    ctx.imageSmoothingEnabled = false
+    // 入力画像とキャンバスサイズを合わせないと
+    // ImageDataでcanvasをオーバーした画素が取得出来ない
+    ctx.canvas.width = img.width
+    ctx.canvas.height = img.height
+    ctx.drawImage(img, 0, 0)
+    img.style.display = 'none'
+    const imageData = ctx.getImageData(0, 0, img.width, img.height)
+    const data = imageData.data
+    // 速度を上げるためにunit32に変換
+    this.unit = new Uint32Array(data.buffer)
+  }
+
+  transTwoDimention(data: Uint8ClampedArray, width: number) {
     this.v = []
     // 配列を2次元化
     for (let j = 0; j < data.length; j += width * 4) {
@@ -21,33 +37,31 @@ export class Imagenize {
 
 export default class StandardTransform extends Imagenize {
   invert() {
-    return new Promise<any[]>(resolve => {
-      const array = []
-      for (let j = 0; j < this.v.length; j++) {
-        for (let i = 0; i < this.v[j].length; i++) {
-          array.push(255 - this.v[j][i][0]) // R
-          array.push(255 - this.v[j][i][1]) // G
-          array.push(255 - this.v[j][i][2]) // B
-          array.push(this.v[j][i][3]) // A
-        }
+    return new Promise<Uint8ClampedArray>(resolve => {
+      for (let i = 0; i < this.unit.length; i++) {
+        const a = this.unit[i] >> 24
+        const b = 255 - ((this.unit[i] >> 16) & 0xff)
+        const g = 255 - ((this.unit[i] >> 8) & 0xff)
+        const r = (255 - this.unit[i]) & 0xff
+        const mixed = (a << 24) | (b << 16) | (g << 8) | r
+        this.unit[i] = mixed
       }
-      resolve([Uint8ClampedArray.from(array), this.v[0].length])
+      resolve(new Uint8ClampedArray(this.unit.buffer))
     })
   }
 
   grayScale() {
-    return new Promise<any[]>(resolve => {
-      const array = []
-      for (let j = 0; j < this.v.length; j++) {
-        for (let i = 0; i < this.v[j].length; i++) {
-          const avg = (this.v[j][i][0] + this.v[j][i][1] + this.v[j][i][2]) / 3
-          array.push(avg)
-          array.push(avg)
-          array.push(avg)
-          array.push(this.v[j][i][3])
-        }
+    return new Promise<Uint8ClampedArray>(resolve => {
+      for (let i = 0; i < this.unit.length; i++) {
+        const a = this.unit[i] >> 24
+        const b = (this.unit[i] >> 16) & 0xff
+        const g = (this.unit[i] >> 8) & 0xff
+        const r = this.unit[i] & 0xff
+        const avg = Math.round((r + g + b) / 3)
+        const mixed = (a << 24) | (avg << 16) | (avg << 8) | avg
+        this.unit[i] = mixed
       }
-      resolve([Uint8ClampedArray.from(array), this.v[0].length])
+      resolve(new Uint8ClampedArray(this.unit.buffer))
     })
   }
 }

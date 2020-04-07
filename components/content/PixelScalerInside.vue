@@ -95,37 +95,30 @@ export default Vue.extend({
       this.converting = true
       setTimeout(() => {
         // 仮想DOMのレンダーから逃れるためのタイムアウト
+        const a = performance.now()
         const canvas = this.$refs.outputCanvas as HTMLCanvasElement
         const img = new Image()
         img.src = this.inputData
         img.onload = async () => {
           const ctx = canvas.getContext('2d')
           if (ctx) {
-            ctx.imageSmoothingEnabled = false
-            // 入力画像とキャンバスサイズを合わせないと
-            // ImageDataでcanvasをオーバーした画素が取得出来ない
-            canvas.width = img.width
-            canvas.height = img.height
-            ctx.drawImage(img, 0, 0)
-            img.style.display = 'none'
-            const imageData = ctx.getImageData(0, 0, img.width, img.height)
-            const data = imageData.data
-
-            const n = new Imagenize(data, img.width)
+            const n = new Imagenize(ctx, img)
             if (type === 1) {
               const newData = await n.invert()
-              const newImageData = new ImageData(newData[0], newData[1])
+              const newImageData = new ImageData(newData, img.width)
               ctx.putImageData(newImageData, 0, 0)
               this.converting = false
             } else if (type === 2) {
               const newData = await n.grayScale()
-              const newImageData = new ImageData(newData[0], newData[1])
+              const newImageData = new ImageData(newData, img.width)
               ctx.putImageData(newImageData, 0, 0)
               this.converting = false
             }
           }
+          const b = performance.now()
+          console.log('displayTime: ', b - a)
         }
-      }, 100)
+      }, 20)
       // const dataURI = this.inputData.split(',')
       // const dataType = dataURI[0].split(';')[0].slice(5)
       // const baseData = dataURI[1]
