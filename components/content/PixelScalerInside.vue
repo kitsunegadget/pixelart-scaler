@@ -16,17 +16,18 @@
       </div>
       <div class="transform-arrow">
         <div
-          v-show="converting"
-          ref="converting"
+          v-if="converting"
           class="spinner-border text-success"
           role="status"
         >
           <span class="sr-only">Loading...</span>
         </div>
+        <div v-else class="converting-arrow">
+          
+        </div>
       </div>
       <div class="output-image">
-        <canvas id="output-canvas" ref="outputCanvas"></canvas>
-        <canvas id="output-canvas" ref="outputCanvas2"></canvas>
+        <canvas ref="outputCanvas"></canvas>
         <img
           v-show="imageTransformed"
           class="image"
@@ -99,17 +100,18 @@ export default Vue.extend({
         const canvas = this.$refs.outputCanvas as HTMLCanvasElement
         const img = new Image()
         img.src = this.inputData
-        img.onload = async () => {
+        img.onload = () => {
           const ctx = canvas.getContext('2d')
           if (ctx) {
             const n = new Imagenize(ctx, img)
+
             if (type === 1) {
-              const newData = await n.invert()
+              const newData = n.invert()
               const newImageData = new ImageData(newData, img.width)
               ctx.putImageData(newImageData, 0, 0)
               this.converting = false
             } else if (type === 2) {
-              const newData = await n.grayScale()
+              const newData = n.grayScale()
               const newImageData = new ImageData(newData, img.width)
               ctx.putImageData(newImageData, 0, 0)
               this.converting = false
@@ -189,6 +191,7 @@ export default Vue.extend({
   }
 }
 .transform-arrow {
+  @include flex-centering(row);
   height: 50px;
   width: 50px;
   margin: 0 40px;

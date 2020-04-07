@@ -37,31 +37,27 @@ export class Imagenize {
 
 export default class StandardTransform extends Imagenize {
   invert() {
-    return new Promise<Uint8ClampedArray>(resolve => {
-      for (let i = 0; i < this.unit.length; i++) {
-        const a = this.unit[i] >> 24
-        const b = 255 - ((this.unit[i] >> 16) & 0xff)
-        const g = 255 - ((this.unit[i] >> 8) & 0xff)
-        const r = (255 - this.unit[i]) & 0xff
-        const mixed = (a << 24) | (b << 16) | (g << 8) | r
-        this.unit[i] = mixed
-      }
-      resolve(new Uint8ClampedArray(this.unit.buffer))
-    })
+    for (let i = 0; i < this.unit.length; i++) {
+      const a = this.unit[i] >> 24
+      const b = 255 - ((this.unit[i] >> 16) & 0xff)
+      const g = 255 - ((this.unit[i] >> 8) & 0xff)
+      const r = (255 - this.unit[i]) & 0xff
+      const mixed = (a << 24) | (b << 16) | (g << 8) | r
+      this.unit[i] = mixed
+    }
+    return new Uint8ClampedArray(this.unit.buffer)
   }
 
   grayScale() {
-    return new Promise<Uint8ClampedArray>(resolve => {
-      for (let i = 0; i < this.unit.length; i++) {
-        const a = this.unit[i] >> 24
-        const b = (this.unit[i] >> 16) & 0xff
-        const g = (this.unit[i] >> 8) & 0xff
-        const r = this.unit[i] & 0xff
-        const avg = Math.round((r + g + b) / 3)
-        const mixed = (a << 24) | (avg << 16) | (avg << 8) | avg
-        this.unit[i] = mixed
-      }
-      resolve(new Uint8ClampedArray(this.unit.buffer))
-    })
+    for (let i = 0; i < this.unit.length; i++) {
+      const a = this.unit[i] >> 24
+      const b = (this.unit[i] >> 16) & 0xff
+      const g = (this.unit[i] >> 8) & 0xff
+      const r = this.unit[i] & 0xff
+      const avg = Math.round((r + g + b) / 3)
+      const mixed = (a << 24) | (avg << 16) | (avg << 8) | avg
+      this.unit[i] = mixed
+    }
+    return new Uint8ClampedArray(this.unit.buffer)
   }
 }
