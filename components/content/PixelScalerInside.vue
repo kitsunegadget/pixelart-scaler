@@ -29,49 +29,29 @@
       </div>
       <div class="output-image">
         <canvas ref="outputCanvas"></canvas>
-        <img
-          v-show="imageConverted"
+        <!-- <img
+          v-show="!converting"
           class="image"
           :src="outputData"
           draggable="false"
-        />
+        /> -->
       </div>
     </div>
 
-    <div class="pixel-scaler-bottom dragArea" draggable="false">
-      <div class="scale-style">
-        <!-- スケーリング形式 -->
-        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-          <label class="btn btn-secondary">
-            <input
-              id="type1"
-              type="radio"
-              name="scaling-type"
-              @click="convertClick(1)"
-            />
-            Invert
-          </label>
-          <label class="btn btn-secondary">
-            <input
-              id="type2"
-              type="radio"
-              name="scaling-type"
-              @click="convertClick(2)"
-            />
-            GrayScale
-          </label>
-        </div>
-      </div>
-    </div>
+    <PixelScalerType @convert-start="convertClick" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 // import axios from 'axios'
+import PixelScalerType from './PixelScalerType.vue'
 import Imagenize from '@/plugins/imagenize'
 
 export default Vue.extend({
+  components: {
+    PixelScalerType
+  },
   props: {
     inputData: {
       type: String,
@@ -84,10 +64,6 @@ export default Vue.extend({
       required: true
     },
     imageLoaded: {
-      type: Boolean,
-      required: true
-    },
-    imageConcerted: {
       type: Boolean,
       required: true
     }
@@ -104,10 +80,17 @@ export default Vue.extend({
       if (ctx) {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
       }
+    },
+    converting() {
+      this.$emit('converting-state', this.converting)
     }
   },
   methods: {
     convertClick(type: Number) {
+      if (this.converting) {
+        // 変換中に再度押せないように
+        return
+      }
       this.converting = true
       setTimeout(() => {
         // 仮想DOMのレンダーから逃れるためのタイムアウト
@@ -226,16 +209,5 @@ export default Vue.extend({
 }
 .output-image {
   @extend .input-image;
-}
-
-.pixel-scaler-bottom {
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  background: #3333dd;
-  color: white;
-}
-.scale-style {
-  margin: 10px;
 }
 </style>

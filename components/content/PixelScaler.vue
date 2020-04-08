@@ -11,7 +11,7 @@
       class="dragArea"
       :input-accept="inputAccept"
       :image-loaded="imageLoaded"
-      :image-transformed="imageTransformed"
+      :image-converting="imageConverting"
       @input-changed="inputChanged"
     />
 
@@ -23,7 +23,8 @@
         :input-data="inputData"
         :output-data="outputData"
         :image-loaded="imageLoaded"
-        :image-converted="imageConverted"
+        :image-converting="imageConverting"
+        @converting-state="convertingState"
       />
     </transition>
   </div>
@@ -48,7 +49,7 @@ export default Vue.extend({
       inputData: '',
       outputData: '',
       imageLoaded: false,
-      imageConverted: false
+      imageConverting: false
     }
   },
   mounted() {
@@ -144,8 +145,8 @@ export default Vue.extend({
         }
       }
     },
-    createImageElement() {
-      return document.createElement('img')
+    convertingState(status: boolean) {
+      this.imageConverting = status
     }
   }
 })
@@ -154,7 +155,7 @@ export default Vue.extend({
 <style lang="scss">
 .pixel-scaler {
   position: relative;
-  height: 500px;
+  height: 600px;
   width: 100%;
   margin: 10px 0;
   @include flex-centering(column);

@@ -25,6 +25,7 @@ html {
 }
 
 .container {
+  padding: 0 10px;
   max-width: 1000px;
   margin: auto;
 }

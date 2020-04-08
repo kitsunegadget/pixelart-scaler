@@ -16,6 +16,7 @@
       outlined
       color="success"
       class="ma-2"
+      v-bind="{ disabled: imageConverting }"
       @click="fileSelect"
     >
       <v-icon left>mdi-image</v-icon>画像を選択
@@ -35,6 +36,10 @@ export default Vue.extend({
     },
     inputAccept: {
       type: String,
+      required: true
+    },
+    imageConverting: {
+      type: Boolean,
       required: true
     }
   },
@@ -56,9 +61,11 @@ export default Vue.extend({
   height: 100px;
   margin-left: 1px;
   z-index: 1;
+  top: 0;
+  transform: translateY(240px);
 
   &[loaded] {
-    transform: translateY(-212px);
+    transform: translateY(0);
   }
 
   > p {
