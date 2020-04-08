@@ -16,11 +16,13 @@
     color: $color-green;
   }
   color: $color-white;
+  z-index: 1;
+  box-shadow: 0 0 5px #666a;
 
   .title {
     font-size: 1.7em;
-    margin: 10px;
-    line-height: 1.3em;
+    margin: 0 10px;
+    //line-height: 1.3em;
     cursor: default;
   }
 }

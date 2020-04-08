@@ -23,7 +23,7 @@
         :input-data="inputData"
         :output-data="outputData"
         :image-loaded="imageLoaded"
-        :image-transformed="imageTransformed"
+        :image-converted="imageConverted"
       />
     </transition>
   </div>
@@ -48,7 +48,7 @@ export default Vue.extend({
       inputData: '',
       outputData: '',
       imageLoaded: false,
-      imageTransformed: false
+      imageConverted: false
     }
   },
   mounted() {

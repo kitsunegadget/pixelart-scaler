@@ -8,9 +8,18 @@
       style="display: none;"
       @change="$emit('input-changed', $event)"
     />
-    <Button id="fileSelect" class="btn btn-outline-info" @click="fileSelect">
-      画像を選択
-    </Button>
+    <v-btn
+      id="fileSelect"
+      :ripple="{ center: true }"
+      large
+      tile
+      outlined
+      color="success"
+      class="ma-2"
+      @click="fileSelect"
+    >
+      <v-icon left>mdi-image</v-icon>画像を選択
+    </v-btn>
     <p></p>
     <p v-bind="{ loaded: imageLoaded }">もしくは、ドラッグ＆ドロップ</p>
   </div>
@@ -45,9 +54,11 @@ export default Vue.extend({
   transition: all 1s ease;
   overflow: hidden;
   height: 100px;
+  margin-left: 1px;
+  z-index: 1;
 
   &[loaded] {
-    transform: translateY(-200px);
+    transform: translateY(-212px);
   }
 
   > p {

@@ -56,7 +56,7 @@ export default Vue.extend({
 
     > ul {
       margin: 0;
-      margin-left: -20px;
+      // margin-left: -20px;
       > li {
         margin: 5px 10px;
         font-size: 0.9em;

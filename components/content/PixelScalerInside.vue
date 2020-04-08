@@ -14,22 +14,23 @@
           draggable="false"
         />
       </div>
-      <div class="transform-arrow">
-        <div
+      <div class="converting-status">
+        <v-progress-circular
           v-if="converting"
-          class="spinner-border text-success"
-          role="status"
+          indeterminate
+          color="blue"
+          :size="50"
         >
           <span class="sr-only">Loading...</span>
-        </div>
-        <div v-else class="converting-arrow">
-          
+        </v-progress-circular>
+        <div v-else class="converting-status-arrow">
+          <v-icon x-large color="orange">mdi-arrow-right-thick</v-icon>
         </div>
       </div>
       <div class="output-image">
         <canvas ref="outputCanvas"></canvas>
         <img
-          v-show="imageTransformed"
+          v-show="imageConverted"
           class="image"
           :src="outputData"
           draggable="false"
@@ -40,12 +41,26 @@
     <div class="pixel-scaler-bottom dragArea" draggable="false">
       <div class="scale-style">
         <!-- スケーリング形式 -->
-        <Button class="btn btn-secondary" @click="convertClick(1)">
-          Invert
-        </Button>
-        <Button class="btn btn-secondary" @click="convertClick(2)">
-          Grayscale
-        </Button>
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+          <label class="btn btn-secondary">
+            <input
+              id="type1"
+              type="radio"
+              name="scaling-type"
+              @click="convertClick(1)"
+            />
+            Invert
+          </label>
+          <label class="btn btn-secondary">
+            <input
+              id="type2"
+              type="radio"
+              name="scaling-type"
+              @click="convertClick(2)"
+            />
+            GrayScale
+          </label>
+        </div>
       </div>
     </div>
   </div>
@@ -72,7 +87,7 @@ export default Vue.extend({
       type: Boolean,
       required: true
     },
-    imageTransformed: {
+    imageConcerted: {
       type: Boolean,
       required: true
     }
@@ -190,12 +205,24 @@ export default Vue.extend({
     color: $color-black6;
   }
 }
-.transform-arrow {
+.converting-status {
   @include flex-centering(row);
   height: 50px;
   width: 50px;
   margin: 0 40px;
   // background: #222;
+
+  &-arrow {
+    animation: rot 0.7s ease;
+  }
+}
+@keyframes rot {
+  0% {
+    transform: rotateZ(0deg);
+  }
+  100% {
+    transform: rotateZ(360deg);
+  }
 }
 .output-image {
   @extend .input-image;
