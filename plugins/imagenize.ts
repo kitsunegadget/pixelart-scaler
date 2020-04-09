@@ -1,63 +1,152 @@
 /* eslint-disable unicorn/number-literal-case */
-// canvasとimgから画像を編集
-export class Imagenize {
-  protected v = new Array(0)
-  protected unit: Uint32Array
-  constructor(ctx: CanvasRenderingContext2D, img: HTMLImageElement) {
-    ctx.imageSmoothingEnabled = false
-    // 入力画像とキャンバスサイズを合わせないと
-    // ImageDataでcanvasをオーバーした画素が取得出来ない
-    ctx.canvas.width = img.width
-    ctx.canvas.height = img.height
-    ctx.drawImage(img, 0, 0)
-    img.style.display = 'none'
-    const imageData = ctx.getImageData(0, 0, img.width, img.height)
-    const data = imageData.data
-    // 速度を上げるためにunit32に変換
-    this.unit = new Uint32Array(data.buffer)
-  }
+// ImageDataを引数にして変換後にImageDataを返すstaticクラス
+export default class Imagenize {
+  // Eric's Pixel Expansion / Scale Nx Algorithm
+  static ScaleNx(imageData: ImageData, scales: number) {
+    const data = new Uint32Array(imageData.data.buffer)
+    const width = imageData.width
+    const height = imageData.height
 
-  transTwoDimention(data: Uint8ClampedArray, width: number) {
-    this.v = []
-    // 配列を2次元化
-    for (let j = 0; j < data.length; j += width * 4) {
-      const u = []
-      for (let i = 0; i < width * 4; i += 4) {
-        const color = []
-        color.push(data[i + j]) // R
-        color.push(data[i + j + 1]) // G
-        color.push(data[i + j + 2]) // B
-        color.push(data[i + j + 3]) // A
-        u.push(color)
+    const rData = new Uint32Array(data.length * scales ** 2)
+    for (let j = 0; j < height; j++) {
+      for (let i = 0; i < width; i++) {
+        const l = j * width + i
+        // A  B  C
+        // D  E  F
+        // G  H  I
+        const B = j === 0 ? data[l] : data[l - width]
+        const D = i === 0 ? data[l] : data[l - 1]
+        const E = data[l]
+        const F = i === width - 1 ? data[l] : data[l + 1]
+        const H = j === height - 1 ? data[l] : data[l + width]
+
+        const rl = j * width * scales ** 2 + i * scales
+        if (scales === 2) {
+          // out
+          if (B !== H && D !== F) {
+            rData[rl] = D === B ? D : E
+            rData[rl + 1] = B === F ? F : E
+            rData[rl + width * scales] = D === H ? D : E
+            rData[rl + width * scales + 1] = H === F ? F : E
+          } else {
+            rData[rl] = rData[rl + 1] = rData[rl + width * 2] = rData[
+              rl + width * 2 + 1
+            ] = E
+          }
+        } else if (scales === 3) {
+          const A =
+            j === 0 && i === 0
+              ? data[l]
+              : j === 0
+              ? data[l - 1]
+              : i === 0
+              ? data[l - width]
+              : data[l - width - 1]
+          const C =
+            j === 0 && i === width - 1
+              ? data[l]
+              : j === 0
+              ? data[l + 1]
+              : i === width - 1
+              ? data[l - width]
+              : data[l - width + 1]
+          const G =
+            j === height - 1 && i === 0
+              ? data[l]
+              : j === height - 1
+              ? data[l - 1]
+              : i === 0
+              ? data[l + width]
+              : data[l + width - 1]
+          const I =
+            j === height - 1 && i === width - 1
+              ? data[l]
+              : j === height - 1
+              ? data[l + 1]
+              : i === width - 1
+              ? data[l + width]
+              : data[l + width + 1]
+          // out
+          if (B !== H && D !== F) {
+            rData[rl] = D === B ? D : E
+            rData[rl + 1] = (D === B && E !== C) || (B === F && E !== A) ? B : E
+            rData[rl + 2] = B === F ? F : E
+            rData[rl + width * scales] =
+              (D === B && E !== G) || (D === H && E !== A) ? D : E
+            rData[rl + width * scales + 1] = E
+            rData[rl + width * scales + 2] =
+              (B === F && E !== I) || (H === F && E !== C) ? F : E
+            rData[rl + width * scales * 2] = D === H ? D : E
+            rData[rl + width * scales * 2 + 1] =
+              (D === H && E !== I) || (H === F && E !== G) ? H : E
+            rData[rl + width * scales * 2 + 2] = H === F ? F : E
+          } else {
+            rData[rl] = rData[rl + 1] = rData[rl + 2] = rData[
+              rl + width * scales
+            ] = rData[rl + width * scales + 1] = rData[
+              rl + width * scales + 2
+            ] = rData[rl + width * scales * 2] = rData[
+              rl + width * scales * 2 + 1
+            ] = rData[rl + width * scales * 2 + 2] = E
+          }
+        }
       }
-      this.v.push(u)
     }
+    const outData = new Uint8ClampedArray(rData.buffer)
+    return new ImageData(outData, width * scales)
   }
 }
 
-export default class StandardTransform extends Imagenize {
-  invert() {
-    for (let i = 0; i < this.unit.length; i++) {
-      const a = this.unit[i] >> 24
-      const b = 255 - ((this.unit[i] >> 16) & 0xff)
-      const g = 255 - ((this.unit[i] >> 8) & 0xff)
-      const r = (255 - this.unit[i]) & 0xff
-      const mixed = (a << 24) | (b << 16) | (g << 8) | r
-      this.unit[i] = mixed
+export class StandardFilter {
+  static invert(imageData: ImageData) {
+    const data = new Uint32Array(imageData.data.buffer)
+
+    for (let i = 0; i < data.length; i++) {
+      const a = data[i] >> 24
+      const b = 255 - ((data[i] >> 16) & 0xff)
+      const g = 255 - ((data[i] >> 8) & 0xff)
+      const r = (255 - data[i]) & 0xff
+      const out = (a << 24) | (b << 16) | (g << 8) | r
+      data[i] = out
     }
-    return new Uint8ClampedArray(this.unit.buffer)
+    const outData = new Uint8ClampedArray(data.buffer)
+    return new ImageData(outData, imageData.width)
   }
 
-  grayScale() {
-    for (let i = 0; i < this.unit.length; i++) {
-      const a = this.unit[i] >> 24
-      const b = (this.unit[i] >> 16) & 0xff
-      const g = (this.unit[i] >> 8) & 0xff
-      const r = this.unit[i] & 0xff
+  static grayScale(imageData: ImageData) {
+    const data = new Uint32Array(imageData.data.buffer)
+
+    for (let i = 0; i < data.length; i++) {
+      const a = data[i] >> 24
+      const b = (data[i] >> 16) & 0xff
+      const g = (data[i] >> 8) & 0xff
+      const r = data[i] & 0xff
       const avg = Math.round((r + g + b) / 3)
-      const mixed = (a << 24) | (avg << 16) | (avg << 8) | avg
-      this.unit[i] = mixed
+      const out = (a << 24) | (avg << 16) | (avg << 8) | avg
+      data[i] = out
     }
-    return new Uint8ClampedArray(this.unit.buffer)
+    const outData = new Uint8ClampedArray(data.buffer)
+    return new ImageData(outData, imageData.width)
+  }
+
+  static binarization(imageData: ImageData, threshold: number) {
+    const data = new Uint32Array(imageData.data.buffer)
+
+    for (let i = 0; i < data.length; i++) {
+      const a = data[i] >> 24
+      const b = (data[i] >> 16) & 0xff
+      const g = (data[i] >> 8) & 0xff
+      const r = data[i] & 0xff
+      const avg = Math.round((r + g + b) / 3)
+      let out = 0
+      if (avg < threshold) {
+        out = (a << 24) | 0x00ffffff
+      } else {
+        out = (a << 24) | 0x00000000
+      }
+      data[i] = out
+    }
+    const outData = new Uint8ClampedArray(data.buffer)
+    return new ImageData(outData, imageData.width)
   }
 }

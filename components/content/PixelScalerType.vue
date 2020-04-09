@@ -3,17 +3,23 @@
     <div class="scale-style">
       <!-- スケーリング形式 -->
       <v-btn-toggle class="type-button" v-model="text" tile group>
-        <v-btn @click="$emit('convert-start', 1)">
+        <v-btn @click="$emit('convert-start', 'invert')">
           Negative
         </v-btn>
-        <v-btn @click="$emit('convert-start', 2)">
+        <v-btn @click="$emit('convert-start', 'grayscale')">
           GrayScale
         </v-btn>
-        <v-btn @click="$emit('convert-start', 3)">
+        <v-btn @click="$emit('convert-start', 'binarization')">
           Binarization
         </v-btn>
-        <v-btn @click="$emit('convert-start', 4)">
-          EPX
+        <v-btn @click="$emit('convert-start', 'epx2')">
+          Scale2x
+        </v-btn>
+        <v-btn @click="$emit('convert-start', 'epx3')">
+          Scale3x
+        </v-btn>
+        <v-btn @click="$emit('convert-start', 'epx4')">
+          Scale4x
         </v-btn>
         <v-btn @click="$emit('convert-start', 0)">
           Test

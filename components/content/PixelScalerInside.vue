@@ -46,7 +46,7 @@
 import Vue from 'vue'
 // import axios from 'axios'
 import PixelScalerType from './PixelScalerType.vue'
-import Imagenize from '@/plugins/imagenize'
+import Imagenize, { StandardFilter } from '@/plugins/imagenize'
 
 export default Vue.extend({
   components: {
@@ -86,7 +86,7 @@ export default Vue.extend({
     }
   },
   methods: {
-    convertClick(type: Number) {
+    convertClick(type: string) {
       if (this.converting) {
         // 変換中に再度押せないように
         return
@@ -101,25 +101,38 @@ export default Vue.extend({
         img.onload = () => {
           const ctx = canvas.getContext('2d')
           if (ctx) {
-            const n = new Imagenize(ctx, img)
+            // 入力画像とキャンバスサイズを合わせないと
+            // ImageDataでcanvasをオーバーした画素が取得出来ない
+            ctx.canvas.width = img.width
+            ctx.canvas.height = img.height
+            ctx.drawImage(img, 0, 0)
+            img.style.display = 'none'
+            const imageData = ctx.getImageData(0, 0, img.width, img.height)
 
-            if (type === 1) {
-              const newData = n.invert()
-              const newImageData = new ImageData(newData, img.width)
+            if (type === 'invert') {
+              const newImageData = StandardFilter.invert(imageData)
               ctx.putImageData(newImageData, 0, 0)
-            } else if (type === 2) {
-              const newData = n.grayScale()
-              const newImageData = new ImageData(newData, img.width)
+            } else if (type === 'grayscale') {
+              const newImageData = StandardFilter.grayScale(imageData)
               ctx.putImageData(newImageData, 0, 0)
-            } else if (type === 3) {
-              const newData = n.Binarization(127)
-              const newImageData = new ImageData(newData, img.width)
+            } else if (type === 'binarization') {
+              const newImageData = StandardFilter.binarization(imageData, 127)
               ctx.putImageData(newImageData, 0, 0)
-            } else if (type === 4) {
+            } else if (type === 'epx2') {
               ctx.canvas.width *= 2
               ctx.canvas.height *= 2
-              const newData = n.EPX()
-              const newImageData = new ImageData(newData, ctx.canvas.width)
+              const newImageData = Imagenize.ScaleNx(imageData, 2)
+              ctx.putImageData(newImageData, 0, 0)
+            } else if (type === 'epx3') {
+              ctx.canvas.width *= 3
+              ctx.canvas.height *= 3
+              const newImageData = Imagenize.ScaleNx(imageData, 3)
+              ctx.putImageData(newImageData, 0, 0)
+            } else if (type === 'epx4') {
+              ctx.canvas.width *= 4
+              ctx.canvas.height *= 4
+              const x2ImageData = Imagenize.ScaleNx(imageData, 2)
+              const newImageData = Imagenize.ScaleNx(x2ImageData, 2)
               ctx.putImageData(newImageData, 0, 0)
             }
             this.converting = false
@@ -185,13 +198,13 @@ export default Vue.extend({
     width: 100%;
     height: 100%;
     object-fit: contain;
-    image-rendering: crisp-edges;
+    image-rendering: pixelated;
   }
   .image {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    image-rendering: crisp-edges;
+    image-rendering: pixelated;
   }
 
   > span {
