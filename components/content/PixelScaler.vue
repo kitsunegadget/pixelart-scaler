@@ -155,7 +155,7 @@ export default Vue.extend({
 <style lang="scss">
 .pixel-scaler {
   position: relative;
-  height: 600px;
+  // height: 700px;
   width: 100%;
   margin: 10px 0;
   @include flex-centering(column);

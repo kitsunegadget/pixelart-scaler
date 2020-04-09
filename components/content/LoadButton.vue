@@ -61,8 +61,8 @@ export default Vue.extend({
   height: 100px;
   margin-left: 1px;
   z-index: 1;
-  top: 0;
-  transform: translateY(240px);
+  top: 2.5px;
+  transform: translateY(187.5px);
 
   &[loaded] {
     transform: translateY(0);

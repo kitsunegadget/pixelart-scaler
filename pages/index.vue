@@ -24,6 +24,8 @@ export default Vue.extend({
 <style lang="scss">
 .main-container {
   width: 100%;
+  height: 100%;
   @include flex-centering(column);
+  justify-content: flex-start;
 }
 </style>

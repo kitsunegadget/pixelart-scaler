@@ -21,7 +21,7 @@
           color="blue"
           :size="50"
         >
-          <span class="sr-only">Loading...</span>
+          <!-- <span class="sr-only">Loading...</span> -->
         </v-progress-circular>
         <div v-else class="converting-status-arrow">
           <v-icon x-large color="orange">mdi-arrow-right-thick</v-icon>
@@ -107,13 +107,22 @@ export default Vue.extend({
               const newData = n.invert()
               const newImageData = new ImageData(newData, img.width)
               ctx.putImageData(newImageData, 0, 0)
-              this.converting = false
             } else if (type === 2) {
               const newData = n.grayScale()
               const newImageData = new ImageData(newData, img.width)
               ctx.putImageData(newImageData, 0, 0)
-              this.converting = false
+            } else if (type === 3) {
+              const newData = n.Binarization(127)
+              const newImageData = new ImageData(newData, img.width)
+              ctx.putImageData(newImageData, 0, 0)
+            } else if (type === 4) {
+              ctx.canvas.width *= 2
+              ctx.canvas.height *= 2
+              const newData = n.EPX()
+              const newImageData = new ImageData(newData, ctx.canvas.width)
+              ctx.putImageData(newImageData, 0, 0)
             }
+            this.converting = false
           }
           const b = performance.now()
           console.log('displayTime: ', b - a)
@@ -152,6 +161,7 @@ export default Vue.extend({
 
 <style lang="scss">
 .pixel-scaler-inside {
+  padding-top: 25px;
   display: flex;
   flex-flow: column nowrap;
   width: 100%;
@@ -166,8 +176,8 @@ export default Vue.extend({
   transition: all 1s ease;
 }
 .input-image {
-  height: 256px;
-  width: 256px;
+  height: 320px;
+  width: 320px;
   // background: #666;
   border: solid 1px $color-green;
 
@@ -175,11 +185,13 @@ export default Vue.extend({
     width: 100%;
     height: 100%;
     object-fit: contain;
+    image-rendering: crisp-edges;
   }
   .image {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    image-rendering: crisp-edges;
   }
 
   > span {
