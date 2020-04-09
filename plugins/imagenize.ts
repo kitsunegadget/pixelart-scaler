@@ -95,6 +95,106 @@ export default class Imagenize {
     const outData = new Uint8ClampedArray(rData.buffer)
     return new ImageData(outData, width * scales)
   }
+
+  static Eagle(imageData: ImageData, scale: number, mode = 'normal') {
+    // Eagle algorithm
+    const data = new Uint32Array(imageData.data.buffer)
+    const width = imageData.width
+    const height = imageData.height
+
+    const rData = new Uint32Array(data.length * scale ** 2)
+    for (let j = 0; j < height; j++) {
+      for (let i = 0; i < width; i++) {
+        const l = j * width + i
+        // A  B  C
+        // D  E  F
+        // G  H  I
+        const B = j === 0 ? data[l] : data[l - width]
+        const D = i === 0 ? data[l] : data[l - 1]
+        const E = data[l]
+        const F = i === width - 1 ? data[l] : data[l + 1]
+        const H = j === height - 1 ? data[l] : data[l + width]
+        const A =
+          j === 0 && i === 0
+            ? data[l]
+            : j === 0
+            ? data[l - 1]
+            : i === 0
+            ? data[l - width]
+            : data[l - width - 1]
+        const C =
+          j === 0 && i === width - 1
+            ? data[l]
+            : j === 0
+            ? data[l + 1]
+            : i === width - 1
+            ? data[l - width]
+            : data[l - width + 1]
+        const G =
+          j === height - 1 && i === 0
+            ? data[l]
+            : j === height - 1
+            ? data[l - 1]
+            : i === 0
+            ? data[l + width]
+            : data[l + width - 1]
+        const I =
+          j === height - 1 && i === width - 1
+            ? data[l]
+            : j === height - 1
+            ? data[l + 1]
+            : i === width - 1
+            ? data[l + width]
+            : data[l + width + 1]
+
+        // out
+        const rl = j * width * scale ** 2 + i * scale
+        if (scale === 2) {
+          rData[rl] = rData[rl + 1] = rData[rl + width * scale] = rData[
+            rl + width * scale + 1
+          ] = E
+          if (A === B && A === D) rData[rl] = A
+          if (C === B && C === F) rData[rl + 1] = C
+          if (G === D && G === H) rData[rl + width * scale] = G
+          if (I === F && I === H) rData[rl + width * scale + 1] = I
+        } else if (scale === 3 && mode === 'normal') {
+          rData[rl] = rData[rl + 1] = rData[rl + 2] = rData[
+            rl + width * scale
+          ] = rData[rl + width * scale + 1] = rData[
+            rl + width * scale + 2
+          ] = rData[rl + width * scale * 2] = rData[
+            rl + width * scale * 2 + 1
+          ] = rData[rl + width * scale * 2 + 2] = E
+
+          if (A === B && A === D) rData[rl] = A
+          if (C === B && C === F) rData[rl + 2] = C
+          if (G === D && G === H) rData[rl + width * scale * 2] = G
+          if (I === F && I === H) rData[rl + width * scale * 2 + 2] = I
+          if (A === B && A === D && C === B && C === F) rData[rl + 1] = B
+          if (C === B && C === F && I === F && I === H)
+            rData[rl + width * scale + 2] = F
+          if (G === D && G === H && I === F && I === H)
+            rData[rl + width * scale * 2 + 1] = H
+          if (A === B && A === D && G === D && G === H)
+            rData[rl + width * scale] = D
+        } else if (scale === 3 && mode === 'B'){
+          rData[rl] = rData[rl + 1] = rData[rl + 2] = rData[
+            rl + width * scale
+          ] = rData[rl + width * scale + 1] = rData[
+            rl + width * scale + 2
+          ] = rData[rl + width * scale * 2] = rData[
+            rl + width * scale * 2 + 1
+          ] = rData[rl + width * scale * 2 + 2] = E
+          if (A === B && A === D) rData[rl] = A
+          if (C === B && C === F) rData[rl + 2] = C
+          if (G === D && G === H) rData[rl + width * scale * 2] = G
+          if (I === F && I === H) rData[rl + width * scale * 2 + 2] = I
+        }
+      }
+    }
+    const outData = new Uint8ClampedArray(rData.buffer)
+    return new ImageData(outData, width * scale)
+  }
 }
 
 export class StandardFilter {
