@@ -121,18 +121,18 @@ export default Vue.extend({
             } else if (type === 'epx2') {
               ctx.canvas.width *= 2
               ctx.canvas.height *= 2
-              const newImageData = Imagenize.ScaleNx(imageData, 2)
+              const newImageData = Imagenize.EPX(imageData, 2)
               ctx.putImageData(newImageData, 0, 0)
             } else if (type === 'epx3') {
               ctx.canvas.width *= 3
               ctx.canvas.height *= 3
-              const newImageData = Imagenize.ScaleNx(imageData, 3)
+              const newImageData = Imagenize.EPX(imageData, 3)
               ctx.putImageData(newImageData, 0, 0)
             } else if (type === 'epx4') {
               ctx.canvas.width *= 4
               ctx.canvas.height *= 4
-              const x2ImageData = Imagenize.ScaleNx(imageData, 2)
-              const newImageData = Imagenize.ScaleNx(x2ImageData, 2)
+              const x2ImageData = Imagenize.EPX(imageData, 2)
+              const newImageData = Imagenize.EPX(x2ImageData, 2)
               ctx.putImageData(newImageData, 0, 0)
             } else if (type === 'eagle2') {
               ctx.canvas.width *= 2

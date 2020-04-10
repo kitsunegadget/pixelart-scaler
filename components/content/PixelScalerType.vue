@@ -13,7 +13,7 @@
           Binarization
         </v-btn>
         <v-btn @click="$emit('convert-start', 'epx2')">
-          Scale2x
+          EPX
         </v-btn>
         <v-btn @click="$emit('convert-start', 'epx3')">
           Scale3x

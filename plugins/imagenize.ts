@@ -1,99 +1,79 @@
 /* eslint-disable unicorn/number-literal-case */
-// ImageDataを引数にして変換後にImageDataを返すstaticクラス
+import PixelData from './pixelData'
+// ImageDataをPixelData型にしてスケール変換するstaticクラス
 export default class Imagenize {
   // Eric's Pixel Expansion / Scale Nx Algorithm
-  static ScaleNx(imageData: ImageData, scales: number) {
-    const data = new Uint32Array(imageData.data.buffer)
-    const width = imageData.width
-    const height = imageData.height
+  static EPX(imageData: ImageData, scales: number) {
+    const p = new PixelData(imageData)
+    p.setDistSize(p.data.length, scales)
 
-    const rData = new Uint32Array(data.length * scales ** 2)
-    for (let j = 0; j < height; j++) {
-      for (let i = 0; i < width; i++) {
-        const l = j * width + i
+    for (let j = 0; j < p.height; j++) {
+      for (let i = 0; i < p.width; i++) {
+        const l = j * p.width + i
         // A  B  C
         // D  E  F
         // G  H  I
-        const B = j === 0 ? data[l] : data[l - width]
-        const D = i === 0 ? data[l] : data[l - 1]
-        const E = data[l]
-        const F = i === width - 1 ? data[l] : data[l + 1]
-        const H = j === height - 1 ? data[l] : data[l + width]
+        const B = p.getSourcePoint(l, j, i, -1, 0)
+        const D = p.getSourcePoint(l, j, i, 0, -1)
+        const E = p.data[l]
+        const F = p.getSourcePoint(l, j, i, 0, 1)
+        const H = p.getSourcePoint(l, j, i, 1, 0)
 
-        const rl = j * width * scales ** 2 + i * scales
+        const rl = j * p.width * scales ** 2 + i * scales
+        let e00 = 0
+        let e01 = 0
+        let e10 = 0
+        let e11 = 0
         if (scales === 2) {
-          // out
           if (B !== H && D !== F) {
-            rData[rl] = D === B ? D : E
-            rData[rl + 1] = B === F ? F : E
-            rData[rl + width * scales] = D === H ? D : E
-            rData[rl + width * scales + 1] = H === F ? F : E
+            e00 = D === B ? D : E
+            e01 = B === F ? F : E
+            e10 = D === H ? D : E
+            e11 = H === F ? F : E
           } else {
-            rData[rl] = rData[rl + 1] = rData[rl + width * 2] = rData[
-              rl + width * 2 + 1
-            ] = E
+            e00 = e01 = e10 = e11 = E
           }
+          p.setDistPoint(rl, 0, 0, e00)
+          p.setDistPoint(rl, 0, 1, e01)
+          p.setDistPoint(rl, 1, 0, e10)
+          p.setDistPoint(rl, 1, 1, e11)
         } else if (scales === 3) {
-          const A =
-            j === 0 && i === 0
-              ? data[l]
-              : j === 0
-              ? data[l - 1]
-              : i === 0
-              ? data[l - width]
-              : data[l - width - 1]
-          const C =
-            j === 0 && i === width - 1
-              ? data[l]
-              : j === 0
-              ? data[l + 1]
-              : i === width - 1
-              ? data[l - width]
-              : data[l - width + 1]
-          const G =
-            j === height - 1 && i === 0
-              ? data[l]
-              : j === height - 1
-              ? data[l - 1]
-              : i === 0
-              ? data[l + width]
-              : data[l + width - 1]
-          const I =
-            j === height - 1 && i === width - 1
-              ? data[l]
-              : j === height - 1
-              ? data[l + 1]
-              : i === width - 1
-              ? data[l + width]
-              : data[l + width + 1]
+          const A = p.getSourcePoint(l, j, i, -1, -1)
+          const C = p.getSourcePoint(l, j, i, -1, 1)
+          const G = p.getSourcePoint(l, j, i, 1, -1)
+          const I = p.getSourcePoint(l, j, i, 1, 1)
           // out
+          let e02
+          let e12
+          let e20
+          let e21
+          let e22
           if (B !== H && D !== F) {
-            rData[rl] = D === B ? D : E
-            rData[rl + 1] = (D === B && E !== C) || (B === F && E !== A) ? B : E
-            rData[rl + 2] = B === F ? F : E
-            rData[rl + width * scales] =
-              (D === B && E !== G) || (D === H && E !== A) ? D : E
-            rData[rl + width * scales + 1] = E
-            rData[rl + width * scales + 2] =
-              (B === F && E !== I) || (H === F && E !== C) ? F : E
-            rData[rl + width * scales * 2] = D === H ? D : E
-            rData[rl + width * scales * 2 + 1] =
-              (D === H && E !== I) || (H === F && E !== G) ? H : E
-            rData[rl + width * scales * 2 + 2] = H === F ? F : E
+            e00 = D === B ? D : E
+            e01 = (D === B && E !== C) || (B === F && E !== A) ? B : E
+            e02 = B === F ? F : E
+            e10 = (D === B && E !== G) || (D === H && E !== A) ? D : E
+            e11 = E
+            e12 = (B === F && E !== I) || (H === F && E !== C) ? F : E
+            e20 = D === H ? D : E
+            e21 = (D === H && E !== I) || (H === F && E !== G) ? H : E
+            e22 = H === F ? F : E
           } else {
-            rData[rl] = rData[rl + 1] = rData[rl + 2] = rData[
-              rl + width * scales
-            ] = rData[rl + width * scales + 1] = rData[
-              rl + width * scales + 2
-            ] = rData[rl + width * scales * 2] = rData[
-              rl + width * scales * 2 + 1
-            ] = rData[rl + width * scales * 2 + 2] = E
+            e00 = e01 = e02 = e10 = e11 = e12 = e20 = e21 = e22 = E
           }
+          p.setDistPoint(rl, 0, 0, e00)
+          p.setDistPoint(rl, 0, 1, e01)
+          p.setDistPoint(rl, 0, 2, e02)
+          p.setDistPoint(rl, 1, 0, e10)
+          p.setDistPoint(rl, 1, 1, e11)
+          p.setDistPoint(rl, 1, 2, e12)
+          p.setDistPoint(rl, 2, 0, e20)
+          p.setDistPoint(rl, 2, 1, e21)
+          p.setDistPoint(rl, 2, 2, e22)
         }
       }
     }
-    const outData = new Uint8ClampedArray(rData.buffer)
-    return new ImageData(outData, width * scales)
+    return p.outImageData()
   }
 
   static Eagle(imageData: ImageData, scale: number, mode = 'normal') {
@@ -177,7 +157,7 @@ export default class Imagenize {
             rData[rl + width * scale * 2 + 1] = H
           if (A === B && A === D && G === D && G === H)
             rData[rl + width * scale] = D
-        } else if (scale === 3 && mode === 'B'){
+        } else if (scale === 3 && mode === 'B') {
           rData[rl] = rData[rl + 1] = rData[rl + 2] = rData[
             rl + width * scale
           ] = rData[rl + width * scale + 1] = rData[
