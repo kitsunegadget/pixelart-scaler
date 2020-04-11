@@ -3,9 +3,9 @@ import PixelData from './pixelData'
 // ImageDataをPixelData型にしてスケール変換するstaticクラス
 export default class Imagenize {
   // Eric's Pixel Expansion / Scale Nx Algorithm
-  static EPX(imageData: ImageData, scales: number) {
+  static EPX(imageData: ImageData, scale: number) {
     const p = new PixelData(imageData)
-    p.setDistSize(p.data.length, scales)
+    p.setDistSize(scale)
 
     for (let j = 0; j < p.height; j++) {
       for (let i = 0; i < p.width; i++) {
@@ -19,12 +19,9 @@ export default class Imagenize {
         const F = p.getSourcePoint(l, 0, 1)
         const H = p.getSourcePoint(l, 1, 0)
 
-        const rl = j * p.width * scales ** 2 + i * scales
-        let e00 = 0
-        let e01 = 0
-        let e10 = 0
-        let e11 = 0
-        if (scales === 2) {
+        const rl = j * p.width * scale ** 2 + i * scale
+        let e00, e01, e10, e11
+        if (scale === 2) {
           if (B !== H && D !== F) {
             e00 = D === B ? D : E
             e01 = B === F ? F : E
@@ -37,17 +34,13 @@ export default class Imagenize {
           p.setDistPoint(rl, 0, 1, e01)
           p.setDistPoint(rl, 1, 0, e10)
           p.setDistPoint(rl, 1, 1, e11)
-        } else if (scales === 3) {
+        } else if (scale === 3) {
           const A = p.getSourcePoint(l, -1, -1)
           const C = p.getSourcePoint(l, -1, 1)
           const G = p.getSourcePoint(l, 1, -1)
           const I = p.getSourcePoint(l, 1, 1)
           // out
-          let e02
-          let e12
-          let e20
-          let e21
-          let e22
+          let e02, e12, e20, e21, e22
           if (B !== H && D !== F) {
             e00 = D === B ? D : E
             e01 = (D === B && E !== C) || (B === F && E !== A) ? B : E
@@ -80,7 +73,7 @@ export default class Imagenize {
   // 3x and 3xB is based on Hawkynt's modified
   static Eagle(imageData: ImageData, scale: number, mode = 'normal') {
     const p = new PixelData(imageData)
-    p.setDistSize(p.data.length, scale)
+    p.setDistSize(scale)
 
     for (let j = 0; j < p.height; j++) {
       for (let i = 0; i < p.width; i++) {
@@ -157,7 +150,140 @@ export default class Imagenize {
   // 2xSaI algorithm
   // original auther is Drek Liauw Kie Fa
   static x2SaI(imageData: ImageData, scale: number) {
+    const getResult = (c00: number, c01: number, c10: number, c11: number) => {
+      let x = 0
+      let y = 0
+      let r = 0
+      if (c00 === c10) x++
+      else if (c01 === c10) y++
+      if (c00 === c11) x++
+      else if (c01 === c11) y++
+      if (x <= 1) r++
+      if (y <= 1) r--
+      return r
+    }
+    const p = new PixelData(imageData)
+    p.setDistSize(scale)
 
+    for (let j = 0; j < p.height; j++) {
+      for (let i = 0; i < p.width; i++) {
+        const l = j * p.width + i
+        // I  E  F  J
+        // G  A  B  K
+        // H  C  D  L
+        // M  N  O  P
+        const I = p.getSourcePoint(l, -1, -1)
+        const E = p.getSourcePoint(l, -1, 0)
+        const F = p.getSourcePoint(l, -1, 1)
+        const J = p.getSourcePoint(l, -1, 2)
+
+        const G = p.getSourcePoint(l, 0, -1)
+        const A = p.data[l]
+        const B = p.getSourcePoint(l, 0, 1)
+        const K = p.getSourcePoint(l, 0, 2)
+
+        const H = p.getSourcePoint(l, 1, -1)
+        const C = p.getSourcePoint(l, 1, 0)
+        const D = p.getSourcePoint(l, 1, 1)
+        const L = p.getSourcePoint(l, 1, 2)
+
+        const M = p.getSourcePoint(l, 2, -1)
+        const N = p.getSourcePoint(l, 2, 0)
+        const O = p.getSourcePoint(l, 2, 1)
+        // const P = p.getSourcePoint(l, 2, 2)
+
+        const rl = j * p.width * scale ** 2 + i * scale
+        const e00 = A
+        let e01, e10, e11
+        e01 = e10 = e11 = A
+        if (A === D && B !== C) {
+          if (
+            (A === E && B === L) ||
+            (A === C && A === F && B !== E && B === J)
+          ) {
+            // e01 = A
+          } else {
+            e01 = PixelData.InterPolate(A, B)
+          }
+
+          if (
+            (A === G && C === O) ||
+            (A === B && A === H && G !== C && C === M)
+          ) {
+            // e10 = A
+          } else {
+            e10 = PixelData.InterPolate(A, C)
+          }
+          // e11 = A
+          //
+        } else if (B === C && A !== D) {
+          if (
+            (B === F && A === H) ||
+            (B === E && B === D && A !== F && A === I)
+          ) {
+            e01 = B
+          } else {
+            e01 = PixelData.InterPolate(A, B)
+          }
+          if (
+            (C === H && A === F) ||
+            (C === G && C === D && A !== H && A === I)
+          ) {
+            e10 = C
+          } else {
+            e10 = PixelData.InterPolate(A, C)
+          }
+          e11 = B
+          //
+        } else if (A === D && B === C) {
+          if (A === B) {
+            // e01 = e10 = e11 = A
+          } else {
+            let r = 0
+            e10 = PixelData.InterPolate(A, C)
+            e01 = PixelData.InterPolate(A, B)
+
+            r += getResult(A, B, G, E)
+            r -= getResult(B, A, K, F)
+            r -= getResult(B, A, H, N)
+            r += getResult(A, B, L, O)
+
+            if (r > 0) {
+              e11 = A
+            } else if (r < 0) {
+              e11 = B
+            } else {
+              e11 = PixelData.InterPolate(A, B, C, D)
+            }
+          }
+          //
+        } else {
+          e11 = PixelData.InterPolate(A, B, C, D)
+
+          if (A === C && A === F && B !== E && B === J) {
+            // e01 = A
+          } else if (B === E && B === D && A !== F && A === I) {
+            e01 = B
+          } else {
+            e01 = PixelData.InterPolate(A, B)
+          }
+
+          if (A === B && A === H && G !== C && C === M) {
+            // e10 = A
+          } else if (C === G && C === D && A !== H && A === I) {
+            e10 = C
+          } else {
+            e10 = PixelData.InterPolate(A, C)
+          }
+        }
+
+        p.setDistPoint(rl, 0, 0, e00)
+        p.setDistPoint(rl, 0, 1, e01)
+        p.setDistPoint(rl, 1, 0, e10)
+        p.setDistPoint(rl, 1, 1, e11)
+      } // end of i for
+    } // end of j for
+    return p.outImageData()
   }
 }
 

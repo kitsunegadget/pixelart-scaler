@@ -28,8 +28,8 @@ class PixelData implements PixelData {
     }
   }
   
-  setDistSize(origLength: number, scale: number) {
-    this.dist = new Uint32Array(origLength * scale ** 2)
+  setDistSize(scale: number) {
+    this.dist = new Uint32Array(this.data.length * scale ** 2)
     this.targetScale = scale
   }
 
@@ -71,19 +71,35 @@ class PixelData implements PixelData {
     return new ImageData(outData, this.width * this.targetScale)
   }
 
-  static InterPolate(A: number, B: number) {
-    if (A !== B) {
-      const A_a = A >> 24
-      const A_b = (A >> 16) & 0xff
-      const A_g = (A >> 8) & 0xff
-      const A_r = A & 0xff
-      const B_a = B >> 24
-      const B_b = (B >> 16) & 0xff
-      const B_g = (B >> 8) & 0xff
-      const B_r = B & 0xff
-      return (A_a + B_a) >> 1 || (A_b + B_b) >> 1 || (A_g + B_g) >> 1 || (A_r + B_r) >> 1
+  // ピクセル補完
+  static InterPolate(A: number, B: number, C?: number, D?: number): number {
+    const A_a = A >> 24
+    const A_b = (A >> 16) & 0xff
+    const A_g = (A >> 8) & 0xff
+    const A_r = A & 0xff
+    const B_a = B >> 24
+    const B_b = (B >> 16) & 0xff
+    const B_g = (B >> 8) & 0xff
+    const B_r = B & 0xff
+
+    if (C === undefined) {
+      return ((A_a + B_a) >> 1) << 24 | ((A_b + B_b) >> 1) << 16 
+          | ((A_g + B_g) >> 1) << 8 | (A_r + B_r) >> 1
+    } else 
+    if (D === undefined) {
+      return 0
     } else {
-      return A
+      const C_a = C >> 24
+      const C_b = (C >> 16) & 0xff
+      const C_g = (C >> 8) & 0xff
+      const C_r = C & 0xff
+      const D_a = D >> 24
+      const D_b = (D >> 16) & 0xff
+      const D_g = (D >> 8) & 0xff
+      const D_r = D & 0xff
+
+      return ((A_a + B_a + C_a + D_a) >> 2) << 24 | ((A_b + B_b + C_b + D_b) >> 2) << 16
+          | ((A_g + B_g + C_g + D_g) >> 2) << 8 | (A_r + B_r + C_r + D_r) >> 2
     }
   }
 }

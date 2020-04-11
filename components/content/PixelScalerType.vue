@@ -13,13 +13,13 @@
           Binarization
         </v-btn>
         <v-btn @click="$emit('convert-start', 'epx2')">
-          EPX
+          EPX / Scale2x
         </v-btn>
         <v-btn @click="$emit('convert-start', 'epx3')">
-          Scale3x
+          EPX3 / Scale3x
         </v-btn>
         <v-btn @click="$emit('convert-start', 'epx4')">
-          Scale4x
+          EPX4 / Scale4x
         </v-btn>
         <v-btn @click="$emit('convert-start', 'eagle2')">
           Eagle2x
@@ -29,6 +29,9 @@
         </v-btn>
         <v-btn @click="$emit('convert-start', 'eagle3xB')">
           Eagle3xB
+        </v-btn>
+        <v-btn @click="$emit('convert-start', '2xSaI')">
+          2xSaI
         </v-btn>
         <v-btn @click="$emit('convert-start', 0)">
           Test

@@ -149,6 +149,11 @@ export default Vue.extend({
               ctx.canvas.height *= 3
               const newImageData = Imagenize.Eagle(imageData, 3, 'B')
               ctx.putImageData(newImageData, 0, 0)
+            } else if (type === '2xSaI') {
+              ctx.canvas.width *= 2
+              ctx.canvas.height *= 2
+              const newImageData = Imagenize.x2SaI(imageData, 2)
+              ctx.putImageData(newImageData, 0, 0)
             }
             this.converting = false
           }
