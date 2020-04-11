@@ -13,11 +13,11 @@ export default class Imagenize {
         // A  B  C
         // D  E  F
         // G  H  I
-        const B = p.getSourcePoint(l, j, i, -1, 0)
-        const D = p.getSourcePoint(l, j, i, 0, -1)
+        const B = p.getSourcePoint(l, -1, 0)
+        const D = p.getSourcePoint(l, 0, -1)
         const E = p.data[l]
-        const F = p.getSourcePoint(l, j, i, 0, 1)
-        const H = p.getSourcePoint(l, j, i, 1, 0)
+        const F = p.getSourcePoint(l, 0, 1)
+        const H = p.getSourcePoint(l, 1, 0)
 
         const rl = j * p.width * scales ** 2 + i * scales
         let e00 = 0
@@ -38,10 +38,10 @@ export default class Imagenize {
           p.setDistPoint(rl, 1, 0, e10)
           p.setDistPoint(rl, 1, 1, e11)
         } else if (scales === 3) {
-          const A = p.getSourcePoint(l, j, i, -1, -1)
-          const C = p.getSourcePoint(l, j, i, -1, 1)
-          const G = p.getSourcePoint(l, j, i, 1, -1)
-          const I = p.getSourcePoint(l, j, i, 1, 1)
+          const A = p.getSourcePoint(l, -1, -1)
+          const C = p.getSourcePoint(l, -1, 1)
+          const G = p.getSourcePoint(l, 1, -1)
+          const I = p.getSourcePoint(l, 1, 1)
           // out
           let e02
           let e12
@@ -72,108 +72,92 @@ export default class Imagenize {
           p.setDistPoint(rl, 2, 2, e22)
         }
       }
-    }
+    } // end of for
     return p.outImageData()
   }
 
+  // Eagle algorithm
+  // 3x and 3xB is based on Hawkynt's modified
   static Eagle(imageData: ImageData, scale: number, mode = 'normal') {
-    // Eagle algorithm
-    const data = new Uint32Array(imageData.data.buffer)
-    const width = imageData.width
-    const height = imageData.height
+    const p = new PixelData(imageData)
+    p.setDistSize(p.data.length, scale)
 
-    const rData = new Uint32Array(data.length * scale ** 2)
-    for (let j = 0; j < height; j++) {
-      for (let i = 0; i < width; i++) {
-        const l = j * width + i
+    for (let j = 0; j < p.height; j++) {
+      for (let i = 0; i < p.width; i++) {
+        const l = j * p.width + i
         // A  B  C
         // D  E  F
         // G  H  I
-        const B = j === 0 ? data[l] : data[l - width]
-        const D = i === 0 ? data[l] : data[l - 1]
-        const E = data[l]
-        const F = i === width - 1 ? data[l] : data[l + 1]
-        const H = j === height - 1 ? data[l] : data[l + width]
-        const A =
-          j === 0 && i === 0
-            ? data[l]
-            : j === 0
-            ? data[l - 1]
-            : i === 0
-            ? data[l - width]
-            : data[l - width - 1]
-        const C =
-          j === 0 && i === width - 1
-            ? data[l]
-            : j === 0
-            ? data[l + 1]
-            : i === width - 1
-            ? data[l - width]
-            : data[l - width + 1]
-        const G =
-          j === height - 1 && i === 0
-            ? data[l]
-            : j === height - 1
-            ? data[l - 1]
-            : i === 0
-            ? data[l + width]
-            : data[l + width - 1]
-        const I =
-          j === height - 1 && i === width - 1
-            ? data[l]
-            : j === height - 1
-            ? data[l + 1]
-            : i === width - 1
-            ? data[l + width]
-            : data[l + width + 1]
-
+        const A = p.getSourcePoint(l, -1, -1)
+        const B = p.getSourcePoint(l, -1, 0)
+        const C = p.getSourcePoint(l, -1, 1)
+        const D = p.getSourcePoint(l, 0, -1)
+        const E = p.data[l]
+        const F = p.getSourcePoint(l, 0, 1)
+        const G = p.getSourcePoint(l, 1, -1)
+        const H = p.getSourcePoint(l, 1, 0)
+        const I = p.getSourcePoint(l, 1, 1)
         // out
-        const rl = j * width * scale ** 2 + i * scale
+        const rl = j * p.width * scale ** 2 + i * scale
+        let e00, e01, e10, e11
         if (scale === 2) {
-          rData[rl] = rData[rl + 1] = rData[rl + width * scale] = rData[
-            rl + width * scale + 1
-          ] = E
-          if (A === B && A === D) rData[rl] = A
-          if (C === B && C === F) rData[rl + 1] = C
-          if (G === D && G === H) rData[rl + width * scale] = G
-          if (I === F && I === H) rData[rl + width * scale + 1] = I
+          e00 = e01 = e10 = e11 = E
+          if (A === B && A === D) e00 = A
+          if (C === B && C === F) e01 = C
+          if (G === D && G === H) e10 = G
+          if (I === F && I === H) e11 = I
+          p.setDistPoint(rl, 0, 0, e00)
+          p.setDistPoint(rl, 0, 1, e01)
+          p.setDistPoint(rl, 1, 0, e10)
+          p.setDistPoint(rl, 1, 1, e11)
         } else if (scale === 3 && mode === 'normal') {
-          rData[rl] = rData[rl + 1] = rData[rl + 2] = rData[
-            rl + width * scale
-          ] = rData[rl + width * scale + 1] = rData[
-            rl + width * scale + 2
-          ] = rData[rl + width * scale * 2] = rData[
-            rl + width * scale * 2 + 1
-          ] = rData[rl + width * scale * 2 + 2] = E
+          let e02, e12, e20, e21, e22
 
-          if (A === B && A === D) rData[rl] = A
-          if (C === B && C === F) rData[rl + 2] = C
-          if (G === D && G === H) rData[rl + width * scale * 2] = G
-          if (I === F && I === H) rData[rl + width * scale * 2 + 2] = I
-          if (A === B && A === D && C === B && C === F) rData[rl + 1] = B
-          if (C === B && C === F && I === F && I === H)
-            rData[rl + width * scale + 2] = F
-          if (G === D && G === H && I === F && I === H)
-            rData[rl + width * scale * 2 + 1] = H
-          if (A === B && A === D && G === D && G === H)
-            rData[rl + width * scale] = D
+          e00 = e01 = e02 = e10 = e11 = e12 = e20 = e21 = e22 = E
+          if (A === B && A === D) e00 = A
+          if (C === B && C === F) e02 = C
+          if (G === D && G === H) e20 = G
+          if (I === F && I === H) e22 = I
+          if (A === B && A === D && C === B && C === F) e01 = B
+          if (C === B && C === F && I === F && I === H) e12 = F
+          if (G === D && G === H && I === F && I === H) e21 = H
+          if (A === B && A === D && G === D && G === H) e10 = D
+          p.setDistPoint(rl, 0, 0, e00)
+          p.setDistPoint(rl, 0, 1, e01)
+          p.setDistPoint(rl, 0, 2, e02)
+          p.setDistPoint(rl, 1, 0, e10)
+          p.setDistPoint(rl, 1, 1, e11)
+          p.setDistPoint(rl, 1, 2, e12)
+          p.setDistPoint(rl, 2, 0, e20)
+          p.setDistPoint(rl, 2, 1, e21)
+          p.setDistPoint(rl, 2, 2, e22)
         } else if (scale === 3 && mode === 'B') {
-          rData[rl] = rData[rl + 1] = rData[rl + 2] = rData[
-            rl + width * scale
-          ] = rData[rl + width * scale + 1] = rData[
-            rl + width * scale + 2
-          ] = rData[rl + width * scale * 2] = rData[
-            rl + width * scale * 2 + 1
-          ] = rData[rl + width * scale * 2 + 2] = E
-          if (A === B && A === D) rData[rl] = A
-          if (C === B && C === F) rData[rl + 2] = C
-          if (G === D && G === H) rData[rl + width * scale * 2] = G
-          if (I === F && I === H) rData[rl + width * scale * 2 + 2] = I
+          let e02, e12, e20, e21, e22
+
+          e00 = e01 = e02 = e10 = e11 = e12 = e20 = e21 = e22 = E
+          if (A === B && A === D) e00 = A
+          if (C === B && C === F) e02 = C
+          if (G === D && G === H) e20 = G
+          if (I === F && I === H) e22 = I
+          p.setDistPoint(rl, 0, 0, e00)
+          p.setDistPoint(rl, 0, 1, e01)
+          p.setDistPoint(rl, 0, 2, e02)
+          p.setDistPoint(rl, 1, 0, e10)
+          p.setDistPoint(rl, 1, 1, e11)
+          p.setDistPoint(rl, 1, 2, e12)
+          p.setDistPoint(rl, 2, 0, e20)
+          p.setDistPoint(rl, 2, 1, e21)
+          p.setDistPoint(rl, 2, 2, e22)
         }
       }
-    }
-    const outData = new Uint8ClampedArray(rData.buffer)
-    return new ImageData(outData, width * scale)
+    } // end of for
+    return p.outImageData()
+  }
+
+  // 2xSaI algorithm
+  // original auther is Drek Liauw Kie Fa
+  static x2SaI(imageData: ImageData, scale: number) {
+
   }
 }
 
