@@ -87,7 +87,13 @@ class PixelData implements PixelData {
           | ((A_g + B_g) >> 1) << 8 | (A_r + B_r) >> 1
     } else 
     if (D === undefined) {
-      return 0
+      const C_a = C >> 24
+      const C_b = (C >> 16) & 0xff
+      const C_g = (C >> 8) & 0xff
+      const C_r = C & 0xff
+
+      return ((A_a + B_a + C_a) / 3) << 24 | ((A_b + B_b + C_b) / 3) << 16
+          | ((A_g + B_g + C_g) / 3) << 8 | (A_r + B_r + C_r) / 3
     } else {
       const C_a = C >> 24
       const C_b = (C >> 16) & 0xff
@@ -101,6 +107,46 @@ class PixelData implements PixelData {
       return ((A_a + B_a + C_a + D_a) >> 2) << 24 | ((A_b + B_b + C_b + D_b) >> 2) << 16
           | ((A_g + B_g + C_g + D_g) >> 2) << 8 | (A_r + B_r + C_r + D_r) >> 2
     }
+  }
+
+  static InterpolateFiltered2(A: number, B: number, f1: number, f2: number) {
+    let total = (f1 + f2)
+
+    const A_a = A >> 24
+    const A_b = (A >> 16) & 0xff
+    const A_g = (A >> 8) & 0xff
+    const A_r = A & 0xff
+    const B_a = B >> 24
+    const B_b = (B >> 16) & 0xff
+    const B_g = (B >> 8) & 0xff
+    const B_r = B & 0xff
+
+    return (((A_a * f1 + B_a * f2) / total)) << 24 
+        | ((A_b * f1 + B_b * f2) / total) << 16 
+        | ((A_g * f1 + B_g * f2) / total) << 8 
+        | ((A_r * f1 + B_r * f2) / total)
+  }
+
+  static InterpolateFiltered3(A: number, B: number, C: number, f1: number, f2: number, f3: number) {
+    let total = (f1 + f2 + f3)
+
+    const A_a = A >> 24
+    const A_b = (A >> 16) & 0xff
+    const A_g = (A >> 8) & 0xff
+    const A_r = A & 0xff
+    const B_a = B >> 24
+    const B_b = (B >> 16) & 0xff
+    const B_g = (B >> 8) & 0xff
+    const B_r = B & 0xff
+    const C_a = C >> 24
+    const C_b = (C >> 16) & 0xff
+    const C_g = (C >> 8) & 0xff
+    const C_r = C & 0xff
+
+    return (((A_a * f1 + B_a * f2 + C_a * f3) / total)) << 24 
+        | ((A_b * f1 + B_b * f2 + C_b * f3) / total) << 16 
+        | ((A_g * f1 + B_g * f2 + C_g * f3) / total) << 8 
+        | ((A_r * f1 + B_r * f2 + C_r * f3) / total)
   }
 }
 

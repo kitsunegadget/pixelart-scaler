@@ -152,7 +152,17 @@ export default Vue.extend({
             } else if (type === '2xSaI') {
               ctx.canvas.width *= 2
               ctx.canvas.height *= 2
-              const newImageData = Imagenize.x2SaI(imageData, 2)
+              const newImageData = Imagenize._2xSaI(imageData, 2)
+              ctx.putImageData(newImageData, 0, 0)
+            } else if (type === 'Super2xSaI') {
+              ctx.canvas.width *= 2
+              ctx.canvas.height *= 2
+              const newImageData = Imagenize.Super2xSaI(imageData, 2)
+              ctx.putImageData(newImageData, 0, 0)
+            } else if (type === 'SuperEagle') {
+              ctx.canvas.width *= 2
+              ctx.canvas.height *= 2
+              const newImageData = Imagenize.SuperEagle(imageData, 2)
               ctx.putImageData(newImageData, 0, 0)
             }
             this.converting = false

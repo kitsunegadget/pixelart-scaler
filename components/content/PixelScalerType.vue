@@ -33,6 +33,12 @@
         <v-btn @click="$emit('convert-start', '2xSaI')">
           2xSaI
         </v-btn>
+        <v-btn @click="$emit('convert-start', 'Super2xSaI')">
+          Super2xSaI
+        </v-btn>
+        <v-btn @click="$emit('convert-start', 'SuperEagle')">
+          SuperEagle
+        </v-btn>
         <v-btn @click="$emit('convert-start', 0)">
           Test
         </v-btn>
