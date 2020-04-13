@@ -219,8 +219,8 @@ export default Vue.extend({
   transition: all 1s ease;
 }
 .input-image {
-  height: 320px;
-  width: 320px;
+  height: 400px;
+  width: 400px;
   // background: #666;
   border: solid 1px $color-green;
 
