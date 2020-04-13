@@ -1,13 +1,12 @@
 // 変換の見通しを良くするためのpixelDataクラス
 interface PixelData {
-  data: Uint32Array
   width: number
   height: number
   outImageData(): ImageData
 }
 
 class PixelData implements PixelData {
-  data!: Uint32Array
+  private data!: Uint32Array
   width!: number
   height!: number
   private dist!: Uint32Array
@@ -71,8 +70,8 @@ class PixelData implements PixelData {
     return new ImageData(outData, this.width * this.targetScale)
   }
 
-  // ピクセル補完
-  static InterPolate(A: number, B: number, C?: number, D?: number): number {
+  // ピクセル色補完
+  static Interpolate(A: number, B: number, C?: number, D?: number): number {
     const A_a = A >> 24
     const A_b = (A >> 16) & 0xff
     const A_g = (A >> 8) & 0xff
@@ -82,19 +81,7 @@ class PixelData implements PixelData {
     const B_g = (B >> 8) & 0xff
     const B_r = B & 0xff
 
-    if (C === undefined) {
-      return ((A_a + B_a) >> 1) << 24 | ((A_b + B_b) >> 1) << 16 
-          | ((A_g + B_g) >> 1) << 8 | (A_r + B_r) >> 1
-    } else 
-    if (D === undefined) {
-      const C_a = C >> 24
-      const C_b = (C >> 16) & 0xff
-      const C_g = (C >> 8) & 0xff
-      const C_r = C & 0xff
-
-      return ((A_a + B_a + C_a) / 3) << 24 | ((A_b + B_b + C_b) / 3) << 16
-          | ((A_g + B_g + C_g) / 3) << 8 | (A_r + B_r + C_r) / 3
-    } else {
+    if (C !== undefined && D !== undefined) {
       const C_a = C >> 24
       const C_b = (C >> 16) & 0xff
       const C_g = (C >> 8) & 0xff
@@ -104,8 +91,27 @@ class PixelData implements PixelData {
       const D_g = (D >> 8) & 0xff
       const D_r = D & 0xff
 
-      return ((A_a + B_a + C_a + D_a) >> 2) << 24 | ((A_b + B_b + C_b + D_b) >> 2) << 16
-          | ((A_g + B_g + C_g + D_g) >> 2) << 8 | (A_r + B_r + C_r + D_r) >> 2
+      return ((A_a + B_a + C_a + D_a) >> 2) << 24 
+          | ((A_b + B_b + C_b + D_b) >> 2) << 16
+          | ((A_g + B_g + C_g + D_g) >> 2) << 8 
+          | ((A_r + B_r + C_r + D_r) >> 2)
+      //
+    } else if (C !== undefined && D === undefined) {
+      const C_a = C >> 24
+      const C_b = (C >> 16) & 0xff
+      const C_g = (C >> 8) & 0xff
+      const C_r = C & 0xff
+
+      return Math.floor((A_a + B_a + C_a) / 3) << 24 
+          | Math.floor((A_b + B_b + C_b) / 3) << 16
+          | Math.floor((A_g + B_g + C_g) / 3) << 8 
+          | Math.floor((A_r + B_r + C_r) / 3)
+      //
+    } else {
+      return ((A_a + B_a) >> 1) << 24 
+          | ((A_b + B_b) >> 1) << 16 
+          | ((A_g + B_g) >> 1) << 8 
+          | ((A_r + B_r) >> 1)
     }
   }
 
@@ -121,10 +127,10 @@ class PixelData implements PixelData {
     const B_g = (B >> 8) & 0xff
     const B_r = B & 0xff
 
-    return (((A_a * f1 + B_a * f2) / total)) << 24 
-        | ((A_b * f1 + B_b * f2) / total) << 16 
-        | ((A_g * f1 + B_g * f2) / total) << 8 
-        | ((A_r * f1 + B_r * f2) / total)
+    return Math.floor((A_a * f1 + B_a * f2) / total) << 24 
+        | Math.floor((A_b * f1 + B_b * f2) / total) << 16 
+        | Math.floor((A_g * f1 + B_g * f2) / total) << 8 
+        | Math.floor((A_r * f1 + B_r * f2) / total)
   }
 
   static InterpolateFiltered3(A: number, B: number, C: number, f1: number, f2: number, f3: number) {
@@ -143,10 +149,10 @@ class PixelData implements PixelData {
     const C_g = (C >> 8) & 0xff
     const C_r = C & 0xff
 
-    return (((A_a * f1 + B_a * f2 + C_a * f3) / total)) << 24 
-        | ((A_b * f1 + B_b * f2 + C_b * f3) / total) << 16 
-        | ((A_g * f1 + B_g * f2 + C_g * f3) / total) << 8 
-        | ((A_r * f1 + B_r * f2 + C_r * f3) / total)
+    return Math.floor((A_a * f1 + B_a * f2 + C_a * f3) / total) << 24 
+        | Math.floor((A_b * f1 + B_b * f2 + C_b * f3) / total) << 16 
+        | Math.floor((A_g * f1 + B_g * f2 + C_g * f3) / total) << 8 
+        | Math.floor((A_r * f1 + B_r * f2 + C_r * f3) / total)
   }
 }
 

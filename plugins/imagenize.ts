@@ -15,7 +15,7 @@ export default class Imagenize {
         // G  H  I
         const B = p.getSourcePoint(l, -1, 0)
         const D = p.getSourcePoint(l, 0, -1)
-        const E = p.data[l]
+        const E = p.getSourcePoint(l, 0, 0)
         const F = p.getSourcePoint(l, 0, 1)
         const H = p.getSourcePoint(l, 1, 0)
 
@@ -85,7 +85,7 @@ export default class Imagenize {
         const B = p.getSourcePoint(l, -1, 0)
         const C = p.getSourcePoint(l, -1, 1)
         const D = p.getSourcePoint(l, 0, -1)
-        const E = p.data[l]
+        const E = p.getSourcePoint(l, 0, 0)
         const F = p.getSourcePoint(l, 0, 1)
         const G = p.getSourcePoint(l, 1, -1)
         const H = p.getSourcePoint(l, 1, 0)
@@ -178,7 +178,7 @@ export default class Imagenize {
         const d3 = p.getSourcePoint(l, -1, 2)
 
         const c3 = p.getSourcePoint(l, 0, -1)
-        const c4 = p.data[l]
+        const c4 = p.getSourcePoint(l, 0, 0)
         const c5 = p.getSourcePoint(l, 0, 1)
         const d4 = p.getSourcePoint(l, 0, 2)
 
@@ -197,14 +197,14 @@ export default class Imagenize {
         e01 = e10 = e11 = c4
 
         if (c4 === c8 && c5 !== c7) {
-          const c48 = PixelData.InterPolate(c4, c8)
+          const c48 = PixelData.Interpolate(c4, c8)
           if (
             (c48 === c1 && c5 === d5) ||
             (c48 === c7 && c48 === c2 && c5 !== c1 && c5 === d3)
           ) {
             // e01 = c4
           } else {
-            e01 = PixelData.InterPolate(c48, c5)
+            e01 = PixelData.Interpolate(c48, c5)
           }
 
           if (
@@ -213,19 +213,19 @@ export default class Imagenize {
           ) {
             // e10 = c4
           } else {
-            e10 = PixelData.InterPolate(c48, c7)
+            e10 = PixelData.Interpolate(c48, c7)
           }
           // e11 = c4
           //
         } else if (c5 === c7 && c4 !== c8) {
-          const c57 = PixelData.InterPolate(c5, c7)
+          const c57 = PixelData.Interpolate(c5, c7)
           if (
             (c57 === c2 && c4 === c6) ||
             (c57 === c1 && c57 === c8 && c4 !== c2 && c4 === c0)
           ) {
             e01 = c57
           } else {
-            e01 = PixelData.InterPolate(c4, c57)
+            e01 = PixelData.Interpolate(c4, c57)
           }
           if (
             (c57 === c6 && c4 === c2) ||
@@ -233,13 +233,13 @@ export default class Imagenize {
           ) {
             e10 = c57
           } else {
-            e10 = PixelData.InterPolate(c4, c57)
+            e10 = PixelData.Interpolate(c4, c57)
           }
           e11 = c57
           //
         } else if (c4 === c8 && c5 === c7) {
-          const c48 = PixelData.InterPolate(c4, c8)
-          const c57 = PixelData.InterPolate(c5, c7)
+          const c48 = PixelData.Interpolate(c4, c8)
+          const c57 = PixelData.Interpolate(c5, c7)
           if (c48 !== c57) {
             let r = 0
             r += getResult(c48, c57, c3, c1)
@@ -250,29 +250,29 @@ export default class Imagenize {
             if (r < 0) {
               e11 = c57
             } else if (r === 0) {
-              e11 = PixelData.InterPolate(c48, c57)
+              e11 = PixelData.Interpolate(c48, c57)
             }
-            e10 = PixelData.InterPolate(c48, c57)
-            e01 = PixelData.InterPolate(c48, c57)
+            e10 = PixelData.Interpolate(c48, c57)
+            e01 = PixelData.Interpolate(c48, c57)
           }
           //
         } else {
-          e11 = PixelData.InterPolate(c4, c5, c7, c8)
+          e11 = PixelData.Interpolate(c4, c5, c7, c8)
 
           if (c4 === c7 && c4 === c2 && c5 !== c1 && c5 === d3) {
             // e01 = c4
           } else if (c5 === c1 && c5 === c8 && c4 !== c2 && c4 === c0) {
-            e01 = PixelData.InterPolate(c5, c1, c8)
+            e01 = PixelData.Interpolate(c5, c1, c8)
           } else {
-            e01 = PixelData.InterPolate(c4, c5)
+            e01 = PixelData.Interpolate(c4, c5)
           }
 
           if (c4 === c5 && c4 === c6 && c3 !== c7 && c7 === d0) {
             // e10 = c4
           } else if (c7 === c3 && c7 === c8 && c4 !== c6 && c4 === c0) {
-            e10 = PixelData.InterPolate(c7, c3, c8)
+            e10 = PixelData.Interpolate(c7, c3, c8)
           } else {
-            e10 = PixelData.InterPolate(c4, c7)
+            e10 = PixelData.Interpolate(c4, c7)
           }
         }
         const rl = j * p.width * scale ** 2 + i * scale
@@ -316,7 +316,7 @@ export default class Imagenize {
         const d3 = p.getSourcePoint(l, -1, 2)
 
         const c3 = p.getSourcePoint(l, 0, -1)
-        const c4 = p.data[l]
+        const c4 = p.getSourcePoint(l, 0, 0)
         const c5 = p.getSourcePoint(l, 0, 1)
         const d4 = p.getSourcePoint(l, 0, 2)
 
@@ -334,15 +334,15 @@ export default class Imagenize {
         e00 = e01 = e11 = c4
 
         if (c7 === c5 && c4 !== c8) {
-          const c57 = PixelData.InterPolate(c7, c5)
+          const c57 = PixelData.Interpolate(c7, c5)
           e11 = c57
           e01 = c57
         } else if (c4 === c8 && c7 !== c5) {
           // e11 = c48
           // e01 = c48
         } else if (c4 === c8 && c7 === c5) {
-          const c57 = PixelData.InterPolate(c7, c5)
-          const c48 = PixelData.InterPolate(c4, c8)
+          const c57 = PixelData.Interpolate(c7, c5)
+          const c48 = PixelData.Interpolate(c4, c8)
           let r = 0
           r += getResult(c57, c48, c6, d1)
           r += getResult(c57, c48, c3, c1)
@@ -353,47 +353,44 @@ export default class Imagenize {
             e11 = c57
             e01 = c57
           } else if (r === 0) {
-            e11 = PixelData.InterPolate(c48, c57)
-            e01 = PixelData.InterPolate(c48, c57)
-          } else {
-            // e11 = c4
-            // e01 = c4
+            e11 = PixelData.Interpolate(c48, c57)
+            e01 = PixelData.Interpolate(c48, c57)
           }
+          //
         } else {
           if (c8 === c5 && c8 === d1 && c7 !== d2 && c8 !== d0) {
             // eslint-disable-next-line prettier/prettier
-            e11 = PixelData.InterpolateFiltered2(PixelData.InterPolate(c8, c5, d1), c7, 3, 1)
+            e11 = PixelData.InterpolateFiltered2(PixelData.Interpolate(c8, c5, d1), c7, 3, 1)
           } else if (c7 === c4 && c7 === d2 && c7 !== d6 && c8 !== d1) {
             // eslint-disable-next-line prettier/prettier
-            e11 = PixelData.InterpolateFiltered2(PixelData.InterPolate(c7, c4, d2), c8, 3, 1)
+            e11 = PixelData.InterpolateFiltered2(PixelData.Interpolate(c7, c4, d2), c8, 3, 1)
           } else {
-            e11 = PixelData.InterPolate(c7, c8)
+            e11 = PixelData.Interpolate(c7, c8)
           }
           if (c5 === c8 && c5 === c1 && c5 !== c0 && c4 !== c2) {
             // eslint-disable-next-line prettier/prettier
-            e01 = PixelData.InterpolateFiltered2(PixelData.InterPolate(c5, c8, c1), c4, 3, 1)
+            e01 = PixelData.InterpolateFiltered2(PixelData.Interpolate(c5, c8, c1), c4, 3, 1)
           } else if (c4 === c7 && c4 === c2 && c5 !== c1 && c4 !== d3) {
             // eslint-disable-next-line prettier/prettier
-            e01 = PixelData.InterpolateFiltered2(PixelData.InterPolate(c4, c7, c2), c5, 3, 1)
+            e01 = PixelData.InterpolateFiltered2(PixelData.Interpolate(c4, c7, c2), c5, 3, 1)
           } else {
-            e01 = PixelData.InterPolate(c4, c5)
-          }
-
-          if (c4 === c8 && c4 === c3 && c7 !== c5 && c4 !== d2) {
-            e10 = PixelData.InterPolate(c7, PixelData.InterPolate(c4, c8, c3))
-          } else if (c4 === c6 && c4 === c5 && c7 !== c3 && c4 !== d0) {
-            e10 = PixelData.InterPolate(c7, PixelData.InterPolate(c4, c6, c5))
-          } else {
-            e10 = c7
-          }
-          if (c7 === c5 && c7 === c6 && c4 !== c8 && c7 !== c2) {
-            e00 = PixelData.InterPolate(PixelData.InterPolate(c7, c5, c6), c4)
-          } else if (c7 === c3 && c7 === c8 && c4 !== c6 && c7 !== c0) {
-            e00 = PixelData.InterPolate(PixelData.InterPolate(c7, c3, c8), c4)
-          } else {
-            // e10 = c4
+            e01 = PixelData.Interpolate(c4, c5)
           }
         }
+
+        if (c4 === c8 && c4 === c3 && c7 !== c5 && c4 !== d2) {
+          e10 = PixelData.Interpolate(c7, PixelData.Interpolate(c4, c8, c3))
+        } else if (c4 === c6 && c4 === c5 && c7 !== c3 && c4 !== d0) {
+          e10 = PixelData.Interpolate(c7, PixelData.Interpolate(c4, c6, c5))
+        } else {
+          e10 = c7
+        }
+        if (c7 === c5 && c7 === c6 && c4 !== c8 && c7 !== c2) {
+          e00 = PixelData.Interpolate(PixelData.Interpolate(c7, c5, c6), c4)
+        } else if (c7 === c3 && c7 === c8 && c4 !== c6 && c7 !== c0) {
+          e00 = PixelData.Interpolate(PixelData.Interpolate(c7, c3, c8), c4)
+        }
+
         const rl = j * p.width * scale ** 2 + i * scale
         p.setDistPoint(rl, 0, 0, e00)
         p.setDistPoint(rl, 0, 1, e01)
@@ -405,7 +402,7 @@ export default class Imagenize {
   }
 
   // SuperEagle algorithm
-  // original auther is Drek Liauw Kie Fa modified by Hawkynt
+  // original auther is Drek Liauw Kie Fa
   static SuperEagle(imageData: ImageData, scale: number) {
     const getResult = (c00: number, c01: number, c10: number, c11: number) => {
       let x = 0
@@ -434,7 +431,7 @@ export default class Imagenize {
         const c2 = p.getSourcePoint(l, -1, 1)
 
         const c3 = p.getSourcePoint(l, 0, -1)
-        const c4 = p.data[l]
+        const c4 = p.getSourcePoint(l, 0, 0)
         const c5 = p.getSourcePoint(l, 0, 1)
         const d4 = p.getSourcePoint(l, 0, 2)
 
@@ -446,95 +443,79 @@ export default class Imagenize {
         const d1 = p.getSourcePoint(l, 2, 0)
         const d2 = p.getSourcePoint(l, 2, 1)
 
-        let e00 = c4
-        let e11 = c4
-        let e01, e10
+        let e00, e01, e10, e11
+        // e00 = e01 = e10 = e11 = c4
 
-        if (c4 === c8) {
-          const c48 = PixelData.InterPolate(c4, c8)
-          if (c7 === c5) {
-            const c57 = PixelData.InterPolate(c5, c7)
-            let r = 0
-            r += getResult(c57, c48, c6, d1)
-            r += getResult(c57, c48, c3, c1)
-            r += getResult(c57, c48, d2, d5)
-            r += getResult(c57, c48, c2, d4)
-
-            if (r > 0) {
-              e10 = c57
-              e01 = c57
-              e11 = PixelData.InterPolate(c48, c57)
-              e00 = PixelData.InterPolate(c48, c57)
-            } else if (r < 0) {
-              e10 = PixelData.InterPolate(c48, c57)
-              e01 = PixelData.InterPolate(c48, c57)
-            } else {
-              e10 = c57
-              e01 = c57
-            }
+        if (c7 === c5 && c4 !== c8) {
+          e01 = e10 = c7
+          if (c6 === c7 || c5 === c2) {
+            e00 = PixelData.Interpolate(c7, c4)
+            e00 = PixelData.Interpolate(c7, e00)
+            // e00 = c7
           } else {
-            if (c48 === c1 && c48 === d5) {
-              // eslint-disable-next-line prettier/prettier
-              e01 = PixelData.InterpolateFiltered2(PixelData.InterPolate(c48, c1, d5), c5, 3, 1)
-            } else if (c48 === c1) {
-              // eslint-disable-next-line prettier/prettier
-              e01 = PixelData.InterpolateFiltered2(PixelData.InterPolate(c48, c1), c5, 3, 1)
-            } else if (c48 === d5) {
-              // eslint-disable-next-line prettier/prettier
-              e01 = PixelData.InterpolateFiltered2(PixelData.InterPolate(c48, d5), c5, 3, 1)
-            } else {
-              e01 = PixelData.InterPolate(c48, c5)
-            }
-
-            if (c48 === d2 && c48 === c3) {
-              // eslint-disable-next-line prettier/prettier
-              e10 = PixelData.InterpolateFiltered2(PixelData.InterPolate(c48, d2, c3), c7, 3, 1)
-            } else if (c48 === d2) {
-              // eslint-disable-next-line prettier/prettier
-              e10 = PixelData.InterpolateFiltered2(PixelData.InterPolate(c48, d2), c7, 3, 1)
-            } else if (c48 === c3) {
-              // eslint-disable-next-line prettier/prettier
-              e10 = PixelData.InterpolateFiltered2(PixelData.InterPolate(c48, c3), c7, 3, 1)
-            } else {
-              e10 = PixelData.InterPolate(c48, c7)
-            }
-          }
-        } else if (c7 === c5) {
-          const c57 = PixelData.InterPolate(c5, c7)
-          e01 = c57
-          e10 = c57
-
-          if (c57 === c6 && c57 === c2) {
-            // eslint-disable-next-line prettier/prettier
-            e00 = PixelData.InterpolateFiltered2(PixelData.InterPolate(c57, c6, c2), c4, 3, 1)
-          } else if (c57 === c6) {
-            // eslint-disable-next-line prettier/prettier
-            e00 = PixelData.InterpolateFiltered2(PixelData.InterPolate(c57, c6), c4, 3, 1)
-          } else if (c57 === c2) {
-            // eslint-disable-next-line prettier/prettier
-            e00 = PixelData.InterpolateFiltered2(PixelData.InterPolate(c57, c2), c4, 3, 1)
-          } else {
-            e00 = PixelData.InterPolate(c57, c4)
+            e00 = PixelData.Interpolate(c4, c5)
           }
 
-          if (c57 === d4 && c57 === d1) {
-            // eslint-disable-next-line prettier/prettier
-            e11 = PixelData.InterpolateFiltered2(PixelData.InterPolate(c57, d4, d1), c8, 3, 1)
-          } else if (c57 === d4) {
-            // eslint-disable-next-line prettier/prettier
-            e11 = PixelData.InterpolateFiltered2(PixelData.InterPolate(c57, d4), c8, 3, 1)
-          } else if (c57 === d1) {
-            // eslint-disable-next-line prettier/prettier
-            e11 = PixelData.InterpolateFiltered2(PixelData.InterPolate(c57, d1), c8, 3, 1)
+          if (c5 === d4 || c7 === d1) {
+            e11 = PixelData.Interpolate(c7, c8)
+            e11 = PixelData.Interpolate(c7, e11)
+            // e11 = c7
           } else {
-            e11 = PixelData.InterPolate(c57, c8)
+            e11 = PixelData.Interpolate(c7, c8)
           }
+          //
+        } else if (c4 === c8 && c7 !== c5) {
+          e11 = e00 = c4
+          if (c1 === c4 || c8 === d5) {
+            e01 = PixelData.Interpolate(c4, c5)
+            e01 = PixelData.Interpolate(c4, e01)
+            // e01 = c4
+          } else {
+            e01 = PixelData.Interpolate(c4, c5)
+          }
+
+          if (c8 === d2 || c3 === c4) {
+            e10 = PixelData.Interpolate(c4, c7)
+            e10 = PixelData.Interpolate(c4, e10)
+            // e10 = c4
+          } else {
+            e10 = PixelData.Interpolate(c7, c8)
+          }
+          //
+        } else if (c4 === c8 && c7 === c5) {
+          let r = 0
+          r += getResult(c5, c4, c6, d1)
+          r += getResult(c5, c4, c3, c1)
+          r += getResult(c5, c4, d2, d5)
+          r += getResult(c5, c4, c2, d4)
+
+          if (r > 0) {
+            e01 = e10 = c7
+            e11 = PixelData.Interpolate(c4, c5)
+            e00 = PixelData.Interpolate(c4, c5)
+          } else if (r < 0) {
+            e11 = e00 = c4
+            e10 = PixelData.Interpolate(c4, c5)
+            e01 = PixelData.Interpolate(c4, c5)
+          } else {
+            e11 = e00 = c4
+            e01 = e10 = c7
+          }
+          //
         } else {
-          e11 = PixelData.InterpolateFiltered3(c8, c7, c5, 6, 1, 1)
-          e00 = PixelData.InterpolateFiltered3(c4, c7, c5, 6, 1, 1)
-          e10 = PixelData.InterpolateFiltered3(c7, c4, c8, 6, 1, 1)
-          e01 = PixelData.InterpolateFiltered3(c5, c4, c8, 6, 1, 1)
+          e11 = e00 = PixelData.Interpolate(c7, c5)
+          e11 = PixelData.Interpolate(c8, c8, c8, e11)
+          e00 = PixelData.Interpolate(c4, c4, c4, e00)
+
+          e10 = e01 = PixelData.Interpolate(c4, c8)
+          e10 = PixelData.Interpolate(c7, c7, c7, e10)
+          e01 = PixelData.Interpolate(c5, c5, c5, e01)
+          // e11 = PixelData.InterpolateFiltered3(c8, c7, c5, 6, 1, 1)
+          // e00 = PixelData.InterpolateFiltered3(c4, c7, c5, 6, 1, 1)
+          // e10 = PixelData.InterpolateFiltered3(c7, c4, c8, 6, 1, 1)
+          // e01 = PixelData.InterpolateFiltered3(c5, c4, c8, 6, 1, 1)
         }
+
         const rl = j * p.width * scale ** 2 + i * scale
         p.setDistPoint(rl, 0, 0, e00)
         p.setDistPoint(rl, 0, 1, e01)
