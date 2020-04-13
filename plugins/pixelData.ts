@@ -33,14 +33,20 @@ class PixelData implements PixelData {
   }
 
   getSourcePoint(x: number, v: number, u: number): number {
-    if (u < 0 && x % this.width === 0 || u > 0 && (x + 1) % this.width === 0) {
-      // データは横方向に連続なので左右ボーダーを超えるときはuを0にする
-      u = 0
+    if ((x + u) < this.width * Math.floor(x / this.width) 
+      || (x + u) > this.width * Math.floor((x / this.width) + 1) - 1) {
+      // データは横方向に連続なので左右ボーダーを超えるときはuを1つ戻す
+      u += u === 0 ? 0 : u > 0 ? -1 : 1
     }
+
     if ((x + this.width * v + u) < 0 || (x + this.width * v + u) >= this.data.length) {
-      // データ範囲外ならvを1つ戻して再帰検索
+      // データ範囲外
       v += v === 0 ? 0 : v > 0 ? -1 : 1
+      if (u === 0 && v === 0) {
+        return this.data[x + this.width * v + u]
+      }
       return this.getSourcePoint(x, v, u)
+      //
     } else {
       return this.data[x + this.width * v + u]
     }
