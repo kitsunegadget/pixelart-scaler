@@ -91,3 +91,4 @@ sw.*
 
 README_default.md
 .firebase
+plugins/PixelFilter/Vector.ts

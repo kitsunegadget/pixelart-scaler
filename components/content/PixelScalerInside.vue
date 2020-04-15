@@ -46,7 +46,7 @@
 import Vue from 'vue'
 // import axios from 'axios'
 import PixelScalerType from './PixelScalerType.vue'
-import Imagenize, { StandardFilter } from '@/plugins/imagenize'
+import PxFilter, { StandardFilter } from '@/plugins/PixelFilter/PixelFilter'
 
 export default Vue.extend({
   components: {
@@ -121,63 +121,63 @@ export default Vue.extend({
             } else if (type === 'epx2') {
               ctx.canvas.width *= 2
               ctx.canvas.height *= 2
-              const newImageData = Imagenize.EPX(imageData, 2)
+              const newImageData = PxFilter.EPX(imageData, 2)
               ctx.putImageData(newImageData, 0, 0)
             } else if (type === 'epx3') {
               ctx.canvas.width *= 3
               ctx.canvas.height *= 3
-              const newImageData = Imagenize.EPX(imageData, 3)
+              const newImageData = PxFilter.EPX(imageData, 3)
               ctx.putImageData(newImageData, 0, 0)
             } else if (type === 'epx4') {
               ctx.canvas.width *= 4
               ctx.canvas.height *= 4
-              const x2ImageData = Imagenize.EPX(imageData, 2)
-              const newImageData = Imagenize.EPX(x2ImageData, 2)
+              const x2ImageData = PxFilter.EPX(imageData, 2)
+              const newImageData = PxFilter.EPX(x2ImageData, 2)
               ctx.putImageData(newImageData, 0, 0)
             } else if (type === 'eagle2') {
               ctx.canvas.width *= 2
               ctx.canvas.height *= 2
-              const newImageData = Imagenize.Eagle(imageData, 2)
+              const newImageData = PxFilter.Eagle(imageData, 2)
               ctx.putImageData(newImageData, 0, 0)
             } else if (type === 'eagle3') {
               ctx.canvas.width *= 3
               ctx.canvas.height *= 3
-              const newImageData = Imagenize.Eagle(imageData, 3)
+              const newImageData = PxFilter.Eagle(imageData, 3)
               ctx.putImageData(newImageData, 0, 0)
             } else if (type === 'eagle3xB') {
               ctx.canvas.width *= 3
               ctx.canvas.height *= 3
-              const newImageData = Imagenize.Eagle(imageData, 3, 'B')
+              const newImageData = PxFilter.Eagle(imageData, 3, 'B')
               ctx.putImageData(newImageData, 0, 0)
             } else if (type === '2xSaI') {
               ctx.canvas.width *= 2
               ctx.canvas.height *= 2
-              const newImageData = Imagenize._2xSaI(imageData, 2)
+              const newImageData = PxFilter._2xSaI(imageData, 2)
               ctx.putImageData(newImageData, 0, 0)
             } else if (type === 'Super2xSaI') {
               ctx.canvas.width *= 2
               ctx.canvas.height *= 2
-              const newImageData = Imagenize.Super2xSaI(imageData, 2)
+              const newImageData = PxFilter.Super2xSaI(imageData, 2)
               ctx.putImageData(newImageData, 0, 0)
             } else if (type === 'SuperEagle') {
               ctx.canvas.width *= 2
               ctx.canvas.height *= 2
-              const newImageData = Imagenize.SuperEagle(imageData, 2)
+              const newImageData = PxFilter.SuperEagle(imageData, 2)
               ctx.putImageData(newImageData, 0, 0)
             } else if (type === 'xBR2') {
               ctx.canvas.width *= 2
               ctx.canvas.height *= 2
-              const newImageData = Imagenize.XBR(imageData, 2)
+              const newImageData = PxFilter.XBR(imageData, 2)
               ctx.putImageData(newImageData, 0, 0)
             } else if (type === 'xBR3') {
               ctx.canvas.width *= 3
               ctx.canvas.height *= 3
-              const newImageData = Imagenize.XBR(imageData, 3)
+              const newImageData = PxFilter.XBR(imageData, 3)
               ctx.putImageData(newImageData, 0, 0)
             } else if (type === 'xBR4') {
               ctx.canvas.width *= 4
               ctx.canvas.height *= 4
-              const newImageData = Imagenize.XBR(imageData, 4)
+              const newImageData = PxFilter.XBR(imageData, 4)
               ctx.putImageData(newImageData, 0, 0)
             } else if (type === '0') {
             }

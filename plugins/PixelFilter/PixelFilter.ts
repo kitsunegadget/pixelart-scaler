@@ -2,7 +2,7 @@
 import PixelData from './pixelData'
 import XBR from './xBR'
 // ImageDataをPixelData型にしてスケール変換するstaticクラス
-export default class Imagenize {
+export default class PixelFilter {
   // Eric's Pixel Expansion / Scale Nx Algorithm
   static EPX(imageData: ImageData, scale: number) {
     const p = new PixelData(imageData)
