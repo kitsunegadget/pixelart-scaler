@@ -1,5 +1,6 @@
 /* eslint-disable unicorn/number-literal-case */
 import PixelData from './pixelData'
+import XBR from './xBR'
 // ImageDataをPixelData型にしてスケール変換するstaticクラス
 export default class Imagenize {
   // Eric's Pixel Expansion / Scale Nx Algorithm
@@ -529,6 +530,16 @@ export default class Imagenize {
     } // end j for
     return p.outImageData()
   }
+
+  static XBR(imageData: ImageData, scale: number) {
+    return XBR.XBR(imageData, scale, true)
+  }
+
+  static Test(imageData: ImageData, scale: number) {
+    // let a = [[1, 2]]
+    // let b = [[1,2],[3,4]]
+    // console.log(Vector.mul(a, b))
+  }
 }
 
 export class StandardFilter {
@@ -555,7 +566,8 @@ export class StandardFilter {
       const b = (data[i] >> 16) & 0xff
       const g = (data[i] >> 8) & 0xff
       const r = data[i] & 0xff
-      const avg = Math.round((r + g + b) / 3)
+      // const avg = Math.round((r + g + b) / 3)
+      const avg = r * 0.299 + g * 0.587 + b * 0.114
       const out = (a << 24) | (avg << 16) | (avg << 8) | avg
       data[i] = out
     }

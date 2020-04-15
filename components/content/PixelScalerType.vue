@@ -2,7 +2,7 @@
   <div class="pixel-scaler-bottom dragArea" draggable="false">
     <div class="scale-style">
       <!-- スケーリング形式 -->
-      <!-- <v-btn-toggle class="type-button" v-model="text" tile group>
+      <v-btn-toggle class="type-button" v-model="text" tile group>
         <v-btn @click="$emit('convert-start', 'invert')">
           Negative
         </v-btn>
@@ -12,36 +12,45 @@
         <v-btn @click="$emit('convert-start', 'binarization')">
           Binarization
         </v-btn>
-      </v-btn-toggle> -->
+      </v-btn-toggle>
       <v-btn-toggle class="type-button" v-model="text" tile group mandatory>
         <v-btn @click="$emit('convert-start', 'epx2')">
-          EPX / Scale2x
+          EPX / Scale 2x
         </v-btn>
         <v-btn @click="$emit('convert-start', 'epx3')">
-          Scale3x
+          Scale 3x
         </v-btn>
         <v-btn @click="$emit('convert-start', 'epx4')">
-          Scale4x
+          Scale 4x
         </v-btn>
         <v-btn @click="$emit('convert-start', 'eagle2')">
-          Eagle2x
+          Eagle 2x
         </v-btn>
         <v-btn @click="$emit('convert-start', 'eagle3')">
-          Eagle3x
+          Eagle 3x
         </v-btn>
         <v-btn @click="$emit('convert-start', 'eagle3xB')">
-          Eagle3xB
+          Eagle 3xB
         </v-btn>
         <v-btn @click="$emit('convert-start', '2xSaI')">
-          2xSaI
+          SaI 2x
         </v-btn>
         <v-btn @click="$emit('convert-start', 'Super2xSaI')">
-          Super2xSaI
+          SuperSaI 2x
         </v-btn>
         <v-btn @click="$emit('convert-start', 'SuperEagle')">
-          SuperEagle
+          SuperEagle 2x
         </v-btn>
-        <v-btn @click="$emit('convert-start', 0)">
+        <v-btn @click="$emit('convert-start', 'xBR2')">
+          xBR 2x
+        </v-btn>
+        <v-btn @click="$emit('convert-start', 'xBR3')">
+          xBR 3x
+        </v-btn>
+        <v-btn @click="$emit('convert-start', 'xBR4')">
+          xBR 4x
+        </v-btn>
+        <v-btn @click="$emit('convert-start', '0')">
           Test
         </v-btn>
       </v-btn-toggle>

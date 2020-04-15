@@ -1,3 +1,7 @@
+// jsPixelFilter Library
+// Copyright (C) 2020 Kitsune Gadget
+//
+
 // 変換の見通しを良くするためのpixelDataクラス
 interface PixelData {
   width: number
@@ -58,7 +62,22 @@ class PixelData implements PixelData {
 
   outImageData(): ImageData {
     const outData = new Uint8ClampedArray(this.dist.buffer)
+    console.log(this.targetScale)
     return new ImageData(outData, this.width * this.targetScale)
+  }
+
+  // ピクセルXのカラー取得
+  static getR(X: number) {
+    return X & 0xff
+  }
+  static getG(X: number) {
+    return (X >> 8) & 0xff
+  }
+  static getB(X: number) {
+    return (X >> 16) & 0xff
+  }
+  static getA(X: number) {
+    return X >> 24
   }
 
   // ピクセル色補完
