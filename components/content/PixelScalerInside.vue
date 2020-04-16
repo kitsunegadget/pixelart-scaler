@@ -46,7 +46,7 @@
 import Vue from 'vue'
 // import axios from 'axios'
 import PixelScalerType from './PixelScalerType.vue'
-import PxFilter, { StandardFilter } from '@/plugins/PixelFilter/PixelFilter'
+import PxFilter, { StandardFilter } from '@/plugins/PixelFilter'
 
 export default Vue.extend({
   components: {

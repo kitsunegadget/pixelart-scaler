@@ -562,8 +562,9 @@ export default class XBR {
           p.setDistPoint(rl, 1, 0, e2)
           p.setDistPoint(rl, 1, 1, e3)
         } else if (scale === 3) {
-          let e4, e5, e6, e7, e8
-          e4 = e5 = e6 = e7 = e8 = E
+          const e4 = E
+          let e5, e6, e7, e8
+          e5 = e6 = e7 = e8 = E
 
           // eslint-disable-next-line prettier/prettier
           const e25678 = this._Kernel3x(E,I,H,F,G,C,D,B, F4,I4,H5,I5, e2,e5,e6,e7,e8, allowAlphaBlend)
