@@ -7,7 +7,7 @@ import PixelData from './pixelData'
 
 export default class Eagle {
   // Eagle algorithm
-  // 3x and 3xB was made by Hawkynt
+  // original 3x and 3xB was made by Hawkynt
   static Eagle(imageData: ImageData, scale: number, mode = 'normal') {
     const p = new PixelData(imageData)
     p.setDistSize(scale)

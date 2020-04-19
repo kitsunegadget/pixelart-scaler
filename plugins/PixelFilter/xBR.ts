@@ -1,11 +1,11 @@
 // jsPixelFilter Library
 // Copyright (C) 2020 Kitsune Gadget
 //
-// This code refer to 2dImageFilter (see https://code.google.com/archive/p/2dimagefilter/)
+// Reference: 2dImageFilter (see https://code.google.com/archive/p/2dimagefilter/)
 
 import PixelData from './pixelData'
 
-// xbr algolithm by Hyllian
+// original xbr algolithm by Hyllian
 // xbr-lv3 shader (see https://github.com/libreto/common-shaders)
 export default class XBR {
   private static readonly XBR_Y_WEIGHT = 48

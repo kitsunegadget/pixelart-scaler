@@ -1,7 +1,7 @@
 // jsPixelFilter Library
 // Copyright (C) 2020 Kitsune Gadget
 //
-// This code refer to 2xSaI (see https://vdnoort.home.xs4all.nl/emulation/2xsai/)
+// Reference: 2xSaI (see https://vdnoort.home.xs4all.nl/emulation/2xsai/)
 
 import PixelData from './pixelData'
 
