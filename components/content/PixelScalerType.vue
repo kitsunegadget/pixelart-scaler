@@ -2,7 +2,7 @@
   <div class="pixel-scaler-bottom dragArea" draggable="false">
     <div class="scale-style">
       <!-- スケーリング形式 -->
-      <v-btn-toggle v-model="text" class="type-button" tile group>
+      <!-- <v-btn-toggle v-model="text" class="type-button" tile group>
         <v-btn @click="$emit('convert-start', 'invert')">
           Negative
         </v-btn>
@@ -12,7 +12,7 @@
         <v-btn @click="$emit('convert-start', 'binarization')">
           Binarization
         </v-btn>
-      </v-btn-toggle>
+      </v-btn-toggle> -->
       <v-btn-toggle v-model="text" class="type-button" tile group mandatory>
         <v-btn @click="$emit('convert-start', 'epx2')">
           EPX / Scale 2x

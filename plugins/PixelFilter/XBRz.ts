@@ -61,7 +61,7 @@ class BlendInfo {
   static Rotate(b: number, rotDeg: RotationDegree) {
     const l = rotDeg << 1
     const r = 8 - l
-    return (b << l) | (b >> r)
+    return ((b << l) | (b >> r)) & 0xff // eslint-disable-line
   }
 }
 
@@ -87,30 +87,31 @@ class Rot {
     const h = 7
     const i = 8
 
+    // eslint-disable-next-line prettier/prettier
     const deg0 = [
       a, b, c,
       d, e, f,
       g, h, i
     ]
-
+    // eslint-disable-next-line prettier/prettier
     const deg90 = [
       g, d, a,
       h, e, b,
       i, f, c
     ]
-
+    // eslint-disable-next-line prettier/prettier
     const deg180 = [
       i, h, g,
       f, e, d,
       c, b, a
     ]
-
+    // eslint-disable-next-line prettier/prettier
     const deg270 = [
       c, f, i,
       b, e, h,
       a, d, g
     ]
-
+    // eslint-disable-next-line prettier/prettier
     const rotation = [
       deg0, deg90, deg180, deg270
     ]
@@ -130,8 +131,8 @@ function MatrixRotation(rotDeg: RotationDegree, I: number, J: number, N: number)
   }
 
   if (rotDeg === RotationDegree.Rot0) {
-    struct.J_old = I
-    struct.I_old = J
+    struct.I_old = I
+    struct.J_old = J
   } else {
     const old = MatrixRotation(rotDeg - 1, I, J, N)
     struct.I_old = N - 1 - old.J_old
@@ -388,7 +389,7 @@ export default class XBRz {
       // but support double-blending for 90? corners
     } else if (BlendInfo.GetTopR(blend) !== BlendType.BlendNone && !eq(e, g)) {
       doLineBlend = false
-    } else if (BlendInfo.GetBottomR(blend) !== BlendType.BlendNone && !eq(e, c)) {
+    } else if (BlendInfo.GetBottomL(blend) !== BlendType.BlendNone && !eq(e, c)) {
       doLineBlend = false
 
       // no full blending for L-shapes; blend corner only (handles "mario mushroom eyes")
@@ -454,7 +455,7 @@ export default class XBRz {
     // const kB = 0.0722 // ITU-R BT.709
     // const kR = 0.2126
     const kB = 0.0593 // ITU-R BT.2020 conversion
-    const kR = 0.2627
+    const kR = 0.2627 //
     const kG = 1 - kB - kR
 
     const scaleB = 0.5 / (1 - kB)
@@ -464,8 +465,8 @@ export default class XBRz {
     const cB = scaleB * (bDiff - y)
     const cR = scaleR * (rDiff - y)
 
-    // return Math.sqrt(this._Square(this.luminanceWeight * y) + this._Square(cB) + this._Square(cR))
-    return this._Square(this.luminanceWeight * y) + this._Square(cB) + this._Square(cR)
+    return Math.sqrt(this._Square(this.luminanceWeight * y) + this._Square(cB) + this._Square(cR))
+    // return this._Square(this.luminanceWeight * y) + this._Square(cB) + this._Square(cR)
   }
 
   private static _ColorDist(pix1: number, pix2: number) {
@@ -645,8 +646,9 @@ class Scale4x implements IScaler {
   }
 
   BlendLineDiagonal(color: number, out: OutputMatrix): void {
-    _AlphaBlend(1, 2, out.Reference(this._SCALE - 1, this._SCALE / 2), out, color)
-    _AlphaBlend(1, 2, out.Reference(this._SCALE - 2, this._SCALE / 2 + 1), out, color)
+    // number型が小数になると値が不安定になるため、小数点以下は切り捨てる
+    _AlphaBlend(1, 2, out.Reference(this._SCALE - 1, Math.floor(this._SCALE / 2)), out, color)
+    _AlphaBlend(1, 2, out.Reference(this._SCALE - 2, Math.floor(this._SCALE / 2) + 1), out, color)
     out.SetDstPixel(out.Reference(this._SCALE - 1, this._SCALE - 1), color)
   }
 
@@ -669,8 +671,10 @@ class Scale5x implements IScaler {
     _AlphaBlend(1, 4, out.Reference(this._SCALE - 1, 0), out, color)
     _AlphaBlend(1, 4, out.Reference(this._SCALE - 2, 2), out, color)
     _AlphaBlend(1, 4, out.Reference(this._SCALE - 3, 4), out, color)
+
     _AlphaBlend(3, 4, out.Reference(this._SCALE - 1, 1), out, color)
     _AlphaBlend(3, 4, out.Reference(this._SCALE - 2, 3), out, color)
+
     out.SetDstPixel(out.Reference(this._SCALE - 1, 2), color)
     out.SetDstPixel(out.Reference(this._SCALE - 1, 3), color)
     out.SetDstPixel(out.Reference(this._SCALE - 1, 4), color)
@@ -681,8 +685,10 @@ class Scale5x implements IScaler {
     _AlphaBlend(1, 4, out.Reference(0, this._SCALE - 1), out, color)
     _AlphaBlend(1, 4, out.Reference(2, this._SCALE - 2), out, color)
     _AlphaBlend(1, 4, out.Reference(4, this._SCALE - 3), out, color)
+
     _AlphaBlend(3, 4, out.Reference(1, this._SCALE - 1), out, color)
     _AlphaBlend(3, 4, out.Reference(3, this._SCALE - 2), out, color)
+
     out.SetDstPixel(out.Reference(2, this._SCALE - 1), color)
     out.SetDstPixel(out.Reference(3, this._SCALE - 1), color)
     out.SetDstPixel(out.Reference(4, this._SCALE - 1), color)
@@ -693,23 +699,30 @@ class Scale5x implements IScaler {
     _AlphaBlend(1, 4, out.Reference(0, this._SCALE - 1), out, color)
     _AlphaBlend(1, 4, out.Reference(2, this._SCALE - 2), out, color)
     _AlphaBlend(3, 4, out.Reference(1, this._SCALE - 1), out, color)
+
     _AlphaBlend(1, 4, out.Reference(this._SCALE - 1, 0), out, color)
     _AlphaBlend(1, 4, out.Reference(this._SCALE - 2, 2), out, color)
     _AlphaBlend(3, 4, out.Reference(this._SCALE - 1, 1), out, color)
+
+    _AlphaBlend(2, 3, out.Reference(3, 3), out, color)
+
     out.SetDstPixel(out.Reference(2, this._SCALE - 1), color)
     out.SetDstPixel(out.Reference(3, this._SCALE - 1), color)
+    out.SetDstPixel(out.Reference(4, this._SCALE - 1), color)
+
     out.SetDstPixel(out.Reference(this._SCALE - 1, 2), color)
     out.SetDstPixel(out.Reference(this._SCALE - 1, 3), color)
-    out.SetDstPixel(out.Reference(4, this._SCALE - 1), color)
-    _AlphaBlend(2, 3, out.Reference(3, 3), out, color)
   }
 
   BlendLineDiagonal(color: number, out: OutputMatrix): void {
-    _AlphaBlend(1, 8, out.Reference(this._SCALE - 1, this._SCALE / 2), out, color)
-    _AlphaBlend(1, 8, out.Reference(this._SCALE - 2, this._SCALE / 2 + 1), out, color)
-    _AlphaBlend(1, 8, out.Reference(this._SCALE - 3, this._SCALE / 2 + 2), out, color)
+    // number型が小数になると値が不安定になるため、小数点以下は切り捨てる
+    _AlphaBlend(1, 8, out.Reference(this._SCALE - 1, Math.floor(this._SCALE / 2)), out, color)
+    _AlphaBlend(1, 8, out.Reference(this._SCALE - 2, Math.floor(this._SCALE / 2) + 1), out, color)
+    _AlphaBlend(1, 8, out.Reference(this._SCALE - 3, Math.floor(this._SCALE / 2) + 2), out, color)
+
     _AlphaBlend(7, 8, out.Reference(4, 3), out, color)
     _AlphaBlend(7, 8, out.Reference(3, 4), out, color)
+
     out.SetDstPixel(out.Reference(4, 4), color)
   }
 
@@ -718,8 +731,8 @@ class Scale5x implements IScaler {
     _AlphaBlend(86, 100, out.Reference(4, 4), out, color) // exact: 0.8631434088
     _AlphaBlend(23, 100, out.Reference(4, 3), out, color) // 0.2306749731
     _AlphaBlend(23, 100, out.Reference(3, 4), out, color) // 0.2306749731
-    // alphaBlend(8, 1000, out.ref(4, 2), col); //0.008384061834 -> negligable
-    // alphaBlend(8, 1000, out.ref(2, 4), col); //0.008384061834
+    // _AlphaBlend(1, 64, out.Reference(4, 2), out, color) // 0.01676812367 -> negligable
+    // _AlphaBlend(1, 64, out.Reference(2, 4), out, color) // 0.01676812367
   }
 }
 
@@ -773,7 +786,7 @@ class Scale6x implements IScaler {
     _AlphaBlend(1, 4, out.Reference(this._SCALE - 1, 0), out, color)
     _AlphaBlend(1, 4, out.Reference(this._SCALE - 2, 2), out, color)
     _AlphaBlend(3, 4, out.Reference(this._SCALE - 1, 1), out, color)
-    _AlphaBlend(3, 4, out.Reference(this._SCALE - 1, 3), out, color)
+    _AlphaBlend(3, 4, out.Reference(this._SCALE - 2, 3), out, color)
 
     out.SetDstPixel(out.Reference(2, this._SCALE - 1), color)
     out.SetDstPixel(out.Reference(3, this._SCALE - 1), color)
@@ -788,9 +801,10 @@ class Scale6x implements IScaler {
   }
 
   BlendLineDiagonal(color: number, out: OutputMatrix): void {
-    _AlphaBlend(1, 2, out.Reference(this._SCALE - 1, this._SCALE / 2), out, color)
-    _AlphaBlend(1, 2, out.Reference(this._SCALE - 2, this._SCALE / 2 + 1), out, color)
-    _AlphaBlend(1, 2, out.Reference(this._SCALE - 3, this._SCALE / 2 + 2), out, color)
+    // number型が小数になると値が不安定になるため、小数点以下は切り捨てる
+    _AlphaBlend(1, 2, out.Reference(this._SCALE - 1, Math.floor(this._SCALE / 2)), out, color)
+    _AlphaBlend(1, 2, out.Reference(this._SCALE - 2, Math.floor(this._SCALE / 2) + 1), out, color)
+    _AlphaBlend(1, 2, out.Reference(this._SCALE - 3, Math.floor(this._SCALE / 2) + 2), out, color)
     out.SetDstPixel(out.Reference(this._SCALE - 2, this._SCALE - 1), color)
     out.SetDstPixel(out.Reference(this._SCALE - 1, this._SCALE - 1), color)
     out.SetDstPixel(out.Reference(this._SCALE - 1, this._SCALE - 2), color)
