@@ -53,6 +53,18 @@
         <v-btn @click="$emit('convert-start', 'xBRz2')">
           xBRz 2x
         </v-btn>
+        <v-btn @click="$emit('convert-start', 'xBRz3')">
+          xBRz 3x
+        </v-btn>
+        <v-btn @click="$emit('convert-start', 'xBRz4')">
+          xBRz 4x
+        </v-btn>
+        <v-btn @click="$emit('convert-start', 'xBRz5')">
+          xBRz 5x
+        </v-btn>
+        <v-btn @click="$emit('convert-start', 'xBRz6')">
+          xBRz 6x
+        </v-btn>
         <v-btn @click="$emit('convert-start', '0')">
           Test
         </v-btn>

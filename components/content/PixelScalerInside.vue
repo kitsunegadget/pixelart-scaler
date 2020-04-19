@@ -184,6 +184,26 @@ export default Vue.extend({
               ctx.canvas.height *= 2
               const newImageData = PxFilter.XBRz(imageData, 2)
               ctx.putImageData(newImageData, 0, 0)
+            } else if (type === 'xBRz3') {
+              ctx.canvas.width *= 3
+              ctx.canvas.height *= 3
+              const newImageData = PxFilter.XBRz(imageData, 3)
+              ctx.putImageData(newImageData, 0, 0)
+            } else if (type === 'xBRz4') {
+              ctx.canvas.width *= 4
+              ctx.canvas.height *= 4
+              const newImageData = PxFilter.XBRz(imageData, 4)
+              ctx.putImageData(newImageData, 0, 0)
+            } else if (type === 'xBRz5') {
+              ctx.canvas.width *= 5
+              ctx.canvas.height *= 5
+              const newImageData = PxFilter.XBRz(imageData, 5)
+              ctx.putImageData(newImageData, 0, 0)
+            } else if (type === 'xBRz6') {
+              ctx.canvas.width *= 6
+              ctx.canvas.height *= 6
+              const newImageData = PxFilter.XBRz(imageData, 6)
+              ctx.putImageData(newImageData, 0, 0)
             } else if (type === '0') {
             }
             this.converting = false

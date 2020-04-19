@@ -4,7 +4,7 @@ import EPX from './PixelFilter/EPX'
 import Eagle from './PixelFilter/Eagle'
 import Kreed from './PixelFilter/Kreed'
 import XBR from './PixelFilter/xBR'
-import XBRz from './PixelFilter/XBRz'
+import XBRZ from './PixelFilter/xBRZ'
 // ImageDataをPixelData型にしてスケール変換するstaticクラス
 export default class PixelFilter {
   // Eric's Pixel Expansion / Scale Nx Algorithm
@@ -33,7 +33,7 @@ export default class PixelFilter {
   }
 
   static XBRz(imageData: ImageData, scale: number) {
-    return XBRz.XBRz(imageData, scale)
+    return XBRZ.XBRZ(imageData, scale)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

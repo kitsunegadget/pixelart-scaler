@@ -5,17 +5,11 @@
 // Also, this code refer to 2dImageFilter (see https://code.google.com/archive/p/2dimagefilter/)
 import PixelData from './pixelData'
 
-interface Kernel3x3 {
-  a: any, b: any, c: any, // eslint-disable-line
-  d: any, e: any, f: any, // eslint-disable-line
-  g: any, h: any, i: any // eslint-disable-line
-}
-
 interface Kernel4x4 {
-  a: any, b: any, c: any, d: any, // eslint-disable-line
-  e: any, f: any, g: any, h: any, // eslint-disable-line
-  i: any, j: any, k: any, l: any, // eslint-disable-line
-  m: any, n: any, o: any, p: any // eslint-disable-line
+  a: number, b: number, c: number, d: number, // eslint-disable-line
+  e: number, f: number, g: number, h: number, // eslint-disable-line
+  i: number, j: number, k: number, l: number, // eslint-disable-line
+  m: number, n: number, o: number, p: number // eslint-disable-line
 }
 
 enum BlendType {
@@ -193,13 +187,21 @@ export default class XBRz {
   private static readonly dominantDirectionThreshold = 3.6
   private static steepDirectionThreshold = 2.2
 
-  static XBRz(imageData: ImageData, scale: number) {
+  static XBRZ(imageData: ImageData, scale: number) {
     const p = new PixelData(imageData)
     p.setDistSize(scale)
 
+    Rot.Rot() // init static Rot class
+
     let scaler: IScaler = new Scale2x()
     if (scale === 3) {
-      // scaler = new Scale2x()
+      scaler = new Scale3x()
+    } else if (scale === 4) {
+      scaler = new Scale4x()
+    } else if (scale === 5) {
+      scaler = new Scale5x()
+    } else if (scale === 6) {
+      scaler = new Scale6x()
     }
 
     const trgWidth = p.width * scale
@@ -218,20 +220,20 @@ export default class XBRz {
       // m  n  o  p
       const ker4: Kernel4x4 = {
         a: p.getSourcePoint(l, -1, -1),
-        b: p.getSourcePoint(l, 0, -1),
-        c: p.getSourcePoint(l, 1, -1),
-        d: p.getSourcePoint(l, 2, -1),
-        e: p.getSourcePoint(l, -1, 0),
+        b: p.getSourcePoint(l, -1, 0),
+        c: p.getSourcePoint(l, -1, 1),
+        d: p.getSourcePoint(l, -1, 2),
+        e: p.getSourcePoint(l, 0, -1),
         f: p.getSourcePoint(l, 0, 0),
-        g: p.getSourcePoint(l, 1, 0),
-        h: p.getSourcePoint(l, 2, 0),
-        i: p.getSourcePoint(l, -1, 1),
-        j: p.getSourcePoint(l, 0, 1),
+        g: p.getSourcePoint(l, 0, 1),
+        h: p.getSourcePoint(l, 0, 2),
+        i: p.getSourcePoint(l, 1, -1),
+        j: p.getSourcePoint(l, 1, 0),
         k: p.getSourcePoint(l, 1, 1),
-        l: p.getSourcePoint(l, 2, 1),
-        m: p.getSourcePoint(l, -1, 2),
-        n: p.getSourcePoint(l, 0, 2),
-        o: p.getSourcePoint(l, 1, 2),
+        l: p.getSourcePoint(l, 1, 2),
+        m: p.getSourcePoint(l, 2, -1),
+        n: p.getSourcePoint(l, 2, 0),
+        o: p.getSourcePoint(l, 2, 1),
         p: p.getSourcePoint(l, 2, 2)
       }
 
@@ -269,20 +271,20 @@ export default class XBRz {
 
         const ker4: Kernel4x4 = {
           a: p.getSourcePoint(l, -1, -1),
-          b: p.getSourcePoint(l, 0, -1),
-          c: p.getSourcePoint(l, 1, -1),
-          d: p.getSourcePoint(l, 2, -1),
-          e: p.getSourcePoint(l, -1, 0),
+          b: p.getSourcePoint(l, -1, 0),
+          c: p.getSourcePoint(l, -1, 1),
+          d: p.getSourcePoint(l, -1, 2),
+          e: p.getSourcePoint(l, 0, -1),
           f: p.getSourcePoint(l, 0, 0),
-          g: p.getSourcePoint(l, 1, 0),
-          h: p.getSourcePoint(l, 2, 0),
-          i: p.getSourcePoint(l, -1, 1),
-          j: p.getSourcePoint(l, 0, 1),
+          g: p.getSourcePoint(l, 0, 1),
+          h: p.getSourcePoint(l, 0, 2),
+          i: p.getSourcePoint(l, 1, -1),
+          j: p.getSourcePoint(l, 1, 0),
           k: p.getSourcePoint(l, 1, 1),
-          l: p.getSourcePoint(l, 2, 1),
-          m: p.getSourcePoint(l, -1, 2),
-          n: p.getSourcePoint(l, 0, 2),
-          o: p.getSourcePoint(l, 1, 2),
+          l: p.getSourcePoint(l, 1, 2),
+          m: p.getSourcePoint(l, 2, -1),
+          n: p.getSourcePoint(l, 2, 0),
+          o: p.getSourcePoint(l, 2, 1),
           p: p.getSourcePoint(l, 2, 2)
         }
 
@@ -324,7 +326,7 @@ export default class XBRz {
         // fill block of size scale * scale with the given color
         //  // place *after* preprocessing step, to not overwrite the
         //  // results while processing the the last pixel!
-        this._FillBlock(p, trgi, trgWidth, ker4.f, scale)
+        this._FillBlock(outputMatrix, trgi, trgWidth, ker4.f, scale)
 
         if (blendXy === 0) continue
 
@@ -430,7 +432,7 @@ export default class XBRz {
   }
 
   private static _FillBlock(
-    p: PixelData,
+    out: OutputMatrix,
     trgi: number,
     pitch: number,
     col: number,
@@ -438,7 +440,7 @@ export default class XBRz {
   ) {
     for (let y = 0; y < blocksize; ++y, trgi += pitch) {
       for (let x = 0; x < blocksize; ++x) {
-        p.setDistPoint(trgi + x, 0, 0, col)
+        out.SetDstPixel(trgi + x, col)
       }
     }
   }
@@ -447,7 +449,7 @@ export default class XBRz {
     return x * x
   }
 
-  private static _DistYCbCr(pix1: number, pix2: number) {
+  private static _DistYCbCr(pix1: number, pix2: number): number {
     const rDiff = PixelData.getR(pix1) - PixelData.getR(pix2)
     const gDiff = PixelData.getG(pix1) - PixelData.getG(pix2)
     const bDiff = PixelData.getB(pix1) - PixelData.getB(pix2)
@@ -465,7 +467,8 @@ export default class XBRz {
     const cB = scaleB * (bDiff - y)
     const cR = scaleR * (rDiff - y)
 
-    return Math.sqrt(this._Square(this.luminanceWeight * y) + this._Square(cB) + this._Square(cR))
+    // return Math.sqrt(this._Square(this.luminanceWeight * y) + this._Square(cB) + this._Square(cR))
+    return this._Square(this.luminanceWeight * y) + this._Square(cB) + this._Square(cR)
   }
 
   private static _ColorDist(pix1: number, pix2: number) {
@@ -481,19 +484,19 @@ export default class XBRz {
       return
     }
 
-    const dist = this._ColorDist
+    // const dist = this._ColorDist
     const jg =
-      dist(ker.i, ker.f) +
-      dist(ker.f, ker.c) +
-      dist(ker.n, ker.k) +
-      dist(ker.k, ker.h) +
-      this.centerDirectionBias * dist(ker.j, ker.g)
+      this._ColorDist(ker.i, ker.f) +
+      this._ColorDist(ker.f, ker.c) +
+      this._ColorDist(ker.n, ker.k) +
+      this._ColorDist(ker.k, ker.h) +
+      this.centerDirectionBias * this._ColorDist(ker.j, ker.g)
     const fk =
-      dist(ker.e, ker.j) +
-      dist(ker.j, ker.o) +
-      dist(ker.b, ker.g) +
-      dist(ker.g, ker.l) +
-      this.centerDirectionBias * dist(ker.f, ker.k)
+      this._ColorDist(ker.e, ker.j) +
+      this._ColorDist(ker.j, ker.o) +
+      this._ColorDist(ker.b, ker.g) +
+      this._ColorDist(ker.g, ker.l) +
+      this.centerDirectionBias * this._ColorDist(ker.f, ker.k)
 
     if (jg < fk) {
       const dominantGradient = this.dominantDirectionThreshold * jg < fk
@@ -515,10 +518,10 @@ export default class XBRz {
   }
 }
 
-// blending
-// eslint-disable-next-line prettier/prettier
+//
+// BLENDING
+//
 function _AlphaBlend(n: number, m: number, target: number, out: OutputMatrix, color: number) {
-  // eslint-disable-next-line prettier/prettier
   const ip = PixelData.InterpolateFiltered2(color, out.getDstPixel(target), n, m - n)
   out.SetDstPixel(target, ip)
 }
@@ -562,5 +565,246 @@ class Scale2x implements IScaler {
   BlendCorner(color: number, out: OutputMatrix): void {
     // model a round corner
     _AlphaBlend(21, 100, out.Reference(1, 1), out, color) // exact: 1 - pi/4 = 0.2146018366
+  }
+}
+
+class Scale3x implements IScaler {
+  private _SCALE = 3
+
+  Scale() {
+    return this._SCALE
+  }
+
+  BlendLineShallow(color: number, out: OutputMatrix): void {
+    _AlphaBlend(1, 4, out.Reference(this._SCALE - 1, 0), out, color)
+    _AlphaBlend(1, 4, out.Reference(this._SCALE - 2, 2), out, color)
+    _AlphaBlend(3, 4, out.Reference(this._SCALE - 1, 1), out, color)
+    out.SetDstPixel(out.Reference(this._SCALE - 1, 2), color)
+  }
+
+  BlendLineSteep(color: number, out: OutputMatrix): void {
+    _AlphaBlend(1, 4, out.Reference(0, this._SCALE - 1), out, color)
+    _AlphaBlend(1, 4, out.Reference(2, this._SCALE - 2), out, color)
+    _AlphaBlend(3, 4, out.Reference(1, this._SCALE - 1), out, color)
+    out.SetDstPixel(out.Reference(2, this._SCALE - 1), color)
+  }
+
+  BlendLineSteepAndShallow(color: number, out: OutputMatrix) {
+    _AlphaBlend(1, 4, out.Reference(2, 0), out, color)
+    _AlphaBlend(1, 4, out.Reference(0, 2), out, color)
+    _AlphaBlend(3, 4, out.Reference(2, 1), out, color)
+    _AlphaBlend(3, 4, out.Reference(1, 2), out, color)
+    out.SetDstPixel(out.Reference(2, 2), color)
+  }
+
+  BlendLineDiagonal(color: number, out: OutputMatrix): void {
+    _AlphaBlend(1, 8, out.Reference(1, 2), out, color)
+    _AlphaBlend(1, 8, out.Reference(2, 1), out, color)
+    _AlphaBlend(7, 8, out.Reference(2, 2), out, color)
+  }
+
+  BlendCorner(color: number, out: OutputMatrix): void {
+    // model a round corner
+    _AlphaBlend(45, 100, out.Reference(2, 2), out, color) // exact: 0.4545939598
+    // alphaBlend(14, 1000, out.ref(2, 1), col); //0.01413008627 -> negligable
+    // alphaBlend(14, 1000, out.ref(1, 2), col); //0.01413008627
+  }
+}
+
+class Scale4x implements IScaler {
+  private _SCALE = 4
+
+  Scale() {
+    return this._SCALE
+  }
+
+  BlendLineShallow(color: number, out: OutputMatrix): void {
+    _AlphaBlend(1, 4, out.Reference(this._SCALE - 1, 0), out, color)
+    _AlphaBlend(1, 4, out.Reference(this._SCALE - 2, 2), out, color)
+    _AlphaBlend(3, 4, out.Reference(this._SCALE - 1, 1), out, color)
+    _AlphaBlend(3, 4, out.Reference(this._SCALE - 2, 3), out, color)
+    out.SetDstPixel(out.Reference(this._SCALE - 1, 2), color)
+    out.SetDstPixel(out.Reference(this._SCALE - 1, 3), color)
+  }
+
+  BlendLineSteep(color: number, out: OutputMatrix): void {
+    _AlphaBlend(1, 4, out.Reference(0, this._SCALE - 1), out, color)
+    _AlphaBlend(1, 4, out.Reference(2, this._SCALE - 2), out, color)
+    _AlphaBlend(3, 4, out.Reference(1, this._SCALE - 1), out, color)
+    _AlphaBlend(3, 4, out.Reference(3, this._SCALE - 2), out, color)
+    out.SetDstPixel(out.Reference(2, this._SCALE - 1), color)
+    out.SetDstPixel(out.Reference(3, this._SCALE - 1), color)
+  }
+
+  BlendLineSteepAndShallow(color: number, out: OutputMatrix) {
+    _AlphaBlend(3, 4, out.Reference(3, 1), out, color)
+    _AlphaBlend(3, 4, out.Reference(1, 3), out, color)
+    _AlphaBlend(1, 4, out.Reference(3, 0), out, color)
+    _AlphaBlend(1, 4, out.Reference(0, 3), out, color)
+    _AlphaBlend(1, 3, out.Reference(2, 2), out, color)
+    out.SetDstPixel(out.Reference(3, 3), color)
+    out.SetDstPixel(out.Reference(3, 2), color)
+    out.SetDstPixel(out.Reference(2, 3), color)
+  }
+
+  BlendLineDiagonal(color: number, out: OutputMatrix): void {
+    _AlphaBlend(1, 2, out.Reference(this._SCALE - 1, this._SCALE / 2), out, color)
+    _AlphaBlend(1, 2, out.Reference(this._SCALE - 2, this._SCALE / 2 + 1), out, color)
+    out.SetDstPixel(out.Reference(this._SCALE - 1, this._SCALE - 1), color)
+  }
+
+  BlendCorner(color: number, out: OutputMatrix): void {
+    // model a round corner
+    _AlphaBlend(68, 100, out.Reference(3, 3), out, color) // exact: 0.6848532563
+    _AlphaBlend(9, 100, out.Reference(3, 2), out, color) // 0.08677704501
+    _AlphaBlend(9, 100, out.Reference(2, 3), out, color) // 0.08677704501
+  }
+}
+
+class Scale5x implements IScaler {
+  private _SCALE = 5
+
+  Scale() {
+    return this._SCALE
+  }
+
+  BlendLineShallow(color: number, out: OutputMatrix): void {
+    _AlphaBlend(1, 4, out.Reference(this._SCALE - 1, 0), out, color)
+    _AlphaBlend(1, 4, out.Reference(this._SCALE - 2, 2), out, color)
+    _AlphaBlend(1, 4, out.Reference(this._SCALE - 3, 4), out, color)
+    _AlphaBlend(3, 4, out.Reference(this._SCALE - 1, 1), out, color)
+    _AlphaBlend(3, 4, out.Reference(this._SCALE - 2, 3), out, color)
+    out.SetDstPixel(out.Reference(this._SCALE - 1, 2), color)
+    out.SetDstPixel(out.Reference(this._SCALE - 1, 3), color)
+    out.SetDstPixel(out.Reference(this._SCALE - 1, 4), color)
+    out.SetDstPixel(out.Reference(this._SCALE - 2, 4), color)
+  }
+
+  BlendLineSteep(color: number, out: OutputMatrix): void {
+    _AlphaBlend(1, 4, out.Reference(0, this._SCALE - 1), out, color)
+    _AlphaBlend(1, 4, out.Reference(2, this._SCALE - 2), out, color)
+    _AlphaBlend(1, 4, out.Reference(4, this._SCALE - 3), out, color)
+    _AlphaBlend(3, 4, out.Reference(1, this._SCALE - 1), out, color)
+    _AlphaBlend(3, 4, out.Reference(3, this._SCALE - 2), out, color)
+    out.SetDstPixel(out.Reference(2, this._SCALE - 1), color)
+    out.SetDstPixel(out.Reference(3, this._SCALE - 1), color)
+    out.SetDstPixel(out.Reference(4, this._SCALE - 1), color)
+    out.SetDstPixel(out.Reference(4, this._SCALE - 2), color)
+  }
+
+  BlendLineSteepAndShallow(color: number, out: OutputMatrix) {
+    _AlphaBlend(1, 4, out.Reference(0, this._SCALE - 1), out, color)
+    _AlphaBlend(1, 4, out.Reference(2, this._SCALE - 2), out, color)
+    _AlphaBlend(3, 4, out.Reference(1, this._SCALE - 1), out, color)
+    _AlphaBlend(1, 4, out.Reference(this._SCALE - 1, 0), out, color)
+    _AlphaBlend(1, 4, out.Reference(this._SCALE - 2, 2), out, color)
+    _AlphaBlend(3, 4, out.Reference(this._SCALE - 1, 1), out, color)
+    out.SetDstPixel(out.Reference(2, this._SCALE - 1), color)
+    out.SetDstPixel(out.Reference(3, this._SCALE - 1), color)
+    out.SetDstPixel(out.Reference(this._SCALE - 1, 2), color)
+    out.SetDstPixel(out.Reference(this._SCALE - 1, 3), color)
+    out.SetDstPixel(out.Reference(4, this._SCALE - 1), color)
+    _AlphaBlend(2, 3, out.Reference(3, 3), out, color)
+  }
+
+  BlendLineDiagonal(color: number, out: OutputMatrix): void {
+    _AlphaBlend(1, 8, out.Reference(this._SCALE - 1, this._SCALE / 2), out, color)
+    _AlphaBlend(1, 8, out.Reference(this._SCALE - 2, this._SCALE / 2 + 1), out, color)
+    _AlphaBlend(1, 8, out.Reference(this._SCALE - 3, this._SCALE / 2 + 2), out, color)
+    _AlphaBlend(7, 8, out.Reference(4, 3), out, color)
+    _AlphaBlend(7, 8, out.Reference(3, 4), out, color)
+    out.SetDstPixel(out.Reference(4, 4), color)
+  }
+
+  BlendCorner(color: number, out: OutputMatrix): void {
+    // model a round corner
+    _AlphaBlend(86, 100, out.Reference(4, 4), out, color) // exact: 0.8631434088
+    _AlphaBlend(23, 100, out.Reference(4, 3), out, color) // 0.2306749731
+    _AlphaBlend(23, 100, out.Reference(3, 4), out, color) // 0.2306749731
+    // alphaBlend(8, 1000, out.ref(4, 2), col); //0.008384061834 -> negligable
+    // alphaBlend(8, 1000, out.ref(2, 4), col); //0.008384061834
+  }
+}
+
+class Scale6x implements IScaler {
+  private _SCALE = 6
+
+  Scale() {
+    return this._SCALE
+  }
+
+  BlendLineShallow(color: number, out: OutputMatrix): void {
+    _AlphaBlend(1, 4, out.Reference(this._SCALE - 1, 0), out, color)
+    _AlphaBlend(1, 4, out.Reference(this._SCALE - 2, 2), out, color)
+    _AlphaBlend(1, 4, out.Reference(this._SCALE - 3, 4), out, color)
+    _AlphaBlend(3, 4, out.Reference(this._SCALE - 1, 1), out, color)
+    _AlphaBlend(3, 4, out.Reference(this._SCALE - 2, 3), out, color)
+    _AlphaBlend(3, 4, out.Reference(this._SCALE - 3, 5), out, color)
+
+    out.SetDstPixel(out.Reference(this._SCALE - 1, 2), color)
+    out.SetDstPixel(out.Reference(this._SCALE - 1, 3), color)
+    out.SetDstPixel(out.Reference(this._SCALE - 1, 4), color)
+    out.SetDstPixel(out.Reference(this._SCALE - 1, 5), color)
+
+    out.SetDstPixel(out.Reference(this._SCALE - 2, 4), color)
+    out.SetDstPixel(out.Reference(this._SCALE - 2, 5), color)
+  }
+
+  BlendLineSteep(color: number, out: OutputMatrix): void {
+    _AlphaBlend(1, 4, out.Reference(0, this._SCALE - 1), out, color)
+    _AlphaBlend(1, 4, out.Reference(2, this._SCALE - 2), out, color)
+    _AlphaBlend(1, 4, out.Reference(4, this._SCALE - 3), out, color)
+    _AlphaBlend(3, 4, out.Reference(1, this._SCALE - 1), out, color)
+    _AlphaBlend(3, 4, out.Reference(3, this._SCALE - 2), out, color)
+    _AlphaBlend(3, 4, out.Reference(5, this._SCALE - 3), out, color)
+
+    out.SetDstPixel(out.Reference(2, this._SCALE - 1), color)
+    out.SetDstPixel(out.Reference(3, this._SCALE - 1), color)
+    out.SetDstPixel(out.Reference(4, this._SCALE - 1), color)
+    out.SetDstPixel(out.Reference(5, this._SCALE - 1), color)
+
+    out.SetDstPixel(out.Reference(4, this._SCALE - 2), color)
+    out.SetDstPixel(out.Reference(5, this._SCALE - 2), color)
+  }
+
+  BlendLineSteepAndShallow(color: number, out: OutputMatrix) {
+    _AlphaBlend(1, 4, out.Reference(0, this._SCALE - 1), out, color)
+    _AlphaBlend(1, 4, out.Reference(2, this._SCALE - 2), out, color)
+    _AlphaBlend(3, 4, out.Reference(1, this._SCALE - 1), out, color)
+    _AlphaBlend(3, 4, out.Reference(3, this._SCALE - 2), out, color)
+
+    _AlphaBlend(1, 4, out.Reference(this._SCALE - 1, 0), out, color)
+    _AlphaBlend(1, 4, out.Reference(this._SCALE - 2, 2), out, color)
+    _AlphaBlend(3, 4, out.Reference(this._SCALE - 1, 1), out, color)
+    _AlphaBlend(3, 4, out.Reference(this._SCALE - 1, 3), out, color)
+
+    out.SetDstPixel(out.Reference(2, this._SCALE - 1), color)
+    out.SetDstPixel(out.Reference(3, this._SCALE - 1), color)
+    out.SetDstPixel(out.Reference(4, this._SCALE - 1), color)
+    out.SetDstPixel(out.Reference(5, this._SCALE - 1), color)
+
+    out.SetDstPixel(out.Reference(4, this._SCALE - 2), color)
+    out.SetDstPixel(out.Reference(5, this._SCALE - 2), color)
+
+    out.SetDstPixel(out.Reference(this._SCALE - 1, 2), color)
+    out.SetDstPixel(out.Reference(this._SCALE - 1, 3), color)
+  }
+
+  BlendLineDiagonal(color: number, out: OutputMatrix): void {
+    _AlphaBlend(1, 2, out.Reference(this._SCALE - 1, this._SCALE / 2), out, color)
+    _AlphaBlend(1, 2, out.Reference(this._SCALE - 2, this._SCALE / 2 + 1), out, color)
+    _AlphaBlend(1, 2, out.Reference(this._SCALE - 3, this._SCALE / 2 + 2), out, color)
+    out.SetDstPixel(out.Reference(this._SCALE - 2, this._SCALE - 1), color)
+    out.SetDstPixel(out.Reference(this._SCALE - 1, this._SCALE - 1), color)
+    out.SetDstPixel(out.Reference(this._SCALE - 1, this._SCALE - 2), color)
+  }
+
+  BlendCorner(color: number, out: OutputMatrix): void {
+    // model a round corner
+    _AlphaBlend(97, 100, out.Reference(5, 5), out, color) // exact: 0.9711013910
+    _AlphaBlend(42, 100, out.Reference(4, 5), out, color) // 0.4236372243
+    _AlphaBlend(42, 100, out.Reference(5, 4), out, color) // 0.4236372243
+    _AlphaBlend(6, 100, out.Reference(5, 3), out, color) // 0.05652034508
+    _AlphaBlend(6, 100, out.Reference(3, 5), out, color) // 0.05652034508
   }
 }
