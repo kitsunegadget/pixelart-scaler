@@ -50,6 +50,9 @@
         <v-btn @click="$emit('convert-start', 'xBR4')">
           xBR 4x
         </v-btn>
+        <v-btn @click="$emit('convert-start', 'xBRz2')">
+          xBRz 2x
+        </v-btn>
         <v-btn @click="$emit('convert-start', '0')">
           Test
         </v-btn>

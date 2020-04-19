@@ -26,7 +26,7 @@ class PixelData implements PixelData {
     } else if (typeof obj === 'number') {
       if (typeof width !== 'undefined' && typeof width !== null) {
         this.data = new Uint32Array(obj)
-        this. width = width
+        this.width = width
       }
     }
   }
@@ -58,6 +58,10 @@ class PixelData implements PixelData {
 
   setDistPoint(topleft: number, v: number, u: number, value: number): void {
     this.dist[topleft + this.width * this.targetScale * v + u] = value
+  }
+
+  getDistPoint(trg: number) {
+    return this.dist[trg]
   }
 
   outImageData(): ImageData {
