@@ -13,9 +13,9 @@ interface Kernel4x4 {
 }
 
 enum BlendType {
-  BlendNone = 0, // do not blend
-  BlendNormal = 1, // a normal indication to blend
-  BlendDominant = 2 // a strong indication to blend
+  BlendNone = 0, // ブレンドしない（ピクセル補完しない）
+  BlendNormal = 1, // 通常のブレンド
+  BlendDominant = 2 // 強めのブレンド
 }
 
 interface BlendResult {
@@ -73,7 +73,7 @@ enum RotationDegree {
 }
 
 class Rot {
-  // Cache the 4 rotations of the 9 positions, a to i.
+  // 回転後の位置にアクセスするために4つの回転それぞれで遷移する先を定義しておく
   static readonly _ = new Uint32Array(9 * 4)
 
   static Rot() {
@@ -141,7 +141,8 @@ function MatrixRotation(rotDeg: RotationDegree, I: number, J: number, N: number)
 
   return struct
 }
-class OutputMatrix {
+
+class OutputSystem {
   private _p: PixelData
   private _scaleN: number
   private _outWidth: number
@@ -204,7 +205,7 @@ export default class XBRz {
 
     const trgWidth = p.width * scale
     const preProcBuffer = new Uint8Array(p.width)
-    const outputMatrix = new OutputMatrix(p, scale, trgWidth)
+    const outputSystem = new OutputSystem(p, scale, trgWidth)
     // initialize preprocessing buffer for first row:
     // detect upper left and right corner blending
     // this cannot be optimized for adjacent processing
@@ -260,7 +261,7 @@ export default class XBRz {
     }
 
     for (let j = 0; j < p.height; j++) {
-      let trgi = scale * j * trgWidth // target index
+      let trgi = scale * j * trgWidth // target Y index
       let blendXy1 = 0
 
       for (let i = 0; i < p.width; i++, trgi += scale) {
@@ -317,14 +318,11 @@ export default class XBRz {
         blendXy1 = BlendInfo.SetTopL(0, blendResult.k)
 
         if (i + 1 < p.width) {
-          // eslint-disable-next-line prettier/prettier
           preProcBuffer[i + 1] = BlendInfo.SetBottomL(preProcBuffer[i + 1], blendResult.g)
         }
 
-        // fill block of size scale * scale with the given color
-        //  // place *after* preprocessing step, to not overwrite the
-        //  // results while processing the the last pixel!
-        this._FillBlock(outputMatrix, trgi, trgWidth, ker4.f, scale)
+        // 現在処理ピクセルからのアウトプット範囲を f に初期化
+        this._FillBlock(outputSystem, trgi, trgWidth, ker4.f, scale)
 
         if (blendXy === 0) continue
 
@@ -341,20 +339,20 @@ export default class XBRz {
         ker3[7] = ker4.j
         ker3[8] = ker4.k
 
-        this._BlendPixel(scaler, RotationDegree.Rot0, ker3, outputMatrix, trgi, blendXy)
-        this._BlendPixel(scaler, RotationDegree.Rot90, ker3, outputMatrix, trgi, blendXy)
-        this._BlendPixel(scaler, RotationDegree.Rot180, ker3, outputMatrix, trgi, blendXy)
-        this._BlendPixel(scaler, RotationDegree.Rot270, ker3, outputMatrix, trgi, blendXy)
+        this._BlendPixel(scaler, RotationDegree.Rot0, ker3, outputSystem, trgi, blendXy)
+        this._BlendPixel(scaler, RotationDegree.Rot90, ker3, outputSystem, trgi, blendXy)
+        this._BlendPixel(scaler, RotationDegree.Rot180, ker3, outputSystem, trgi, blendXy)
+        this._BlendPixel(scaler, RotationDegree.Rot270, ker3, outputSystem, trgi, blendXy)
       } // end x for
     } // end y for
-    return outputMatrix.outImage()
+    return outputSystem.outImage()
   }
 
   private static _BlendPixel(
     scaler: IScaler,
     rotDeg: number,
     ker: Uint32Array,
-    outputMatrix: OutputMatrix,
+    outputSystem: OutputSystem,
     trgi: number,
     blendInfo: number
   ) {
@@ -399,10 +397,10 @@ export default class XBRz {
       doLineBlend = true
     }
 
-    // choose most similar color
+    // 一番近い色を選ぶ
     const px = dist(e, f) <= dist(e, h) ? f : h
 
-    outputMatrix.TargetMove(rotDeg, trgi) // move output target point
+    outputSystem.TargetMove(rotDeg, trgi) // 出力ポイントの移動
 
     if (doLineBlend) {
       const fg = dist(f, g)
@@ -414,23 +412,23 @@ export default class XBRz {
       if (haveShallowLine) {
         if (haveSteepLine) {
           // eslint-disable-next-line prettier/prettier
-          scaler.BlendLineSteepAndShallow(px, outputMatrix)
+          scaler.BlendLineSteepAndShallow(px, outputSystem)
         } else {
           // eslint-disable-next-line prettier/prettier
-          scaler.BlendLineShallow(px, outputMatrix)
+          scaler.BlendLineShallow(px, outputSystem)
         }
       } else if (haveSteepLine) {
-        scaler.BlendLineSteep(px, outputMatrix)
+        scaler.BlendLineSteep(px, outputSystem)
       } else {
-        scaler.BlendLineDiagonal(px, outputMatrix)
+        scaler.BlendLineDiagonal(px, outputSystem)
       }
     } else {
-      scaler.BlendCorner(px, outputMatrix)
+      scaler.BlendCorner(px, outputSystem)
     }
   }
 
   private static _FillBlock(
-    out: OutputMatrix,
+    out: OutputSystem,
     trgi: number,
     pitch: number,
     col: number,
@@ -454,7 +452,7 @@ export default class XBRz {
 
     // const kB = 0.0722 // ITU-R BT.709
     // const kR = 0.2126
-    const kB = 0.0593 // ITU-R BT.2020 conversion
+    const kB = 0.0593 // ITU-R BT.2020
     const kR = 0.2627 //
     const kG = 1 - kB - kR
 
@@ -519,18 +517,18 @@ export default class XBRz {
 /// /////////////////////
 // BLENDING
 /// /////////////////////
-function _AlphaBlend(n: number, m: number, target: number, out: OutputMatrix, color: number) {
+function _AlphaBlend(n: number, m: number, target: number, out: OutputSystem, color: number) {
   const ip = PixelData.InterpolateFiltered2(color, out.getDstPixel(target), n, m - n)
   out.SetDstPixel(target, ip)
 }
 
 interface IScaler {
   Scale(): number
-  BlendLineShallow(color: number, out: OutputMatrix): void
-  BlendLineSteep(color: number, out: OutputMatrix): void
-  BlendLineSteepAndShallow(color: number, out: OutputMatrix): void
-  BlendLineDiagonal(color: number, out: OutputMatrix): void
-  BlendCorner(color: number, out: OutputMatrix): void
+  BlendLineShallow(color: number, out: OutputSystem): void
+  BlendLineSteep(color: number, out: OutputSystem): void
+  BlendLineSteepAndShallow(color: number, out: OutputSystem): void
+  BlendLineDiagonal(color: number, out: OutputSystem): void
+  BlendCorner(color: number, out: OutputSystem): void
 }
 
 class Scale2x implements IScaler {
@@ -540,28 +538,28 @@ class Scale2x implements IScaler {
     return this._SCALE
   }
 
-  BlendLineShallow(color: number, out: OutputMatrix): void {
+  BlendLineShallow(color: number, out: OutputSystem): void {
     _AlphaBlend(1, 4, out.Reference(this._SCALE - 1, 0), out, color)
     _AlphaBlend(3, 4, out.Reference(this._SCALE - 1, 1), out, color)
   }
 
-  BlendLineSteep(color: number, out: OutputMatrix): void {
+  BlendLineSteep(color: number, out: OutputSystem): void {
     _AlphaBlend(1, 4, out.Reference(0, this._SCALE - 1), out, color)
     _AlphaBlend(3, 4, out.Reference(1, this._SCALE - 1), out, color)
   }
 
-  BlendLineSteepAndShallow(color: number, out: OutputMatrix) {
+  BlendLineSteepAndShallow(color: number, out: OutputSystem) {
     _AlphaBlend(1, 4, out.Reference(1, 0), out, color)
     _AlphaBlend(1, 4, out.Reference(0, 1), out, color)
     _AlphaBlend(5, 6, out.Reference(1, 1), out, color)
   }
 
-  BlendLineDiagonal(color: number, out: OutputMatrix): void {
+  BlendLineDiagonal(color: number, out: OutputSystem): void {
     _AlphaBlend(1, 2, out.Reference(1, 1), out, color)
   }
 
-  BlendCorner(color: number, out: OutputMatrix): void {
-    // model a round corner
+  BlendCorner(color: number, out: OutputSystem): void {
+    // 角の丸み
     _AlphaBlend(21, 100, out.Reference(1, 1), out, color) // exact: 1 - pi/4 = 0.2146018366
   }
 }
@@ -573,21 +571,21 @@ class Scale3x implements IScaler {
     return this._SCALE
   }
 
-  BlendLineShallow(color: number, out: OutputMatrix): void {
+  BlendLineShallow(color: number, out: OutputSystem): void {
     _AlphaBlend(1, 4, out.Reference(this._SCALE - 1, 0), out, color)
     _AlphaBlend(1, 4, out.Reference(this._SCALE - 2, 2), out, color)
     _AlphaBlend(3, 4, out.Reference(this._SCALE - 1, 1), out, color)
     out.SetDstPixel(out.Reference(this._SCALE - 1, 2), color)
   }
 
-  BlendLineSteep(color: number, out: OutputMatrix): void {
+  BlendLineSteep(color: number, out: OutputSystem): void {
     _AlphaBlend(1, 4, out.Reference(0, this._SCALE - 1), out, color)
     _AlphaBlend(1, 4, out.Reference(2, this._SCALE - 2), out, color)
     _AlphaBlend(3, 4, out.Reference(1, this._SCALE - 1), out, color)
     out.SetDstPixel(out.Reference(2, this._SCALE - 1), color)
   }
 
-  BlendLineSteepAndShallow(color: number, out: OutputMatrix) {
+  BlendLineSteepAndShallow(color: number, out: OutputSystem) {
     _AlphaBlend(1, 4, out.Reference(2, 0), out, color)
     _AlphaBlend(1, 4, out.Reference(0, 2), out, color)
     _AlphaBlend(3, 4, out.Reference(2, 1), out, color)
@@ -595,14 +593,14 @@ class Scale3x implements IScaler {
     out.SetDstPixel(out.Reference(2, 2), color)
   }
 
-  BlendLineDiagonal(color: number, out: OutputMatrix): void {
+  BlendLineDiagonal(color: number, out: OutputSystem): void {
     _AlphaBlend(1, 8, out.Reference(1, 2), out, color)
     _AlphaBlend(1, 8, out.Reference(2, 1), out, color)
     _AlphaBlend(7, 8, out.Reference(2, 2), out, color)
   }
 
-  BlendCorner(color: number, out: OutputMatrix): void {
-    // model a round corner
+  BlendCorner(color: number, out: OutputSystem): void {
+    // 角の丸み
     _AlphaBlend(45, 100, out.Reference(2, 2), out, color) // exact: 0.4545939598
     // alphaBlend(14, 1000, out.ref(2, 1), col); //0.01413008627 -> negligable
     // alphaBlend(14, 1000, out.ref(1, 2), col); //0.01413008627
@@ -616,7 +614,7 @@ class Scale4x implements IScaler {
     return this._SCALE
   }
 
-  BlendLineShallow(color: number, out: OutputMatrix): void {
+  BlendLineShallow(color: number, out: OutputSystem): void {
     _AlphaBlend(1, 4, out.Reference(this._SCALE - 1, 0), out, color)
     _AlphaBlend(1, 4, out.Reference(this._SCALE - 2, 2), out, color)
     _AlphaBlend(3, 4, out.Reference(this._SCALE - 1, 1), out, color)
@@ -625,7 +623,7 @@ class Scale4x implements IScaler {
     out.SetDstPixel(out.Reference(this._SCALE - 1, 3), color)
   }
 
-  BlendLineSteep(color: number, out: OutputMatrix): void {
+  BlendLineSteep(color: number, out: OutputSystem): void {
     _AlphaBlend(1, 4, out.Reference(0, this._SCALE - 1), out, color)
     _AlphaBlend(1, 4, out.Reference(2, this._SCALE - 2), out, color)
     _AlphaBlend(3, 4, out.Reference(1, this._SCALE - 1), out, color)
@@ -634,7 +632,7 @@ class Scale4x implements IScaler {
     out.SetDstPixel(out.Reference(3, this._SCALE - 1), color)
   }
 
-  BlendLineSteepAndShallow(color: number, out: OutputMatrix) {
+  BlendLineSteepAndShallow(color: number, out: OutputSystem) {
     _AlphaBlend(3, 4, out.Reference(3, 1), out, color)
     _AlphaBlend(3, 4, out.Reference(1, 3), out, color)
     _AlphaBlend(1, 4, out.Reference(3, 0), out, color)
@@ -645,15 +643,15 @@ class Scale4x implements IScaler {
     out.SetDstPixel(out.Reference(2, 3), color)
   }
 
-  BlendLineDiagonal(color: number, out: OutputMatrix): void {
+  BlendLineDiagonal(color: number, out: OutputSystem): void {
     // number型が小数になると値が不安定になるため、小数点以下は切り捨てる
     _AlphaBlend(1, 2, out.Reference(this._SCALE - 1, Math.floor(this._SCALE / 2)), out, color)
     _AlphaBlend(1, 2, out.Reference(this._SCALE - 2, Math.floor(this._SCALE / 2) + 1), out, color)
     out.SetDstPixel(out.Reference(this._SCALE - 1, this._SCALE - 1), color)
   }
 
-  BlendCorner(color: number, out: OutputMatrix): void {
-    // model a round corner
+  BlendCorner(color: number, out: OutputSystem): void {
+    // 角の丸み
     _AlphaBlend(68, 100, out.Reference(3, 3), out, color) // exact: 0.6848532563
     _AlphaBlend(9, 100, out.Reference(3, 2), out, color) // 0.08677704501
     _AlphaBlend(9, 100, out.Reference(2, 3), out, color) // 0.08677704501
@@ -667,7 +665,7 @@ class Scale5x implements IScaler {
     return this._SCALE
   }
 
-  BlendLineShallow(color: number, out: OutputMatrix): void {
+  BlendLineShallow(color: number, out: OutputSystem): void {
     _AlphaBlend(1, 4, out.Reference(this._SCALE - 1, 0), out, color)
     _AlphaBlend(1, 4, out.Reference(this._SCALE - 2, 2), out, color)
     _AlphaBlend(1, 4, out.Reference(this._SCALE - 3, 4), out, color)
@@ -681,7 +679,7 @@ class Scale5x implements IScaler {
     out.SetDstPixel(out.Reference(this._SCALE - 2, 4), color)
   }
 
-  BlendLineSteep(color: number, out: OutputMatrix): void {
+  BlendLineSteep(color: number, out: OutputSystem): void {
     _AlphaBlend(1, 4, out.Reference(0, this._SCALE - 1), out, color)
     _AlphaBlend(1, 4, out.Reference(2, this._SCALE - 2), out, color)
     _AlphaBlend(1, 4, out.Reference(4, this._SCALE - 3), out, color)
@@ -695,7 +693,7 @@ class Scale5x implements IScaler {
     out.SetDstPixel(out.Reference(4, this._SCALE - 2), color)
   }
 
-  BlendLineSteepAndShallow(color: number, out: OutputMatrix) {
+  BlendLineSteepAndShallow(color: number, out: OutputSystem) {
     _AlphaBlend(1, 4, out.Reference(0, this._SCALE - 1), out, color)
     _AlphaBlend(1, 4, out.Reference(2, this._SCALE - 2), out, color)
     _AlphaBlend(3, 4, out.Reference(1, this._SCALE - 1), out, color)
@@ -714,7 +712,7 @@ class Scale5x implements IScaler {
     out.SetDstPixel(out.Reference(this._SCALE - 1, 3), color)
   }
 
-  BlendLineDiagonal(color: number, out: OutputMatrix): void {
+  BlendLineDiagonal(color: number, out: OutputSystem): void {
     // number型が小数になると値が不安定になるため、小数点以下は切り捨てる
     _AlphaBlend(1, 8, out.Reference(this._SCALE - 1, Math.floor(this._SCALE / 2)), out, color)
     _AlphaBlend(1, 8, out.Reference(this._SCALE - 2, Math.floor(this._SCALE / 2) + 1), out, color)
@@ -726,8 +724,8 @@ class Scale5x implements IScaler {
     out.SetDstPixel(out.Reference(4, 4), color)
   }
 
-  BlendCorner(color: number, out: OutputMatrix): void {
-    // model a round corner
+  BlendCorner(color: number, out: OutputSystem): void {
+    // 角の丸み
     _AlphaBlend(86, 100, out.Reference(4, 4), out, color) // exact: 0.8631434088
     _AlphaBlend(23, 100, out.Reference(4, 3), out, color) // 0.2306749731
     _AlphaBlend(23, 100, out.Reference(3, 4), out, color) // 0.2306749731
@@ -743,7 +741,7 @@ class Scale6x implements IScaler {
     return this._SCALE
   }
 
-  BlendLineShallow(color: number, out: OutputMatrix): void {
+  BlendLineShallow(color: number, out: OutputSystem): void {
     _AlphaBlend(1, 4, out.Reference(this._SCALE - 1, 0), out, color)
     _AlphaBlend(1, 4, out.Reference(this._SCALE - 2, 2), out, color)
     _AlphaBlend(1, 4, out.Reference(this._SCALE - 3, 4), out, color)
@@ -760,7 +758,7 @@ class Scale6x implements IScaler {
     out.SetDstPixel(out.Reference(this._SCALE - 2, 5), color)
   }
 
-  BlendLineSteep(color: number, out: OutputMatrix): void {
+  BlendLineSteep(color: number, out: OutputSystem): void {
     _AlphaBlend(1, 4, out.Reference(0, this._SCALE - 1), out, color)
     _AlphaBlend(1, 4, out.Reference(2, this._SCALE - 2), out, color)
     _AlphaBlend(1, 4, out.Reference(4, this._SCALE - 3), out, color)
@@ -777,7 +775,7 @@ class Scale6x implements IScaler {
     out.SetDstPixel(out.Reference(5, this._SCALE - 2), color)
   }
 
-  BlendLineSteepAndShallow(color: number, out: OutputMatrix) {
+  BlendLineSteepAndShallow(color: number, out: OutputSystem) {
     _AlphaBlend(1, 4, out.Reference(0, this._SCALE - 1), out, color)
     _AlphaBlend(1, 4, out.Reference(2, this._SCALE - 2), out, color)
     _AlphaBlend(3, 4, out.Reference(1, this._SCALE - 1), out, color)
@@ -800,7 +798,7 @@ class Scale6x implements IScaler {
     out.SetDstPixel(out.Reference(this._SCALE - 1, 3), color)
   }
 
-  BlendLineDiagonal(color: number, out: OutputMatrix): void {
+  BlendLineDiagonal(color: number, out: OutputSystem): void {
     // number型が小数になると値が不安定になるため、小数点以下は切り捨てる
     _AlphaBlend(1, 2, out.Reference(this._SCALE - 1, Math.floor(this._SCALE / 2)), out, color)
     _AlphaBlend(1, 2, out.Reference(this._SCALE - 2, Math.floor(this._SCALE / 2) + 1), out, color)
@@ -810,8 +808,8 @@ class Scale6x implements IScaler {
     out.SetDstPixel(out.Reference(this._SCALE - 1, this._SCALE - 2), color)
   }
 
-  BlendCorner(color: number, out: OutputMatrix): void {
-    // model a round corner
+  BlendCorner(color: number, out: OutputSystem): void {
+    // 角の丸み
     _AlphaBlend(97, 100, out.Reference(5, 5), out, color) // exact: 0.9711013910
     _AlphaBlend(42, 100, out.Reference(4, 5), out, color) // 0.4236372243
     _AlphaBlend(42, 100, out.Reference(5, 4), out, color) // 0.4236372243

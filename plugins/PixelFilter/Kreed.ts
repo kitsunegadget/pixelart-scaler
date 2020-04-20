@@ -56,19 +56,13 @@ export default class Kreed {
         // e01 = e10 = e11 = c4
 
         if (c4 === c8 && c5 !== c7) {
-          if (
-            (c4 === c1 && c5 === d5) ||
-            (c4 === c7 && c4 === c2 && c5 !== c1 && c5 === d3)
-          ) {
+          if ((c4 === c1 && c5 === d5) || (c4 === c7 && c4 === c2 && c5 !== c1 && c5 === d3)) {
             e01 = c4
           } else {
             e01 = PixelData.Interpolate(c4, c5)
           }
 
-          if (
-            (c4 === c3 && c7 === d2) ||
-            (c4 === c5 && c4 === c6 && c3 !== c7 && c7 === d0)
-          ) {
+          if ((c4 === c3 && c7 === d2) || (c4 === c5 && c4 === c6 && c3 !== c7 && c7 === d0)) {
             e10 = c4
           } else {
             e10 = PixelData.Interpolate(c4, c7)
@@ -76,19 +70,13 @@ export default class Kreed {
           e11 = c4
           //
         } else if (c5 === c7 && c4 !== c8) {
-          if (
-            (c5 === c2 && c4 === c6) ||
-            (c5 === c1 && c5 === c8 && c4 !== c2 && c4 === c0)
-          ) {
+          if ((c5 === c2 && c4 === c6) || (c5 === c1 && c5 === c8 && c4 !== c2 && c4 === c0)) {
             e01 = c5
           } else {
             e01 = PixelData.Interpolate(c4, c5)
           }
 
-          if (
-            (c7 === c6 && c4 === c2) ||
-            (c7 === c3 && c7 === c8 && c4 !== c6 && c4 === c0)
-          ) {
+          if ((c7 === c6 && c4 === c2) || (c7 === c3 && c7 === c8 && c4 !== c6 && c4 === c0)) {
             e10 = c7
           } else {
             e10 = PixelData.Interpolate(c4, c7)

@@ -22,6 +22,7 @@ export default class XBR {
 
   // YUV convert function
   private static _RGBtoY(x: number) {
+    // eslint-disable-next-line prettier/prettier
     const t =
       (PixelData.getR(x) * 299 +
         PixelData.getG(x) * 587 +
@@ -81,25 +82,17 @@ export default class XBR {
 
   // 2x
   // eslint-disable-next-line camelcase
-  private static _Left2_2x(
-    n3: number,
-    n2: number,
-    pixel: number,
-    blend: boolean
-  ) {
+  private static _Left2_2x(n3: number, n2: number, pixel: number, blend: boolean) {
+    // eslint-disable-next-line prettier/prettier
     return [
-      this._AlphaBlend192W(n3, pixel, blend),
+      this._AlphaBlend192W(n3, pixel, blend), 
       this._AlphaBlend64W(n2, pixel, blend)
     ]
   }
 
   // eslint-disable-next-line camelcase
-  private static _Up2_2x(
-    n3: number,
-    n1: number,
-    pixel: number,
-    blend: boolean
-  ) {
+  private static _Up2_2x(n3: number, n1: number, pixel: number, blend: boolean) {
+    // eslint-disable-next-line prettier/prettier
     return [
       this._AlphaBlend192W(n3, pixel, blend),
       this._AlphaBlend64W(n1, pixel, blend)
@@ -149,10 +142,7 @@ export default class XBR {
 
     if (
       ee < ii &&
-      ((f !== b && h !== d) ||
-        (e === i && f !== i4 && h !== i5) ||
-        e === g ||
-        e === c)
+      ((f !== b && h !== d) || (e === i && f !== i4 && h !== i5) || e === g || e === c)
     ) {
       const ke = this._YuvDifference(f, g)
       const ki = this._YuvDifference(h, c)
@@ -232,13 +222,7 @@ export default class XBR {
   }
 
   // eslint-disable-next-line camelcase
-  private static _Dia_3x(
-    n8: number,
-    n5: number,
-    n7: number,
-    pixel: number,
-    blend: boolean
-  ) {
+  private static _Dia_3x(n8: number, n5: number, n7: number, pixel: number, blend: boolean) {
     const m8 = this._AlphaBlend224W(n8, pixel, blend)
     const m5 = this._AlphaBlend32W(n5, pixel, blend)
     const m7 = this._AlphaBlend32W(n7, pixel, blend)
@@ -284,10 +268,7 @@ export default class XBR {
 
     if (
       ee < ii &&
-      ((f !== b && h !== d) ||
-        (e === i && f !== i4 && h !== i5) ||
-        e === g ||
-        e === c)
+      ((f !== b && h !== d) || (e === i && f !== i4 && h !== i5) || e === g || e === c)
     ) {
       const ke = this._YuvDifference(f, g)
       const ki = this._YuvDifference(h, c)
@@ -450,10 +431,7 @@ export default class XBR {
 
     if (
       ee < ii &&
-      ((f !== b && h !== d) ||
-        (e === i && f !== i4 && h !== i5) ||
-        e === g ||
-        e === c)
+      ((f !== b && h !== d) || (e === i && f !== i4 && h !== i5) || e === g || e === c)
     ) {
       const ke = this._YuvDifference(f, g)
       const ki = this._YuvDifference(h, c)
