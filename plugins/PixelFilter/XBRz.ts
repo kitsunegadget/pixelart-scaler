@@ -2,7 +2,7 @@
 // Copyright (C) 2020 Kitsune Gadget
 //
 // Reference: xBRz filter by Zenju (see https://sourceforge.net/projects/xbrz/)
-// Also, 2dImageFilter (see https://code.google.com/archive/p/2dimagefilter/)
+// Also, 2dImageFilter (http://hawkynt.github.io/2dimagefilter/)
 import PixelData from './pixelData'
 
 interface Kernel4x4 {
@@ -518,7 +518,7 @@ export default class XBRz {
 // BLENDING
 /// /////////////////////
 function _AlphaBlend(n: number, m: number, target: number, out: OutputSystem, color: number) {
-  const ip = PixelData.InterpolateFiltered2(color, out.getDstPixel(target), n, m - n)
+  const ip = PixelData.InterpolateWeighted2(color, out.getDstPixel(target), n, m - n)
   out.SetDstPixel(target, ip)
 }
 

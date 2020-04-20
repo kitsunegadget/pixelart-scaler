@@ -1,7 +1,7 @@
 // jsPixelFilter Library
 // Copyright (C) 2020 Kitsune Gadget
 //
-// Reference: 2xSaI (see https://vdnoort.home.xs4all.nl/emulation/2xsai/)
+// Reference: 2xSaI (https://vdnoort.home.xs4all.nl/emulation/2xsai/)
 
 import PixelData from './pixelData'
 
@@ -338,10 +338,10 @@ export default class Kreed {
           e10 = e01 = PixelData.Interpolate(c4, c8)
           e10 = PixelData.Interpolate(c7, c7, c7, e10)
           e01 = PixelData.Interpolate(c5, c5, c5, e01)
-          // e11 = PixelData.InterpolateFiltered3(c8, c7, c5, 6, 1, 1)
-          // e00 = PixelData.InterpolateFiltered3(c4, c7, c5, 6, 1, 1)
-          // e10 = PixelData.InterpolateFiltered3(c7, c4, c8, 6, 1, 1)
-          // e01 = PixelData.InterpolateFiltered3(c5, c4, c8, 6, 1, 1)
+          // e11 = PixelData.InterpolateWeighted3(c8, c7, c5, 6, 1, 1)
+          // e00 = PixelData.InterpolateWeighted3(c4, c7, c5, 6, 1, 1)
+          // e10 = PixelData.InterpolateWeighted3(c7, c4, c8, 6, 1, 1)
+          // e01 = PixelData.InterpolateWeighted3(c5, c4, c8, 6, 1, 1)
         }
 
         const rl = j * p.width * scale ** 2 + i * scale

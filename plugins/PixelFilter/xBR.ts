@@ -1,7 +1,7 @@
 // jsPixelFilter Library
 // Copyright (C) 2020 Kitsune Gadget
 //
-// Reference: 2dImageFilter (see https://code.google.com/archive/p/2dimagefilter/)
+// Reference: 2dImageFilter (http://hawkynt.github.io/2dimagefilter/)
 
 import PixelData from './pixelData'
 
@@ -61,11 +61,11 @@ export default class XBR {
 
   // blend function
   private static _AlphaBlend32W(dst: number, src: number, blend: boolean) {
-    return blend ? PixelData.InterpolateFiltered2(dst, src, 7, 1) : src
+    return blend ? PixelData.InterpolateWeighted2(dst, src, 7, 1) : src
   }
 
   private static _AlphaBlend64W(dst: number, src: number, blend: boolean) {
-    return blend ? PixelData.InterpolateFiltered2(dst, src, 3, 1) : src
+    return blend ? PixelData.InterpolateWeighted2(dst, src, 3, 1) : src
   }
 
   private static _AlphaBlend128W(dst: number, src: number, blend: boolean) {
@@ -73,11 +73,11 @@ export default class XBR {
   }
 
   private static _AlphaBlend192W(dst: number, src: number, blend: boolean) {
-    return blend ? PixelData.InterpolateFiltered2(dst, src, 1, 3) : src
+    return blend ? PixelData.InterpolateWeighted2(dst, src, 1, 3) : src
   }
 
   private static _AlphaBlend224W(dst: number, src: number, blend: boolean) {
-    return blend ? PixelData.InterpolateFiltered2(dst, src, 1, 7) : src
+    return blend ? PixelData.InterpolateWeighted2(dst, src, 1, 7) : src
   }
 
   // 2x

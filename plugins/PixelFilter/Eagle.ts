@@ -1,7 +1,7 @@
 // jsPixelFilter Library
 // Copyright (C) 2020 Kitsune Gadget
 //
-// Reference: 2dImageFilter (see https://code.google.com/archive/p/2dimagefilter/)
+// Reference: 2dImageFilter (http://hawkynt.github.io/2dimagefilter/)
 
 import PixelData from './pixelData'
 
