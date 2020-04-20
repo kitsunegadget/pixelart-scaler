@@ -35,12 +35,12 @@
         <v-btn @click="$emit('convert-start', 'eagle2')">
           Eagle 2x
         </v-btn>
-        <v-btn @click="$emit('convert-start', 'eagle3')">
+        <!-- <v-btn @click="$emit('convert-start', 'eagle3')">
           Eagle 3x
-        </v-btn>
-        <v-btn @click="$emit('convert-start', 'eagle3xB')">
+        </v-btn> -->
+        <!-- <v-btn @click="$emit('convert-start', 'eagle3xB')">
           Eagle 3xB
-        </v-btn>
+        </v-btn> -->
         <v-btn @click="$emit('convert-start', '2xSaI')">
           SaI 2x
         </v-btn>
