@@ -6,21 +6,22 @@
 import PixelData from './pixelData'
 
 export default class Kreed {
+  static getResult(c00: number, c01: number, c10: number, c11: number) {
+    let x = 0
+    let y = 0
+    let r = 0
+    if (c00 === c10) x++
+    else if (c01 === c10) y++
+    if (c00 === c11) x++
+    else if (c01 === c11) y++
+    if (x <= 1) r++
+    if (y <= 1) r--
+    return r
+  }
+
   // 2xSaI algorithm
   // original auther is Drek Liauw Kie Fa
   static _2xSaI(imageData: ImageData, scale: number) {
-    const getResult = (c00: number, c01: number, c10: number, c11: number) => {
-      let x = 0
-      let y = 0
-      let r = 0
-      if (c00 === c10) x++
-      else if (c01 === c10) y++
-      if (c00 === c11) x++
-      else if (c01 === c11) y++
-      if (x <= 1) r++
-      if (y <= 1) r--
-      return r
-    }
     const p = new PixelData(imageData)
     p.setDistSize(scale)
 
@@ -93,10 +94,10 @@ export default class Kreed {
             e10 = PixelData.Interpolate(c4, c7)
             e01 = PixelData.Interpolate(c4, c5)
 
-            r += getResult(c4, c5, c3, c1)
-            r -= getResult(c5, c4, d4, c2)
-            r -= getResult(c5, c4, c6, d1)
-            r += getResult(c4, c5, d5, d2)
+            r += this.getResult(c4, c5, c3, c1)
+            r -= this.getResult(c5, c4, d4, c2)
+            r -= this.getResult(c5, c4, c6, d1)
+            r += this.getResult(c4, c5, d5, d2)
 
             if (r > 0) {
               e11 = c4
@@ -139,18 +140,6 @@ export default class Kreed {
   // Super2xSaI algorithm
   // original auther is Drek Liauw Kie Fa
   static Super2xSaI(imageData: ImageData, scale: number) {
-    const getResult = (c00: number, c01: number, c10: number, c11: number) => {
-      let x = 0
-      let y = 0
-      let r = 0
-      if (c00 === c10) x++
-      else if (c01 === c10) y++
-      if (c00 === c11) x++
-      else if (c01 === c11) y++
-      if (x <= 1) r++
-      if (y <= 1) r--
-      return r
-    }
     const p = new PixelData(imageData)
     p.setDistSize(scale)
 
@@ -192,10 +181,10 @@ export default class Kreed {
           e01 = c4
         } else if (c4 === c8 && c7 === c5) {
           let r = 0
-          r += getResult(c5, c4, c6, d1)
-          r += getResult(c5, c4, c3, c1)
-          r += getResult(c5, c4, d2, d5)
-          r += getResult(c5, c4, c2, d4)
+          r += this.getResult(c5, c4, c6, d1)
+          r += this.getResult(c5, c4, c3, c1)
+          r += this.getResult(c5, c4, d2, d5)
+          r += this.getResult(c5, c4, c2, d4)
 
           if (r > 0) {
             e11 = c5
@@ -255,18 +244,6 @@ export default class Kreed {
   // SuperEagle algorithm
   // original auther is Drek Liauw Kie Fa
   static SuperEagle(imageData: ImageData, scale: number) {
-    const getResult = (c00: number, c01: number, c10: number, c11: number) => {
-      let x = 0
-      let y = 0
-      let r = 0
-      if (c00 === c10) x++
-      else if (c01 === c10) y++
-      if (c00 === c11) x++
-      else if (c01 === c11) y++
-      if (x <= 1) r++
-      if (y <= 1) r--
-      return r
-    }
     const p = new PixelData(imageData)
     p.setDistSize(scale)
 
@@ -335,10 +312,10 @@ export default class Kreed {
           //
         } else if (c4 === c8 && c7 === c5) {
           let r = 0
-          r += getResult(c5, c4, c6, d1)
-          r += getResult(c5, c4, c3, c1)
-          r += getResult(c5, c4, d2, d5)
-          r += getResult(c5, c4, c2, d4)
+          r += this.getResult(c5, c4, c6, d1)
+          r += this.getResult(c5, c4, c3, c1)
+          r += this.getResult(c5, c4, d2, d5)
+          r += this.getResult(c5, c4, c2, d4)
 
           if (r > 0) {
             e01 = e10 = c7
