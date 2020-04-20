@@ -23,6 +23,15 @@
         <v-btn @click="$emit('convert-start', 'epx4')">
           Scale 4x
         </v-btn>
+        <v-btn @click="$emit('convert-start', 'epxB')">
+          EPXB 2x
+        </v-btn>
+        <v-btn @click="$emit('convert-start', 'epxC')">
+          EPXC 2x
+        </v-btn>
+        <v-btn @click="$emit('convert-start', 'epx33')">
+          EPX3 3x
+        </v-btn>
         <v-btn @click="$emit('convert-start', 'eagle2')">
           Eagle 2x
         </v-btn>

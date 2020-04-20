@@ -134,6 +134,21 @@ export default Vue.extend({
               const x2ImageData = PxFilter.EPX(imageData, 2)
               const newImageData = PxFilter.EPX(x2ImageData, 2)
               ctx.putImageData(newImageData, 0, 0)
+            } else if (type === 'epxB') {
+              ctx.canvas.width *= 2
+              ctx.canvas.height *= 2
+              const newImageData = PxFilter.SNES9x(imageData, 2, 'B')
+              ctx.putImageData(newImageData, 0, 0)
+            } else if (type === 'epxC') {
+              ctx.canvas.width *= 2
+              ctx.canvas.height *= 2
+              const newImageData = PxFilter.SNES9x(imageData, 2, 'C')
+              ctx.putImageData(newImageData, 0, 0)
+            } else if (type === 'epx33') {
+              ctx.canvas.width *= 3
+              ctx.canvas.height *= 3
+              const newImageData = PxFilter.SNES9x(imageData, 3, '3')
+              ctx.putImageData(newImageData, 0, 0)
             } else if (type === 'eagle2') {
               ctx.canvas.width *= 2
               ctx.canvas.height *= 2

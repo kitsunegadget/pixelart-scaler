@@ -129,7 +129,7 @@ class PixelData implements PixelData {
     }
   }
 
-  static InterpolateFiltered2(A: number, B: number, f1: number, f2: number) {
+  static InterpolateWeighted2(A: number, B: number, f1: number, f2: number) {
     let total = (f1 + f2)
 
     const A_a = A >> 24
@@ -147,7 +147,7 @@ class PixelData implements PixelData {
         | Math.floor((A_r * f1 + B_r * f2) / total)
   }
 
-  static InterpolateFiltered3(A: number, B: number, C: number, f1: number, f2: number, f3: number) {
+  static InterpolateWeighted3(A: number, B: number, C: number, f1: number, f2: number, f3: number) {
     let total = (f1 + f2 + f3)
 
     const A_a = A >> 24
@@ -167,6 +167,35 @@ class PixelData implements PixelData {
         | Math.floor((A_b * f1 + B_b * f2 + C_b * f3) / total) << 16 
         | Math.floor((A_g * f1 + B_g * f2 + C_g * f3) / total) << 8 
         | Math.floor((A_r * f1 + B_r * f2 + C_r * f3) / total)
+  }
+
+  static InterpolateWeighted4(
+    A: number, B: number, C: number, D: number, 
+    w1: number, w2: number, w3: number, w4: number
+  ) {
+    let total = (w1 + w2 + w3 + w4)
+
+    const A_a = A >> 24
+    const A_b = (A >> 16) & 0xff
+    const A_g = (A >> 8) & 0xff
+    const A_r = A & 0xff
+    const B_a = B >> 24
+    const B_b = (B >> 16) & 0xff
+    const B_g = (B >> 8) & 0xff
+    const B_r = B & 0xff
+    const C_a = C >> 24
+    const C_b = (C >> 16) & 0xff
+    const C_g = (C >> 8) & 0xff
+    const C_r = C & 0xff
+    const D_a = D >> 24
+    const D_b = (D >> 16) & 0xff
+    const D_g = (D >> 8) & 0xff
+    const D_r = D & 0xff
+
+    return Math.floor((A_a * w1 + B_a * w2 + C_a * w3 + D_a * w4) / total) << 24 
+        | Math.floor((A_b * w1 + B_b * w2 + C_b * w3 + D_b * w4) / total) << 16 
+        | Math.floor((A_g * w1 + B_g * w2 + C_g * w3 + D_g * w4) / total) << 8 
+        | Math.floor((A_r * w1 + B_r * w2 + C_r * w3 + D_r * w4) / total)
   }
 }
 

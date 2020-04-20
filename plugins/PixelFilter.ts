@@ -1,15 +1,26 @@
 /* eslint-disable unicorn/number-literal-case */
 // import PixelData from './PixelFilter/pixelData'
 import EPX from './PixelFilter/EPX'
+import SNES9x from './PixelFilter/SNES9x'
 import Eagle from './PixelFilter/Eagle'
 import Kreed from './PixelFilter/Kreed'
 import XBR from './PixelFilter/xBR'
 import XBRZ from './PixelFilter/xBRZ'
 // ImageDataをPixelData型にしてスケール変換するstaticクラス
 export default class PixelFilter {
-  // Eric's Pixel Expansion / Scale Nx Algorithm
   static EPX(imageData: ImageData, scale: number) {
     return EPX.EPX(imageData, scale)
+  }
+
+  static SNES9x(imageData: ImageData, scale: number, mode = 'B') {
+    if (mode === 'B') {
+      return SNES9x.EPXB(imageData, scale)
+    } else if (mode === '3') {
+      return SNES9x.EPX3(imageData, scale)
+    } else if (mode === 'C') {
+      return SNES9x.EPXC(imageData, scale)
+    }
+    return imageData
   }
 
   static Eagle(imageData: ImageData, scale: number, mode = 'normal') {
