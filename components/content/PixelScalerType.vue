@@ -50,6 +50,15 @@
         <v-btn @click="$emit('convert-start', 'SuperEagle')">
           SuperEagle 2x
         </v-btn>
+        <v-btn @click="$emit('convert-start', 'HQx2')">
+          HQ 2x
+        </v-btn>
+        <v-btn @click="$emit('convert-start', 'HQx3')">
+          HQ 3x
+        </v-btn>
+        <v-btn @click="$emit('convert-start', 'HQx4')">
+          HQ 4x
+        </v-btn>
         <v-btn @click="$emit('convert-start', 'xBR2')">
           xBR 2x
         </v-btn>

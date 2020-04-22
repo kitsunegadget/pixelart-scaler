@@ -179,6 +179,21 @@ export default Vue.extend({
               ctx.canvas.height *= 2
               const newImageData = PxFilter.SuperEagle(imageData, 2)
               ctx.putImageData(newImageData, 0, 0)
+            } else if (type === 'HQx2') {
+              ctx.canvas.width *= 2
+              ctx.canvas.height *= 2
+              const newImageData = PxFilter.HQx(img, 2)
+              ctx.putImageData(newImageData, 0, 0)
+            } else if (type === 'HQx3') {
+              ctx.canvas.width *= 3
+              ctx.canvas.height *= 3
+              const newImageData = PxFilter.HQx(img, 3)
+              ctx.putImageData(newImageData, 0, 0)
+            } else if (type === 'HQx4') {
+              ctx.canvas.width *= 4
+              ctx.canvas.height *= 4
+              const newImageData = PxFilter.HQx(img, 4)
+              ctx.putImageData(newImageData, 0, 0)
             } else if (type === 'xBR2') {
               ctx.canvas.width *= 2
               ctx.canvas.height *= 2

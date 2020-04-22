@@ -4,7 +4,9 @@ import EPX from './PixelFilter/EPX'
 import SNES9x from './PixelFilter/SNES9x'
 import Eagle from './PixelFilter/Eagle'
 import Kreed from './PixelFilter/Kreed'
+import jsHQx from './js-hqx/hqx'
 import XBR from './PixelFilter/xBR'
+// import XBRm from './PixelFilter/xBRm'
 import XBRZ from './PixelFilter/xBRZ'
 // ImageDataをPixelData型にしてスケール変換するstaticクラス
 export default class PixelFilter {
@@ -39,6 +41,10 @@ export default class PixelFilter {
     return Kreed.SuperEagle(imageData, scale)
   }
 
+  static HQx(image: HTMLImageElement, scale: number) {
+    return jsHQx(image, scale)
+  }
+
   static XBR(imageData: ImageData, scale: number) {
     return XBR.XBR(imageData, scale, true)
   }
@@ -46,6 +52,10 @@ export default class PixelFilter {
   static XBRz(imageData: ImageData, scale: number) {
     return XBRZ.XBRZ(imageData, scale)
   }
+
+  // static XBRm(imageData: ImageData, scale: number) {
+  //   return XBRm.XBR(imageData, scale)
+  // }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static Test(imageData: ImageData, scale: number) {
