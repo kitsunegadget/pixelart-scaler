@@ -121,7 +121,9 @@ export default class XBR {
     n1: number,
     n2: number,
     n3: number,
-    blend: boolean
+    blend: boolean,
+    c1: number, // eslint-disable-line @typescript-eslint/no-unused-vars
+    g0: number // eslint-disable-line @typescript-eslint/no-unused-vars
   ) {
     const ex = e !== h && e !== f
     if (!ex) return [n1, n2, n3]
@@ -140,9 +142,24 @@ export default class XBR {
       (this._YuvDifference(e, i) << 2)
     const px = this._YuvDifference(e, f) <= this._YuvDifference(e, h) ? f : h
 
+    // corner D
+    // if (
+    //   ee < ii &&
+    //   ((f !== b && h !== d) || (e === i && f !== i4 && h !== i5) || e === g || e === c) &&
+    //   ((f !== f4 && f !== i) ||
+    //     (h !== h5 && h !== i) ||
+    //     h !== g ||
+    //     f !== c ||
+    //     (b === c1 && d === g0))
+    // ) {
+    // corner C: none of defined corner
     if (
       ee < ii &&
-      ((f !== b && h !== d) || (e === i && f !== i4 && h !== i5) || e === g || e === c)
+      ((f !== b && f !== c) ||
+        (h !== d && h !== g) ||
+        (e === i && ((f !== f4 && f !== i4) || (h !== h5 && h !== i5))) ||
+        e === g ||
+        e === c)
     ) {
       const ke = this._YuvDifference(f, g)
       const ki = this._YuvDifference(h, c)
@@ -268,7 +285,11 @@ export default class XBR {
 
     if (
       ee < ii &&
-      ((f !== b && h !== d) || (e === i && f !== i4 && h !== i5) || e === g || e === c)
+      ((f !== b && f !== c) ||
+        (h !== d && h !== g) ||
+        (e === i && ((f !== f4 && f !== i4) || (h !== h5 && h !== i5))) ||
+        e === g ||
+        e === c)
     ) {
       const ke = this._YuvDifference(f, g)
       const ki = this._YuvDifference(h, c)
@@ -431,7 +452,11 @@ export default class XBR {
 
     if (
       ee < ii &&
-      ((f !== b && h !== d) || (e === i && f !== i4 && h !== i5) || e === g || e === c)
+      ((f !== b && f !== c) ||
+        (h !== d && h !== g) ||
+        (e === i && ((f !== f4 && f !== i4) || (h !== h5 && h !== i5))) ||
+        e === g ||
+        e === c)
     ) {
       const ke = this._YuvDifference(f, g)
       const ki = this._YuvDifference(h, c)
@@ -515,22 +540,22 @@ export default class XBR {
         const rl = j * p.width * scale ** 2 + i * scale
         if (scale === 2) {
           // eslint-disable-next-line prettier/prettier
-          const e123 = this._Kernel2x(E,I,H,F,G,C,D,B, F4,I4,H5,I5, e1,e2,e3, allowAlphaBlend)
+          const e123 = this._Kernel2x(E,I,H,F,G,C,D,B, F4,I4,H5,I5, e1,e2,e3, allowAlphaBlend, C1, G0)
           e1 = e123[0]
           e2 = e123[1]
           e3 = e123[2]
           // eslint-disable-next-line prettier/prettier
-          const e031 = this._Kernel2x(E,C,F,B,I,A,H,D, B1,C1,F4,C4, e0,e3,e1, allowAlphaBlend)
+          const e031 = this._Kernel2x(E,C,F,B,I,A,H,D, B1,C1,F4,C4, e0,e3,e1, allowAlphaBlend, A0, I5)
           e0 = e031[0]
           e3 = e031[1]
           e1 = e031[2]
           // eslint-disable-next-line prettier/prettier
-          const e210 = this._Kernel2x(E,A,B,D,C,G,F,H, D0,A0,B1,A1, e2,e1,e0, allowAlphaBlend)
+          const e210 = this._Kernel2x(E,A,B,D,C,G,F,H, D0,A0,B1,A1, e2,e1,e0, allowAlphaBlend, G5, C4)
           e2 = e210[0]
           e1 = e210[1]
           e0 = e210[2]
           // eslint-disable-next-line prettier/prettier
-          const e302 = this._Kernel2x(E,G,D,H,A,I,B,F, H5,G5,D0,G0, e3,e0,e2, allowAlphaBlend)
+          const e302 = this._Kernel2x(E,G,D,H,A,I,B,F, H5,G5,D0,G0, e3,e0,e2, allowAlphaBlend, I4, A1)
           e3 = e302[0]
           e0 = e302[1]
           e2 = e302[2]
