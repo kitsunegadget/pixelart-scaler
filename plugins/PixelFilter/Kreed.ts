@@ -1,5 +1,4 @@
-// jsPixelFilter Library
-// Copyright (C) 2020 Kitsune Gadget
+// Pixel Art Scaler: jsPixelFilter
 //
 // Reference: 2xSaI (https://vdnoort.home.xs4all.nl/emulation/2xsai/)
 

@@ -1,12 +1,11 @@
-// jsPixelFilter Library
-// Copyright (C) 2020 Kitsune Gadget
+// Pixel Art Scaler: jsPixelFilter
 //
 // Reference: 2dImageFilter (http://hawkynt.github.io/2dimagefilter/)
 
 import PixelData from './pixelData'
 
 // original xbr algolithm by Hyllian
-// xbr-lv3 shader (see https://github.com/libreto/common-shaders)
+// xbr shader (https://github.com/libreto/common-shaders)
 export default class XBR {
   private static readonly XBR_Y_WEIGHT = 48
   private static readonly XBR_U_WEIGHT = 7

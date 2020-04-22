@@ -1,5 +1,4 @@
-// jsPixelFilter Library
-// Copyright (C) 2020 Kitsune Gadget
+// Pixel Art Scaler: jsPixelFilter
 //
 // Reference: 2dImageFilter (http://hawkynt.github.io/2dimagefilter/)
 

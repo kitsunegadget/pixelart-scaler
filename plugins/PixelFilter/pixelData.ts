@@ -1,5 +1,4 @@
-// jsPixelFilter Library
-// Copyright (C) 2020 Kitsune Gadget
+// Pixel Art Scaler: jsPixelFilter
 //
 
 // 変換の見通しを良くするためのpixelDataクラス

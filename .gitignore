@@ -94,3 +94,4 @@ README_default.md
 plugins/PixelFilter/Vector.ts
 firebase_with_function.json
 functions/
+middleware/
