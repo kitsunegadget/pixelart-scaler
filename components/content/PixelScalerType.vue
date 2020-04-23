@@ -310,6 +310,7 @@ export default Vue.extend({
 <style lang="scss">
 .pixel-scaler-bottom {
   position: relative;
+  width: 250px;
   min-height: 640px;
   height: calc(100vh - 350px);
   display: flex;
@@ -317,6 +318,12 @@ export default Vue.extend({
   // justify-content: space-around;
   // background: #3344dd;
   color: white;
+
+  @media (orientation: portrait) {
+    min-height: initial;
+    height: 30vh;
+    width: 100%;
+  }
 }
 
 .disabled-overlay {
@@ -329,7 +336,6 @@ export default Vue.extend({
 
 .scale-style {
   // margin: 10px;
-  width: 250px;
   display: flex;
   flex-direction: column;
   // align-items: center;
@@ -339,6 +345,11 @@ export default Vue.extend({
   overflow-y: scroll;
   overflow-x: hidden;
 
+  // for firefox
+  scrollbar-width: thin;
+  scrollbar-color: $color-blue2 $color-white;
+
+  // for webkit browser
   &::-webkit-scrollbar {
     display: block;
     overflow: hidden;
@@ -349,7 +360,7 @@ export default Vue.extend({
     }
   }
   &::-webkit-scrollbar-button {
-    background-color: $color-green;
+    background-color: $color-blue1;
     // display: none;
     height: 1px;
   }
@@ -357,7 +368,7 @@ export default Vue.extend({
     background: #f00;
   }
   &::-webkit-scrollbar-thumb {
-    background: $color-blue;
+    background: $color-blue2;
   }
   &::-webkit-scrollbar-track {
     // background: #000;

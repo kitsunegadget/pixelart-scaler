@@ -255,7 +255,7 @@ export default Vue.extend({
     },
     changeCanvasExpand() {
       this.canvasExpanded = !this.canvasExpanded
-      console.log(this.canvasExpanded)
+      // console.log(this.canvasExpanded)
     }
   }
 })
@@ -308,6 +308,10 @@ export default Vue.extend({
       max-height: none;
       max-width: none;
     }
+  }
+
+  @media (orientation: portrait) {
+    height: 45vh;
   }
 }
 .converting-status {

@@ -60,9 +60,9 @@ export default Vue.extend({
   overflow: hidden;
   height: 100px;
   margin-left: 1px;
-  z-index: 1;
+  // z-index: 0;
   top: 2.5px;
-  transform: translateY(187.5px);
+  transform: translateY(220px);
 
   &[loaded] {
     transform: translateY(0);

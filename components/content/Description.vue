@@ -30,7 +30,7 @@ export default Vue.extend({
 <style lang="scss">
 .description {
   width: 100%;
-  height: 500px;
+  height: 550px;
   @include flex-centering(column);
   justify-content: space-around;
   // background: #f2ffe7;
