@@ -1,15 +1,6 @@
 <template>
-  <div class="pixel-scaler-inside">
-    <!-- <div class="pixel-scaler-top dragArea" draggable="false"> -->
+  <div class="pixel-scaler-inside dragArea">
     <PixelScalerType :converting="converting" @convert-start="convertClick" />
-    <!-- <div class="input-image">
-        <span v-show="!imageLoaded">
-          <p>ドラッグ＆ドロップ</p>
-          <p>もしくは</p>
-          <p>画像を選択から読み込む</p>
-        </span>
-        <img v-show="imageLoaded" class="image" :src="inputData" draggable="false" />
-      </div> -->
     <!-- <div class="converting-status">
         <v-progress-circular v-if="converting" indeterminate color="blue" :size="50">
           <span class="sr-only">Loading...</span>
@@ -18,7 +9,7 @@
           <v-icon x-large color="orange">mdi-arrow-right-thick</v-icon>
         </div>
       </div> -->
-    <div class="output-image">
+    <div class="output-image" v-bind="{ expand: !canvasExpanded }" @click="changeCanvasExpand">
       <canvas ref="outputCanvas"></canvas>
       <!-- <img
           v-show="!converting"
@@ -27,7 +18,6 @@
           draggable="false"
         /> -->
     </div>
-    <!-- </div> -->
   </div>
 </template>
 
@@ -60,7 +50,8 @@ export default Vue.extend({
   data() {
     return {
       converting: false,
-      currentFilter: 'NoScale'
+      currentFilter: 'NoScale',
+      canvasExpanded: false
     }
   },
   watch: {
@@ -261,6 +252,10 @@ export default Vue.extend({
       //       console.log(res.data)
       //     }
       //   })
+    },
+    changeCanvasExpand() {
+      this.canvasExpanded = !this.canvasExpanded
+      console.log(this.canvasExpanded)
     }
   }
 })
@@ -277,22 +272,25 @@ export default Vue.extend({
   height: 100%;
   transition: all 1s ease;
 }
-.input-image {
-  min-height: 640px;
-  min-width: 640px;
+.output-image {
+  height: 640px;
+  width: 640px;
   // background: #666;
   border: solid 1px $color-green;
   box-sizing: content-box;
   @include flex-centering(row);
+  cursor: pointer;
 
   canvas {
-    // width: 100%;
-    // height: 100%;
-    max-height: 640px;
-    max-width: 640px;
+    width: 100%;
+    height: 100%;
+    // max-height: 640px;
+    // max-width: 640px;
     object-fit: contain;
     image-rendering: pixelated;
+    transition: all ease 1s;
   }
+
   .image {
     width: 100%;
     height: 100%;
@@ -300,10 +298,16 @@ export default Vue.extend({
     image-rendering: pixelated;
   }
 
-  > span {
-    @include flex-centering(column);
-    height: 100%;
-    color: $color-black6;
+  &[expand] {
+    display: block;
+    overflow: scroll;
+
+    canvas {
+      width: initial;
+      height: initial;
+      max-height: none;
+      max-width: none;
+    }
   }
 }
 .converting-status {
@@ -324,10 +328,5 @@ export default Vue.extend({
   100% {
     transform: rotateZ(360deg);
   }
-}
-.output-image {
-  @extend .input-image;
-  // width: 464px;
-  // height: 464px;
 }
 </style>

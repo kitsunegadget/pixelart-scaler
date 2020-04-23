@@ -340,6 +340,7 @@ export default Vue.extend({
   overflow-x: hidden;
 
   &::-webkit-scrollbar {
+    display: block;
     overflow: hidden;
     width: 7px;
 
