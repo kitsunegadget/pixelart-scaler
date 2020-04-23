@@ -59,7 +59,8 @@ export default Vue.extend({
   },
   data() {
     return {
-      converting: false
+      converting: false,
+      currentFilter: 'NoScale'
     }
   },
   watch: {
@@ -67,7 +68,8 @@ export default Vue.extend({
       const canvas = this.$refs.outputCanvas as HTMLCanvasElement
       const ctx = canvas.getContext('2d')
       if (ctx) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        // ctx.clearRect(0, 0, canvas.width, canvas.height)
+        this.convertClick(this.currentFilter)
       }
     },
     converting() {
@@ -81,6 +83,7 @@ export default Vue.extend({
         return
       }
       this.converting = true
+      this.currentFilter = type
       // setTimeout(() => {
       // 仮想DOMのレンダーから逃れるためのタイムアウト
       // だったが、利用しなくなった
