@@ -2,7 +2,7 @@
   <footer class="footer">
     <div class="container">
       <span>
-        &copy; 2020 Kitsune Gadget - プライバシーポリシー
+        &copy; 2020 Kitsune Gadget
       </span>
     </div>
   </footer>
