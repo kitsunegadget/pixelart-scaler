@@ -23,10 +23,4 @@ html {
   box-sizing: border-box;
   margin: 0;
 }
-
-.container {
-  padding: 0 10px;
-  max-width: 1000px;
-  margin: auto;
-}
 </style>

@@ -18,7 +18,7 @@ export default Vue.extend({
         title: 'ドット絵の色々なスケーリングを試してみよう！',
         notes: [
           '入力最大解像度は 512x512 まで',
-          '現在png形式のみ対応しています'
+          'png形式のみ対応しています'
         ]
       },
       loaded: 'loaded'
@@ -48,6 +48,10 @@ export default Vue.extend({
     font-size: 1.6em;
     font-weight: 600;
     color: $color-black6;
+
+    @media (orientation: portrait) {
+      font-size: 1em;
+    }
   }
 
   &-note {

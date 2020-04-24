@@ -1,9 +1,18 @@
 <template>
   <header class="header">
     <div class="container">
-      <h1 class="title">
-        {{ title }}
-      </h1>
+      <div class="header-content">
+        <h1 class="title">
+          {{ title }}
+        </h1>
+        <div class="right-nav">
+          <ul>
+            <li v-for="nav in navItems" :key="nav.id">
+              <span @click="$emit('show-about', $event)">{{ nav.name }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </header>
 </template>
@@ -11,10 +20,18 @@
 <script lang="ts">
 import Vue from 'vue'
 import nuxtConfig from '../nuxt.config'
+
 export default Vue.extend({
   data() {
     return {
-      title: nuxtConfig.head.title
+      title: nuxtConfig.head.title,
+      navItems: [
+        {
+          id: 0,
+          name: 'このサイトについて'
+        }
+      ],
+      isShowAbout: false
     }
   }
 })
@@ -36,6 +53,38 @@ export default Vue.extend({
     margin: 12px 10px;
     //line-height: 1.3em;
     cursor: default;
+  }
+}
+
+.header-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.right-nav {
+  height: 100%;
+
+  ul {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  li {
+    height: 100%;
+    margin: 0 2px;
+    list-style: none;
+    @include flex-centering(row);
+  }
+  span {
+    font-size: 0.9em;
+    display: block;
+    cursor: pointer;
+
+    &:hover {
+      color: $color-blue2;
+    }
   }
 }
 </style>

@@ -10,6 +10,8 @@
 
 <style lang="scss">
 .footer {
+  margin: 10px 0;
+  color: $color-white;
   width: 100%;
 
   span {

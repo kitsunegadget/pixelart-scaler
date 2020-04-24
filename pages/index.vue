@@ -1,6 +1,7 @@
 <template>
   <div class="main-container">
-    <Header />
+    <Header @show-about="showAbout" />
+    <About v-show="isShowAbout" @show-about="showAbout" />
     <Content />
     <Footer />
   </div>
@@ -9,14 +10,27 @@
 <script lang="ts">
 import Vue from 'vue'
 import Header from '@/components/Header.vue'
+import About from '@/components/About.vue'
 import Content from '@/components/Content.vue'
 import Footer from '@/components/Footer.vue'
 
 export default Vue.extend({
   components: {
     Header,
+    About,
     Content,
     Footer
+  },
+  data() {
+    return {
+      isShowAbout: false
+    }
+  },
+  methods: {
+    showAbout(e: Event) {
+      e.stopPropagation()
+      this.isShowAbout = !this.isShowAbout
+    }
   }
 })
 </script>
@@ -27,5 +41,13 @@ export default Vue.extend({
   height: 100%;
   @include flex-centering(column);
   justify-content: flex-start;
+  background: $color-green;
+}
+
+.container {
+  padding: 0 10px;
+  max-width: 1000px;
+  height: 100%;
+  margin: auto;
 }
 </style>
