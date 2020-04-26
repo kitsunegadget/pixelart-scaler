@@ -21,7 +21,7 @@ export default Vue.extend({
 <style lang="scss">
 .content {
   width: 100%;
-  // min-height: 500px;
-  background-color: $color-white;
+  // background-color: $color-white;
+  background: $color-graylight;
 }
 </style>

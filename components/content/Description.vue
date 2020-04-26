@@ -32,7 +32,7 @@ export default Vue.extend({
   justify-content: space-around;
   // background: #f2ffe7;
   border: {
-    color: $color-green;
+    color: $color-bluegray;
     size: 1px;
     style: solid;
     radius: 10px;
@@ -46,7 +46,13 @@ export default Vue.extend({
     font-weight: 600;
     color: $color-black6;
 
-    @media (orientation: portrait) {
+    @media (max-width: 450px) {
+      font-size: 1.2em;
+    }
+    @media (max-width: 400px) {
+      font-size: 1.1em;
+    }
+    @media (max-width: 350px) {
       font-size: 1em;
     }
   }

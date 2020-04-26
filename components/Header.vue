@@ -42,7 +42,7 @@ export default Vue.extend({
   width: 100%;
   height: 56px;
   background: {
-    color: $color-green;
+    color: $color-bluegray;
   }
   color: $color-white;
   z-index: 1;

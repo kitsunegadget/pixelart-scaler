@@ -41,7 +41,7 @@ export default Vue.extend({
   height: 100%;
   @include flex-centering(column);
   justify-content: flex-start;
-  background: $color-green;
+  background: $color-bluegray;
 }
 
 .container {
