@@ -1,5 +1,14 @@
 <template>
   <div ref="pixelScaler" class="pixel-scaler" draggable="false">
+    <div v-show="isShowImageSizeOver" class="image-size-over" @click="closeImageSizeOver($event)">
+      <div class="image-size-over-close" @click="closeImageSizeOver($event)">
+        <v-icon color="white" large>mdi-close-thick</v-icon>
+      </div>
+      <div class="image-size-over-text">
+        画像が大きすぎます。最大サイズは 512x512 です。
+      </div>
+    </div>
+
     <div v-show="isShowOverlay" class="drag-overlay">
       <div class="drag-overlay-cover" />
       <div class="drag-overlay-inside">
@@ -44,6 +53,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      isShowImageSizeOver: false,
       isShowOverlay: false,
       inputAccept: 'image/png',
       inputData: '',
@@ -65,7 +75,7 @@ export default Vue.extend({
         if (event !== null && event.target !== null) {
           const elem = event.target as HTMLElement
           const pixelScaler = this.$refs.pixelScaler as HTMLElement
-          if (pixelScaler.compareDocumentPosition(elem) & 16) {
+          if (pixelScaler !== undefined && pixelScaler.compareDocumentPosition(elem) & 16) {
             // if (elem.className.includes('dragArea') || elem.className.includes('convert-button')) {
             this.isShowOverlay = true
           } else if (event.dataTransfer !== null) {
@@ -105,16 +115,20 @@ export default Vue.extend({
                 if (data.type === 'image/png') {
                   // const blob = data.slice(0, data.size, data.type)
                   const reader = new FileReader()
-                  reader.onload = () => {
+                  reader.onload = async () => {
                     if (reader.result !== null) {
-                      this.inputData = reader.result as string
+                      if (await this.isCheckImageSize(reader.result as string)) {
+                        this.inputData = reader.result as string
+                        this.imageLoaded = true
+                      } else {
+                        this.isShowImageSizeOver = true
+                      }
                     }
                   }
                   reader.readAsDataURL(data)
 
                   // URL.revokeObjectURL(this.inputData)
                   // this.inputData = URL.createObjectURL(data)
-                  this.imageLoaded = true
                 }
               }
             }
@@ -131,21 +145,42 @@ export default Vue.extend({
         if (data.type === 'image/png') {
           // const blob = data.slice(0, data.size, data.type)
           const reader = new FileReader()
-          reader.onload = () => {
+          reader.onload = async () => {
             if (reader.result !== null) {
-              this.inputData = reader.result as string
+              if (await this.isCheckImageSize(reader.result as string)) {
+                this.inputData = reader.result as string
+                this.imageLoaded = true
+              } else {
+                this.isShowImageSizeOver = true
+              }
             }
           }
           reader.readAsDataURL(data)
 
           // URL.revokeObjectURL(this.inputData)
           // this.inputData = URL.createObjectURL(data)
-          this.imageLoaded = true
         }
       }
     },
     convertingState(status: boolean) {
       this.imageConverting = status
+    },
+    isCheckImageSize(data: string) {
+      return new Promise(resolve => {
+        const img = new Image()
+        img.onload = () => {
+          if (img.width > 512 || img.height > 512) {
+            resolve(false)
+          } else {
+            resolve(true)
+          }
+        }
+        img.src = data
+      })
+    },
+    closeImageSizeOver(e: Event) {
+      e.preventDefault()
+      this.isShowImageSizeOver = false
     }
   }
 })
@@ -159,6 +194,33 @@ export default Vue.extend({
   margin: 10px 0;
   @include flex-centering(column);
 }
+
+.image-size-over {
+  z-index: 1;
+  @include absolute-centering;
+  @include flex-centering(column);
+  background: #000a;
+  cursor: pointer;
+
+  &-close {
+    margin-bottom: 30px;
+    transition: all 0.5s ease;
+
+    &:hover {
+      transform: rotateZ(180deg);
+    }
+  }
+
+  &-text {
+    height: 100px;
+    padding: 30px;
+    background: #eee;
+    @include flex-centering(row);
+    color: $color-red1;
+    cursor: initial;
+  }
+}
+
 .drag-overlay {
   @include absolute-centering;
   z-index: 2;
