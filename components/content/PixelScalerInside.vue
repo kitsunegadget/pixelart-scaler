@@ -9,7 +9,11 @@
           <v-icon x-large color="orange">mdi-arrow-right-thick</v-icon>
         </div>
       </div> -->
-    <div class="output-image" v-bind="{ expand: !canvasExpanded }" @click="changeCanvasExpand">
+    <div
+      class="output-image dragArea"
+      v-bind="{ expand: !canvasExpanded }"
+      @click="changeCanvasExpand"
+    >
       <canvas ref="outputCanvas"></canvas>
       <!-- <img
           v-show="!converting"

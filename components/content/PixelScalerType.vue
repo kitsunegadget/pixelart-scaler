@@ -1,5 +1,5 @@
 <template>
-  <div class="pixel-scaler-bottom dragArea" draggable="false">
+  <div class="pixel-scaler-bottom" draggable="false">
     <div v-show="converting" class="disabled-overlay"></div>
     <div class="scale-style">
       <!-- スケーリング形式 -->
@@ -14,16 +14,7 @@
           Binarization
         </v-btn>
       </v-btn-toggle> -->
-      <v-btn-toggle
-        v-model="text"
-        color="blue"
-        class="type-button"
-        dense
-        borderless
-        tile
-        group
-        mandatory
-      >
+      <v-btn-toggle color="blue" class="type-button" dense borderless tile group mandatory>
         <v-btn
           :loading="loading.loadingNoScale"
           text

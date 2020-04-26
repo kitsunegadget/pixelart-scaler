@@ -16,10 +16,7 @@ export default Vue.extend({
     return {
       description: {
         title: 'ドット絵の色々なスケーリングを試してみよう！',
-        notes: [
-          '入力最大解像度は 512x512 まで',
-          'png形式のみ対応しています'
-        ]
+        notes: ['入力最大解像度は 512x512 まで', 'png形式のみ対応しています']
       },
       loaded: 'loaded'
     }

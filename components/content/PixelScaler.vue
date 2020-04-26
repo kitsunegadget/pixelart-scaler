@@ -1,8 +1,8 @@
 <template>
-  <div class="pixel-scaler" draggable="false">
-    <div v-show="isShowOverlay" class="drag-overlay dragArea">
-      <div class="drag-overlay-cover dragArea" />
-      <div class="drag-overlay-inside dragArea">
+  <div ref="pixelScaler" class="pixel-scaler" draggable="false">
+    <div v-show="isShowOverlay" class="drag-overlay">
+      <div class="drag-overlay-cover" />
+      <div class="drag-overlay-inside">
         変換したいドット画像をドロップ
       </div>
     </div>
@@ -16,7 +16,7 @@
     />
 
     <transition name="fade" mode="out-in">
-      <Description v-if="!imageLoaded" class="dragArea" />
+      <Description v-if="!imageLoaded" />
       <PixelScalerInside
         v-else
         class="dragArea"
@@ -64,7 +64,9 @@ export default Vue.extend({
         event.preventDefault()
         if (event !== null && event.target !== null) {
           const elem = event.target as HTMLElement
-          if (elem.className.includes('dragArea')) {
+          const pixelScaler = this.$refs.pixelScaler as HTMLElement
+          if (pixelScaler.compareDocumentPosition(elem) & 16) {
+            // if (elem.className.includes('dragArea') || elem.className.includes('convert-button')) {
             this.isShowOverlay = true
           } else if (event.dataTransfer !== null) {
             event.dataTransfer.dropEffect = 'none'
@@ -95,13 +97,10 @@ export default Vue.extend({
         if (event !== null) {
           if (event.target !== null) {
             const elem = event.target as HTMLElement
-            if (elem.className.includes('dragArea')) {
+            if (elem.className.includes('drag-overlay-cover')) {
               this.isShowOverlay = false
 
-              if (
-                event.dataTransfer !== null &&
-                event.dataTransfer.files[0] !== undefined
-              ) {
+              if (event.dataTransfer !== null && event.dataTransfer.files[0] !== undefined) {
                 const data = event.dataTransfer.files[0]
                 if (data.type === 'image/png') {
                   // const blob = data.slice(0, data.size, data.type)
