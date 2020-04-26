@@ -13,6 +13,13 @@
       </p>
       <p>2x, 3x の表記は拡大スケールを表しています。</p>
       <p>表示された画像をクリックすると原寸表示と全体表示を切り替えることができます。</p>
+      <p>
+        読み込める最大サイズは、スケーリング倍率を考慮して 512x512 までとしています。
+        間違えてサイズが大きい画像をスケールした場合に、処理時間でページが硬直するのを防ぐためです。
+      </p>
+      <p>
+        稀に処理が遅くなる場合があります。
+      </p>
     </article>
     <div class="about-content-productBy">
       <h6>作者</h6>
@@ -26,10 +33,10 @@
     <div class="about-end">
       Thanks All Open Source Pixel Filters.
       <!-- <ul>
-          <li v-for="item in filterName" :key="item">
-            {{ item }}
-          </li>
-        </ul> -->
+        <li v-for="item in filterName" :key="item">
+          {{ item }}
+        </li>
+      </ul> -->
     </div>
   </div>
 </template>
@@ -43,7 +50,7 @@ export default Vue.extend({
       twitterAuthorLink: 'https://twitter.com/kitsunegadget/',
       filterName: [
         '2xSaI, Super2xSaI, SuperEagle (https://vdnoort.home.xs4all.nl/emulation/2xsai/)',
-        'HQx (http://en.wikipedia.org/wiki/Hqx)',
+        'HQx (Maxim Stepin)',
         'XBR (Hyllian)',
         'XBRz (https://sourceforge.net/projects/xbrz/)',
         '2dImageFilter (https://github.com/Hawkynt/2dimagefilter)',

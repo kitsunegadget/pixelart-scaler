@@ -2,7 +2,7 @@
   <div class="about">
     <div class="about-outside" @click="$emit('show-about', $event)"></div>
     <div class="about-select">
-      <v-btn-toggle mandatory>
+      <v-btn-toggle dark tile mandatory>
         <v-btn @click="changeCurrent('content')">このサイトについて</v-btn>
         <v-btn @click="changeCurrent('privacy')">プライバシーポリシー</v-btn>
       </v-btn-toggle>
