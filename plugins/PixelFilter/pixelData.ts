@@ -81,7 +81,7 @@ class PixelData implements PixelData {
 
   outImageData(): ImageData {
     const outData = new Uint8ClampedArray(this.dist.buffer)
-    console.log(this.targetScale)
+    // console.log(this.targetScale)
     return new ImageData(outData, this.width * this.targetScale)
   }
 

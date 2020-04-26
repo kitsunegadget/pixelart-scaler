@@ -82,7 +82,7 @@ export default Vue.extend({
       // setTimeout(() => {
       // 仮想DOMのレンダーから逃れるためのタイムアウト
       // だったが、利用しなくなった
-      const a = performance.now()
+      // const a = performance.now()
       const canvas = this.$refs.outputCanvas as HTMLCanvasElement
       const img = new Image()
       img.src = this.inputData
@@ -226,8 +226,8 @@ export default Vue.extend({
           }
           this.converting = false
         }
-        const b = performance.now()
-        console.log('displayTime: ', b - a)
+        // const b = performance.now()
+        // console.log('displayTime: ', b - a)
       }
       // }, 200)
       // const dataURI = this.inputData.split(',')
@@ -280,7 +280,7 @@ export default Vue.extend({
   height: 640px;
   width: 640px;
   // background: #666;
-  border: solid 1px $color-green;
+  border: solid 1px $color-bluegray;
   box-sizing: content-box;
   @include flex-centering(row);
   cursor: pointer;
