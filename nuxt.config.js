@@ -14,7 +14,12 @@ export default {
         content: process.env.npm_package_description || ''
       }
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    script: [
+      { src: '/__/firebase/8.1.1/firebase-app.js' },
+      { src: '/__/firebase/8.1.1/firebase-analytics.js' },
+      { src: '/__/firebase/8.1.1/init.js' }
+    ]
   },
   /*
    ** Customize the progress-bar color
