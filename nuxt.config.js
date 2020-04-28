@@ -16,9 +16,9 @@ export default {
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     script: [
-      { src: '/__/firebase/8.1.1/firebase-app.js' },
-      { src: '/__/firebase/8.1.1/firebase-analytics.js' },
-      { src: '/__/firebase/8.1.1/init.js' }
+      { src: '/__/firebase/7.14.2/firebase-app.js' },
+      { src: '/__/firebase/7.14.2/firebase-analytics.js' },
+      { src: '/__/firebase/init.js' }
     ]
   },
   /*
