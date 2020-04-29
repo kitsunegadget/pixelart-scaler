@@ -85,6 +85,20 @@ class PixelData implements PixelData {
     return new ImageData(outData, this.width * this.targetScale)
   }
 
+  outImageDataURL(): string {
+    const id = this.outImageData()
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    if (ctx) {
+      ctx.canvas.width = id.width
+      ctx.canvas.height = id.height
+      ctx.putImageData(id, 0, 0)
+      return canvas.toDataURL()
+    } else {
+      return ""
+    }
+  }
+
   // ピクセルXのカラー取得
   static getR(X: number) {
     return X & 0xff

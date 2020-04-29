@@ -21,7 +21,12 @@ import PixelData from './pixelData'
 
 export default class EPX {
   // Eric's Pixel Expansion / Scale Nx Algorithm
-  static EPX(imageData: ImageData, scale: number) {
+  static EPX(imageData: ImageData, scale: number): ImageData {
+    let twiceScale = false
+    if (scale === 4) {
+      twiceScale = true
+      scale = 2
+    }
     const p = new PixelData(imageData)
     p.setDistSize(scale)
 
@@ -84,6 +89,10 @@ export default class EPX {
         }
       }
     } // end of for
-    return p.outImageData()
+    if (twiceScale) {
+      return this.EPX(p.outImageData(), 2)
+    } else {
+      return p.outImageData()
+    }
   }
 }

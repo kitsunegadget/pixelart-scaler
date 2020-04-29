@@ -30,7 +30,6 @@
         v-else
         class="dragArea"
         :input-data="inputData"
-        :output-data="outputData"
         :image-loaded="imageLoaded"
         :image-converting="imageConverting"
         @converting-state="convertingState"
@@ -57,7 +56,6 @@ export default Vue.extend({
       isShowOverlay: false,
       inputAccept: 'image/png',
       inputData: '',
-      outputData: '',
       imageLoaded: false,
       imageConverting: false
     }

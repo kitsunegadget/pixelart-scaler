@@ -15,12 +15,7 @@
       @click="changeCanvasExpand"
     >
       <canvas ref="outputCanvas"></canvas>
-      <!-- <img
-          v-show="!converting"
-          class="image"
-          :src="outputData"
-          draggable="false"
-        /> -->
+      <!-- <img class="image" :src="outputData" draggable="false" /> -->
     </div>
   </div>
 </template>
@@ -41,11 +36,6 @@ export default Vue.extend({
       default: '',
       required: true
     },
-    outputData: {
-      type: String,
-      default: '',
-      required: true
-    },
     imageLoaded: {
       type: Boolean,
       required: true
@@ -53,6 +43,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      outputData: '',
       converting: false,
       currentFilter: 'NoScale',
       canvasExpanded: false
@@ -60,16 +51,14 @@ export default Vue.extend({
   },
   watch: {
     inputData() {
-      const canvas = this.$refs.outputCanvas as HTMLCanvasElement
-      const ctx = canvas.getContext('2d')
-      if (ctx) {
-        // ctx.clearRect(0, 0, canvas.width, canvas.height)
-        this.convertClick(this.currentFilter)
-      }
+      this.convertClick(this.currentFilter)
     },
     converting() {
       this.$emit('converting-state', this.converting)
     }
+  },
+  mounted() {
+    this.convertClick(this.currentFilter)
   },
   methods: {
     convertClick(type: string) {
@@ -79,157 +68,115 @@ export default Vue.extend({
       }
       this.converting = true
       this.currentFilter = type
-      // setTimeout(() => {
-      // 仮想DOMのレンダーから逃れるためのタイムアウト
-      // だったが、利用しなくなった
-      // const a = performance.now()
-      const canvas = this.$refs.outputCanvas as HTMLCanvasElement
-      const img = new Image()
-      img.src = this.inputData
-      img.onload = () => {
-        const ctx = canvas.getContext('2d')
-        if (ctx) {
-          // 入力画像とキャンバスサイズを合わせないと
-          // ImageDataでcanvasをオーバーした画素が取得出来ない
-          ctx.canvas.width = img.width
-          ctx.canvas.height = img.height
-          ctx.drawImage(img, 0, 0)
-          img.style.display = 'none'
-          const imageData = ctx.getImageData(0, 0, img.width, img.height)
+      setTimeout(() => {
+        // 仮想DOMのレンダーから逃れるためのタイムアウト
+        // const a = performance.now()
+        const canvas = this.$refs.outputCanvas as HTMLCanvasElement
+        // const canvas = document.createElement('canvas')
+        const img = new Image()
+        img.src = this.inputData
+        img.onload = () => {
+          const ctx = canvas.getContext('2d')
+          if (ctx) {
+            // 入力画像とキャンバスサイズを合わせないと
+            // ImageDataでcanvasをオーバーした画素が取得出来ない
+            ctx.canvas.width = img.width
+            ctx.canvas.height = img.height
+            ctx.drawImage(img, 0, 0)
+            img.style.display = 'none'
+            const imageData = ctx.getImageData(0, 0, img.width, img.height)
+            let newImageData = imageData
 
-          if (type === 'invert') {
-            const newImageData = StandardFilter.invert(imageData)
+            if (type === 'NoScale') {
+              // this.outputData = this.inputData
+              //
+            } else if (type === 'invert') {
+              newImageData = StandardFilter.invert(imageData)
+              //
+            } else if (type === 'grayscale') {
+              newImageData = StandardFilter.grayScale(imageData)
+              //
+            } else if (type === 'binarization') {
+              newImageData = StandardFilter.binarization(imageData, 127)
+              //
+            } else if (type === 'Epx2') {
+              newImageData = PxFilter.EPX(ctx, imageData, 2)
+              //
+            } else if (type === 'Epx3') {
+              newImageData = PxFilter.EPX(ctx, imageData, 3)
+              //
+            } else if (type === 'Epx4') {
+              newImageData = PxFilter.EPX(ctx, imageData, 4)
+              //
+            } else if (type === 'EpxB') {
+              newImageData = PxFilter.SNES9x(ctx, imageData, 2, 'B')
+              //
+            } else if (type === 'EpxC') {
+              newImageData = PxFilter.SNES9x(ctx, imageData, 2, 'C')
+              //
+            } else if (type === 'Epx33') {
+              newImageData = PxFilter.SNES9x(ctx, imageData, 3, '3')
+              //
+            } else if (type === 'Eagle2') {
+              newImageData = PxFilter.Eagle(ctx, imageData, 2)
+              //
+            } else if (type === 'Eagle3') {
+              newImageData = PxFilter.Eagle(ctx, imageData, 3)
+              //
+            } else if (type === 'Eagle3xB') {
+              newImageData = PxFilter.Eagle(ctx, imageData, 3, 'B')
+              //
+            } else if (type === '2xSaI') {
+              newImageData = PxFilter._2xSaI(ctx, imageData, 2)
+              //
+            } else if (type === 'Super2xSaI') {
+              newImageData = PxFilter.Super2xSaI(ctx, imageData, 2)
+              //
+            } else if (type === 'SuperEagle') {
+              newImageData = PxFilter.SuperEagle(ctx, imageData, 2)
+              //
+            } else if (type === 'HQx2') {
+              newImageData = PxFilter.HQx(ctx, img, 2)
+              //
+            } else if (type === 'HQx3') {
+              newImageData = PxFilter.HQx(ctx, img, 3)
+              //
+            } else if (type === 'HQx4') {
+              newImageData = PxFilter.HQx(ctx, img, 4)
+              //
+            } else if (type === 'XBR2') {
+              newImageData = PxFilter.XBR(ctx, imageData, 2)
+              //
+            } else if (type === 'XBR3') {
+              newImageData = PxFilter.XBR(ctx, imageData, 3)
+              //
+            } else if (type === 'XBR4') {
+              newImageData = PxFilter.XBR(ctx, imageData, 4)
+              //
+            } else if (type === 'XBRz2') {
+              newImageData = PxFilter.XBRz(ctx, imageData, 2)
+              //
+            } else if (type === 'XBRz3') {
+              newImageData = PxFilter.XBRz(ctx, imageData, 3)
+              //
+            } else if (type === 'XBRz4') {
+              newImageData = PxFilter.XBRz(ctx, imageData, 4)
+              //
+            } else if (type === 'XBRz5') {
+              newImageData = PxFilter.XBRz(ctx, imageData, 5)
+              //
+            } else if (type === 'XBRz6') {
+              newImageData = PxFilter.XBRz(ctx, imageData, 6)
+              //
+            } else if (type === '0') {
+            }
             ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'grayscale') {
-            const newImageData = StandardFilter.grayScale(imageData)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'binarization') {
-            const newImageData = StandardFilter.binarization(imageData, 127)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'Epx2') {
-            ctx.canvas.width *= 2
-            ctx.canvas.height *= 2
-            const newImageData = PxFilter.EPX(imageData, 2)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'Epx3') {
-            ctx.canvas.width *= 3
-            ctx.canvas.height *= 3
-            const newImageData = PxFilter.EPX(imageData, 3)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'Epx4') {
-            ctx.canvas.width *= 4
-            ctx.canvas.height *= 4
-            const x2ImageData = PxFilter.EPX(imageData, 2)
-            const newImageData = PxFilter.EPX(x2ImageData, 2)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'EpxB') {
-            ctx.canvas.width *= 2
-            ctx.canvas.height *= 2
-            const newImageData = PxFilter.SNES9x(imageData, 2, 'B')
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'EpxC') {
-            ctx.canvas.width *= 2
-            ctx.canvas.height *= 2
-            const newImageData = PxFilter.SNES9x(imageData, 2, 'C')
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'Epx33') {
-            ctx.canvas.width *= 3
-            ctx.canvas.height *= 3
-            const newImageData = PxFilter.SNES9x(imageData, 3, '3')
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'Eagle2') {
-            ctx.canvas.width *= 2
-            ctx.canvas.height *= 2
-            const newImageData = PxFilter.Eagle(imageData, 2)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'Eagle3') {
-            ctx.canvas.width *= 3
-            ctx.canvas.height *= 3
-            const newImageData = PxFilter.Eagle(imageData, 3)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'Eagle3xB') {
-            ctx.canvas.width *= 3
-            ctx.canvas.height *= 3
-            const newImageData = PxFilter.Eagle(imageData, 3, 'B')
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === '2xSaI') {
-            ctx.canvas.width *= 2
-            ctx.canvas.height *= 2
-            const newImageData = PxFilter._2xSaI(imageData, 2)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'Super2xSaI') {
-            ctx.canvas.width *= 2
-            ctx.canvas.height *= 2
-            const newImageData = PxFilter.Super2xSaI(imageData, 2)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'SuperEagle') {
-            ctx.canvas.width *= 2
-            ctx.canvas.height *= 2
-            const newImageData = PxFilter.SuperEagle(imageData, 2)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'HQx2') {
-            ctx.canvas.width *= 2
-            ctx.canvas.height *= 2
-            const newImageData = PxFilter.HQx(img, 2)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'HQx3') {
-            ctx.canvas.width *= 3
-            ctx.canvas.height *= 3
-            const newImageData = PxFilter.HQx(img, 3)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'HQx4') {
-            ctx.canvas.width *= 4
-            ctx.canvas.height *= 4
-            const newImageData = PxFilter.HQx(img, 4)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'XBR2') {
-            ctx.canvas.width *= 2
-            ctx.canvas.height *= 2
-            const newImageData = PxFilter.XBR(imageData, 2)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'XBR3') {
-            ctx.canvas.width *= 3
-            ctx.canvas.height *= 3
-            const newImageData = PxFilter.XBR(imageData, 3)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'XBR4') {
-            ctx.canvas.width *= 4
-            ctx.canvas.height *= 4
-            const newImageData = PxFilter.XBR(imageData, 4)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'XBRz2') {
-            ctx.canvas.width *= 2
-            ctx.canvas.height *= 2
-            const newImageData = PxFilter.XBRz(imageData, 2)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'XBRz3') {
-            ctx.canvas.width *= 3
-            ctx.canvas.height *= 3
-            const newImageData = PxFilter.XBRz(imageData, 3)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'XBRz4') {
-            ctx.canvas.width *= 4
-            ctx.canvas.height *= 4
-            const newImageData = PxFilter.XBRz(imageData, 4)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'XBRz5') {
-            ctx.canvas.width *= 5
-            ctx.canvas.height *= 5
-            const newImageData = PxFilter.XBRz(imageData, 5)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === 'XBRz6') {
-            ctx.canvas.width *= 6
-            ctx.canvas.height *= 6
-            const newImageData = PxFilter.XBRz(imageData, 6)
-            ctx.putImageData(newImageData, 0, 0)
-          } else if (type === '0') {
+            this.converting = false
           }
-          this.converting = false
+          // const b = performance.now()
+          // console.log('displayTime: ', b - a)
         }
-        // const b = performance.now()
-        // console.log('displayTime: ', b - a)
-      }
-      // }, 200)
+      }, 20)
     },
     changeCanvasExpand() {
       this.canvasExpanded = !this.canvasExpanded
@@ -274,6 +221,7 @@ export default Vue.extend({
     height: 100%;
     object-fit: contain;
     image-rendering: pixelated;
+    transition: all ease 1s;
   }
 
   &[expand] {
@@ -281,6 +229,13 @@ export default Vue.extend({
     overflow: scroll;
 
     canvas {
+      width: initial;
+      height: initial;
+      max-height: none;
+      max-width: none;
+    }
+
+    .image {
       width: initial;
       height: initial;
       max-height: none;
