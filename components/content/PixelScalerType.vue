@@ -1,5 +1,5 @@
 <template>
-  <div class="pixel-scaler-bottom" draggable="false">
+  <div class="pixel-scaler-type" draggable="false">
     <div v-show="converting" class="disabled-overlay"></div>
     <div class="scale-style">
       <!-- スケーリング形式 -->
@@ -299,7 +299,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-.pixel-scaler-bottom {
+.pixel-scaler-type {
   position: relative;
   width: 250px;
   min-height: 640px;

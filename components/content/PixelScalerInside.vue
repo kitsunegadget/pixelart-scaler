@@ -29,7 +29,7 @@
 import Vue from 'vue'
 // import axios from 'axios'
 import PixelScalerType from './PixelScalerType.vue'
-import PxFilter, { StandardFilter } from '@/plugins/PixelFilter'
+import PxFilter, { StandardFilter } from '@/modules/PixelFilter'
 
 export default Vue.extend({
   components: {
@@ -230,32 +230,6 @@ export default Vue.extend({
         // console.log('displayTime: ', b - a)
       }
       // }, 200)
-      // const dataURI = this.inputData.split(',')
-      // const dataType = dataURI[0].split(';')[0].slice(5)
-      // const baseData = dataURI[1]
-      // console.log(dataType)
-      // const postURL =
-      //   'http://localhost:5001/nuxt-pixel-scaler/asia-northeast1/transformTest'
-      // // post data
-      // axios
-      //   .post(
-      //     postURL,
-      //     {
-      //       scaleType: '',
-      //       type: dataType,
-      //       data: baseData
-      //     },
-      //     {
-      //       headers: {
-      //         'Content-Type': 'text/plain'
-      //       }
-      //     }
-      //   )
-      //   .then(res => {
-      //     if (res.status === 200) {
-      //       console.log(res.data)
-      //     }
-      //   })
     },
     changeCanvasExpand() {
       this.canvasExpanded = !this.canvasExpanded
