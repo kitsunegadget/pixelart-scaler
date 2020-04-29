@@ -1,31 +1,24 @@
 <template>
   <div class="about-content">
-    <h3>{{ aboutTitle }}</h3>
+    <h2>{{ aboutTitle }}</h2>
     <article>
       <p>
         ドット画像の拡大に使われる基本的なフィルターを手元にある画像で簡単に触れることができます。
       </p>
     </article>
-    <h5>使い方</h5>
+    <h3>使い方</h3>
     <article>
-      <p>
-        画像を選択・もしくはドロップで読み込み、フィルタ一覧からクリックして適用されます。
-      </p>
-      <p>2x, 3x の表記は拡大スケールを表しています。</p>
-      <p>表示された画像をクリックすると原寸表示と全体表示を切り替えることができます。</p>
-      <p>
-        読み込める最大サイズは、スケーリング倍率を考慮して 512x512 までとしています。
-        間違えてサイズが大きい画像をスケールした場合に、処理時間でページが硬直するのを防ぐためです。
-      </p>
-      <p>
-        稀に処理が遅くなる場合があります。
-      </p>
+      <ul>
+        <li v-for="str in howToUse" :key="str">
+          <p>{{ str }}</p>
+        </li>
+      </ul>
     </article>
     <div class="about-content-productBy">
-      <h6>作者</h6>
+      <h3>作者</h3>
       <div class="about-content-author">
         <span>Kitsune Gadget</span>
-        <a :href="twitterAuthorLink" target="_blank" no-looper>
+        <a :href="twitterAuthorLink" target="_blank" rel="noopener">
           <v-icon left dense color="blue">mdi-twitter</v-icon>
         </a>
       </div>
@@ -47,6 +40,13 @@ export default Vue.extend({
   data() {
     return {
       aboutTitle: 'このサイトについて',
+      howToUse: [
+        '画像を選択ボタン・もしくはドラッグ＆ドロップで読み込み、フィルタ一覧からクリックして適用されます。',
+        '2x, 3x の表記は拡大スケールを表しています。',
+        '表示された画像をクリックすると原寸表示と全体表示を切り替えることができます。',
+        '読み込める最大サイズは、スケーリング倍率を考慮して 512x512 までとしています。間違えてサイズが大きい画像をスケールした場合に、処理時間でページが硬直するのを防ぐためです。',
+        '稀に処理が遅くなる場合があるかもしれません。'
+      ],
       twitterAuthorLink: 'https://twitter.com/kitsunegadget/',
       filterName: [
         '2xSaI, Super2xSaI, SuperEagle (https://vdnoort.home.xs4all.nl/emulation/2xsai/)',
@@ -63,12 +63,16 @@ export default Vue.extend({
 
 <style lang="scss">
 .about-content {
-  > h3 {
+  > h2 {
     margin-bottom: 10px;
   }
 
-  > h5 {
+  h3 {
     margin-top: 30px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    border-left: solid 5px $color-black3;
+    border-bottom: solid 1px $color-black3;
   }
 
   > article > p {
@@ -87,6 +91,14 @@ export default Vue.extend({
 
     > span {
       margin-right: 10px;
+    }
+
+    > a {
+      text-decoration: none;
+
+      i:hover {
+        color: skyblue !important;
+      }
     }
   }
 }

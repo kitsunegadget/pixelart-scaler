@@ -1,20 +1,26 @@
 <template>
   <div class="about-privacy">
-    <h3>{{ aboutPrivacyTittle }}</h3>
-    <h5>画像の取り扱い</h5>
+    <h2>{{ aboutPrivacyTittle }}</h2>
+    <h3>画像の取り扱い</h3>
     <article>
       <p>画像の変換はデバイス内で行われるため、外部に送信することはありません。</p>
     </article>
-    <h5>Cookieの取り扱い</h5>
+    <h3>広告の配信</h3>
     <article>
       <p>
-        このページでは、Cookieを利用してGoogle経由の広告を配信しています。
-        サイトにアクセスした際のCookieからユーザーに合わせた広告を表示するためのものです。
-        必要であれば、こちらの広告設定からパーソナライズ広告を無効にすることが出来ます。
+        このページでは、Google経由の広告を配信しています。
+        他のサイトにアクセスした広告Cookieからユーザーに合わせた広告を表示します。必要であれば、
+        <a href="https://adssettings.google.com/authenticated" target="_blank" rel="noopener">
+          こちら (https://adssettings.google.com/authenticated)
+        </a>
+        の広告設定からパーソナライズ広告を無効にすることが出来ます。
       </p>
+    </article>
+    <h3>Google Analytics</h3>
+    <article>
       <p>
-        また、統計情報取得に Google Analytics を利用しています。
-        アクセス情報は統計のみに利用され、プライバシーに関わるような情報の取得は行いません。
+        このページでは "Google Analytics" を利用しています。
+        トラフィックデータはCookieを利用し、匿名で収集されます。これは個人を特定するものではありません。
         必要であれば、ブラウザの設定からCookieをブロックすることが出来ます。
       </p>
     </article>
@@ -34,12 +40,24 @@ export default Vue.extend({
 
 <style lang="scss">
 .about-privacy {
-  > h3 {
+  > h2 {
     margin-bottom: 30px;
   }
 
   > article > p {
     margin-left: 10px;
+  }
+
+  > h3 {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    border-left: solid 5px $color-black3;
+    border-bottom: solid 1px $color-black3;
+  }
+
+  a {
+    text-decoration: none;
   }
 }
 </style>
