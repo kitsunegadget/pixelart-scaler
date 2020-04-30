@@ -14,6 +14,10 @@
         </li>
       </ul>
     </article>
+    <h3>画像の取り扱い</h3>
+    <article>
+      <p>画像の変換はデバイス内で行われるため、外部に送信することはありません。</p>
+    </article>
     <div class="about-content-productBy">
       <h3>作者</h3>
       <div class="about-content-author">
@@ -24,7 +28,10 @@
       </div>
     </div>
     <div class="about-end">
-      Thanks All Open Source Pixel Filters.
+      <span>Thanks All Open Source Pixel Filters.</span>
+      <a :href="githubLink" target="_blank" rel="noopener">
+        <v-icon left dense color="black">mdi-github</v-icon>
+      </a>
       <!-- <ul>
         <li v-for="item in filterName" :key="item">
           {{ item }}
@@ -45,9 +52,10 @@ export default Vue.extend({
         '2x, 3x の表記は拡大スケールを表しています。',
         '表示された画像をクリックすると原寸表示と全体表示を切り替えることができます。',
         '読み込める最大サイズは、スケーリング倍率を考慮して 512x512 までとしています。間違えてサイズが大きい画像をスケールした場合に、処理時間でページが硬直するのを防ぐためです。',
-        '稀に処理が遅くなる場合があるかもしれません。'
+        '稀に処理が極端に遅くなることがあります。その場合はページを再読み込みしてみてください。'
       ],
       twitterAuthorLink: 'https://twitter.com/kitsunegadget/',
+      githubLink: '',
       filterName: [
         '2xSaI, Super2xSaI, SuperEagle (https://vdnoort.home.xs4all.nl/emulation/2xsai/)',
         'HQx (Maxim Stepin)',
@@ -105,5 +113,17 @@ export default Vue.extend({
 
 .about-end {
   font-size: 0.9em;
+
+  > span {
+    margin-right: 5px;
+  }
+
+  > a {
+    text-decoration: none;
+
+    i:hover {
+      color: grey !important;
+    }
+  }
 }
 </style>

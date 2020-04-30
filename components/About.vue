@@ -2,13 +2,13 @@
   <div class="about">
     <div class="about-outside" @click="$emit('show-about', $event)"></div>
     <div class="about-select">
-      <v-btn-toggle dark tile mandatory>
+      <!-- <v-btn-toggle dark tile mandatory>
         <v-btn @click="changeCurrent('content')">このサイトについて</v-btn>
         <v-btn @click="changeCurrent('privacy')">プライバシーポリシー</v-btn>
-      </v-btn-toggle>
-      <v-icon color="white" large @click="$emit('show-about', $event)"
-        >mdi-close-circle-outline</v-icon
-      >
+      </v-btn-toggle> -->
+      <v-icon color="white" large @click="$emit('show-about', $event)">
+        mdi-close-thick
+      </v-icon>
     </div>
     <div class="about-inside">
       <AboutContent v-if="currentContent === 'content'" />
@@ -68,14 +68,57 @@ export default Vue.extend({
   }
 
   &-select {
+    margin-top: -10px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
+
+    .v-icon {
+      margin: 5px;
+
+      &:hover {
+        color: $color-whiteD !important;
+      }
+    }
   }
 
   &-inside {
     padding: 30px;
     color: $color-black6;
     background: #fff;
+    max-height: 80vh;
+    overflow-y: scroll;
+
+    // for firefox
+    scrollbar-width: thin;
+    scrollbar-color: $color-black3 $color-white;
+
+    // for webkit browser
+    &::-webkit-scrollbar {
+      display: block;
+      overflow: hidden;
+      width: 7px;
+
+      &:hover {
+        width: 10px;
+      }
+    }
+    &::-webkit-scrollbar-button {
+      // background-color: $color-blue1;
+      // // display: none;
+      // height: 1px;
+    }
+    &::-webkit-scrollbar-corner {
+      // background: #f00;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: $color-black3;
+    }
+    &::-webkit-scrollbar-track {
+      // background: #000;
+    }
+    &::-webkit-scrollbar-track-piece {
+      // background: #00f;
+    }
   }
 }
 </style>

@@ -1,7 +1,9 @@
 <template>
-  <div class="pixel-scaler-inside dragArea">
-    <PixelScalerType :converting="converting" @convert-start="convertClick" />
-    <!-- <div class="converting-status">
+  <div class="pixel-scaler-inside">
+    <PixelScalerInsideAbove :output-data="outputData" :current-filter="currentFilter" />
+    <div class="pixel-scaler-inside-below">
+      <PixelScalerType :converting="converting" @convert-start="convertClick" />
+      <!-- <div class="converting-status">
         <v-progress-circular v-if="converting" indeterminate color="blue" :size="50">
           <span class="sr-only">Loading...</span>
         </v-progress-circular>
@@ -9,13 +11,10 @@
           <v-icon x-large color="orange">mdi-arrow-right-thick</v-icon>
         </div>
       </div> -->
-    <div
-      class="output-image dragArea"
-      v-bind="{ expand: !canvasExpanded }"
-      @click="changeCanvasExpand"
-    >
-      <canvas ref="outputCanvas"></canvas>
-      <!-- <img class="image" :src="outputData" draggable="false" /> -->
+      <div class="output-image" v-bind="{ expand: !canvasExpanded }" @click="changeCanvasExpand">
+        <canvas ref="outputCanvas"></canvas>
+        <!-- <img class="image" :src="outputData" draggable="false" /> -->
+      </div>
     </div>
   </div>
 </template>
@@ -23,11 +22,13 @@
 <script lang="ts">
 import Vue from 'vue'
 // import axios from 'axios'
+import PixelScalerInsideAbove from './PixelScalerInsideAbove.vue'
 import PixelScalerType from './PixelScalerType.vue'
 import PxFilter, { StandardFilter } from '@/modules/PixelFilter'
 
 export default Vue.extend({
   components: {
+    PixelScalerInsideAbove,
     PixelScalerType
   },
   props: {
@@ -188,14 +189,24 @@ export default Vue.extend({
 
 <style lang="scss">
 .pixel-scaler-inside {
-  padding-top: 72px;
   padding-bottom: 10px;
-  @include flex-centering(row);
+  width: 100%;
+  height: 100%;
+}
+.pixel-scaler-inside-below {
+  // padding-top: 72px;
+  display: flex;
+  flex-direction: row;
   justify-content: space-around;
   flex-wrap: wrap;
   width: 100%;
   height: 100%;
   transition: all 1s ease;
+
+  @media (orientation: portrait) {
+    flex-direction: column;
+    width: 100vw;
+  }
 }
 .output-image {
   height: 640px;
@@ -244,7 +255,8 @@ export default Vue.extend({
   }
 
   @media (orientation: portrait) {
-    height: 45vh;
+    height: 40vh;
+    width: 99vw;
   }
 }
 .converting-status {

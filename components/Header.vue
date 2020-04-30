@@ -40,7 +40,7 @@ export default Vue.extend({
 <style lang="scss">
 .header {
   width: 100%;
-  height: 56px;
+  height: 50px;
   background: {
     color: $color-bluegray;
   }
@@ -49,8 +49,10 @@ export default Vue.extend({
   box-shadow: 0 0 5px #666a;
 
   .title {
-    font-size: 1.6em !important;
-    margin: 12px 10px;
+    font-size: 1.4em !important;
+    font-weight: bold;
+    @include flex-centering(row);
+    margin: 0 10px;
     //line-height: 1.3em;
     cursor: default;
   }
@@ -67,7 +69,7 @@ export default Vue.extend({
   height: 100%;
 
   ul {
-    margin: 0;
+    margin-right: 10px;
     padding: 0;
     height: 100%;
   }
@@ -78,7 +80,7 @@ export default Vue.extend({
     @include flex-centering(row);
   }
   span {
-    font-size: 0.9em;
+    font-size: 0.8em;
     display: block;
     cursor: pointer;
 

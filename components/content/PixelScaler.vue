@@ -28,7 +28,6 @@
       <Description v-if="!imageLoaded" />
       <PixelScalerInside
         v-else
-        class="dragArea"
         :input-data="inputData"
         :image-loaded="imageLoaded"
         :image-converting="imageConverting"
@@ -191,6 +190,7 @@ export default Vue.extend({
   width: 100%;
   margin: 10px 0;
   @include flex-centering(column);
+  max-height: 80vh;
 }
 
 .image-size-over {

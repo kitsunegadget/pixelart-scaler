@@ -14,7 +14,7 @@
       large
       tile
       outlined
-      color="success"
+      color="teal"
       class="ma-2"
       v-bind="{ disabled: imageConverting }"
       @click="fileSelect"
@@ -62,7 +62,7 @@ export default Vue.extend({
   margin-left: 1px;
   // z-index: 0;
   top: 2.5px;
-  transform: translateY(220px);
+  transform: translateY(200px);
 
   &[loaded] {
     transform: translateY(0);

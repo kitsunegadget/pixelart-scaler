@@ -49,5 +49,9 @@ export default Vue.extend({
   max-width: 1000px;
   height: 100%;
   margin: auto;
+
+  @media (orientation: portrait) {
+    padding: 0;
+  }
 }
 </style>
