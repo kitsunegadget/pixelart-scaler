@@ -1,7 +1,7 @@
 {
   "name": "pixel-scaler",
-  "version": "0.0.0",
-  "description": "pixel scaling test service",
+  "version": "1.0.0",
+  "description": "Pixel scaling filter tool",
   "author": "Kitsune Gadget",
   "private": true,
   "scripts": {
@@ -37,6 +37,7 @@
     "prettier": "^1.19.1",
     "sass-loader": "^8.0.2",
     "ts-jest": "^25.0.0",
-    "vue-jest": "^4.0.0-0"
+    "vue-jest": "^4.0.0-0",
+    "webpack-bundle-analyzer": "^3.7.0"
   }
 }
