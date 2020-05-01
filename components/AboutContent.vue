@@ -1,12 +1,18 @@
 <template>
   <div class="about-content">
-    <h2>{{ aboutTitle }}</h2>
+    <h2>
+      {{ 'このサイトについて' }}
+    </h2>
     <article>
       <p>
-        ドット画像の拡大に使われる基本的なフィルターを手元にある画像で簡単に触れることができます。
+        {{
+          'ドット画像の拡大に使われる基本的なスケールフィルターを手元にある画像で簡単に触れることができます。'
+        }}
       </p>
     </article>
-    <h3>使い方</h3>
+    <h3>
+      {{ '使い方' }}
+    </h3>
     <article>
       <ul>
         <li v-for="str in howToUse" :key="str">
@@ -14,24 +20,39 @@
         </li>
       </ul>
     </article>
-    <h3>画像の取り扱い</h3>
+    <h3>
+      {{ '画像の取り扱い' }}
+    </h3>
     <article>
-      <p>画像の変換はデバイス内で行われるため、外部に送信することはありません。</p>
+      <p>
+        {{ '画像の変換はデバイス内で行われるため、外部に送信することはありません。' }}
+      </p>
     </article>
     <div class="about-content-productBy">
-      <h3>作者</h3>
+      <h3>
+        {{ '作者' }}
+      </h3>
       <div class="about-content-author">
-        <span>Kitsune Gadget</span>
-        <a :href="twitterAuthorLink" target="_blank" rel="noopener">
-          <v-icon left dense color="blue">mdi-twitter</v-icon>
+        <span>
+          {{ 'Kitsune Gadget' }}
+        </span>
+        <a href="https://twitter.com/kitsunegadget/" target="_blank" rel="noopener noreferer">
+          <v-icon left dense color="blue">{{ 'mdi-twitter' }}</v-icon>
         </a>
       </div>
     </div>
     <div class="about-end">
-      <span>Thanks All Open Source Pixel Filters.</span>
-      <a :href="githubLink" target="_blank" rel="noopener">
-        <v-icon left dense color="black">mdi-github</v-icon>
-      </a>
+      <p>
+        {{ 'Thanks all open source Scale Filters.' }}
+      </p>
+      <p>
+        {{
+          'Most original Scale Filters are under the GPL license, and so I publish source code of this application.'
+        }}
+        <a :href="githubLink" target="_blank" rel="noopener noreferer">
+          <v-icon left dense color="black">{{ 'mdi-github' }}</v-icon>
+        </a>
+      </p>
       <!-- <ul>
         <li v-for="item in filterName" :key="item">
           {{ item }}
@@ -46,15 +67,14 @@ import Vue from 'vue'
 export default Vue.extend({
   data() {
     return {
-      aboutTitle: 'このサイトについて',
       howToUse: [
         '画像を選択ボタン・もしくはドラッグ＆ドロップで読み込み、フィルタ一覧からクリックして適用されます。',
         '2x, 3x の表記は拡大スケールを表しています。',
         '表示された画像をクリックすると原寸表示と全体表示を切り替えることができます。',
-        '読み込める最大サイズは、スケーリング倍率を考慮して 512x512 までとしています。間違えてサイズが大きい画像をスケールした場合に、処理時間でページが硬直するのを防ぐためです。',
+        '読み込める最大サイズは、スケーリング倍率を考慮して 512x512 までとしています。',
+        '左上の Save ボタンを押すと選択されたスケーリングでの拡大画像を保存することが出来ます。（「No Scaling」選択時は機能しません。）',
         '稀に処理が極端に遅くなることがあります。その場合はページを再読み込みしてみてください。'
       ],
-      twitterAuthorLink: 'https://twitter.com/kitsunegadget/',
       githubLink: '',
       filterName: [
         '2xSaI, Super2xSaI, SuperEagle (https://vdnoort.home.xs4all.nl/emulation/2xsai/)',
@@ -114,15 +134,15 @@ export default Vue.extend({
 .about-end {
   font-size: 0.9em;
 
-  > span {
-    margin-right: 5px;
+  > p {
+    margin: 0;
   }
 
-  > a {
+  a {
     text-decoration: none;
 
     i:hover {
-      color: grey !important;
+      color: gray !important;
     }
   }
 }

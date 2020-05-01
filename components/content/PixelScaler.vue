@@ -1,23 +1,22 @@
 <template>
   <div ref="pixelScaler" class="pixel-scaler" draggable="false">
-    <div v-show="isShowImageSizeOver" class="image-size-over" @click="closeImageSizeOver($event)">
-      <div class="image-size-over-close" @click="closeImageSizeOver($event)">
+    <div v-show="isShowErrorOverlay" class="error-overlay" @click="closeErrorOverlay()">
+      <div class="error-overlay-close" @click="closeErrorOverlay()">
         <v-icon color="white" large>mdi-close-thick</v-icon>
       </div>
-      <div class="image-size-over-text">
-        画像が大きすぎます。最大サイズは 512x512 です。
+      <div class="error-overlay-text">
+        {{ errorOverlayText }}
       </div>
     </div>
 
-    <div v-show="isShowOverlay" class="drag-overlay">
+    <div v-show="isShowDragOverlay" class="drag-overlay">
       <div class="drag-overlay-cover" />
       <div class="drag-overlay-inside">
-        変換したいドット画像をドロップ
+        {{ '変換したいドット画像をドロップ' }}
       </div>
     </div>
 
     <LoadButton
-      class="dragArea"
       :input-accept="inputAccept"
       :image-loaded="imageLoaded"
       :image-converting="imageConverting"
@@ -29,7 +28,6 @@
       <PixelScalerInside
         v-else
         :input-data="inputData"
-        :image-loaded="imageLoaded"
         :image-converting="imageConverting"
         @converting-state="convertingState"
       />
@@ -43,6 +41,12 @@ import Description from './Description.vue'
 import LoadButton from './LoadButton.vue'
 import PixelScalerInside from './PixelScalerInside.vue'
 
+enum ErrorType {
+  inputSizeOver,
+  inputReadError,
+  inputTypeError
+}
+
 export default Vue.extend({
   components: {
     Description,
@@ -51,12 +55,23 @@ export default Vue.extend({
   },
   data() {
     return {
-      isShowImageSizeOver: false,
-      isShowOverlay: false,
+      isShowErrorOverlay: false,
+      isShowDragOverlay: false,
       inputAccept: 'image/png',
       inputData: '',
       imageLoaded: false,
-      imageConverting: false
+      imageConverting: false,
+      CurrentError: '',
+      errorText: {
+        inputSizeOver: '画像が大きすぎます。最大サイズは 512x512 です。',
+        inputReadError: '画像が読み込めませんでした。',
+        inputTypeError: 'ファイル形式は「.png」のみ対応しています。'
+      }
+    }
+  },
+  computed: {
+    errorOverlayText() {
+      return this.CurrentError
     }
   },
   mounted() {
@@ -73,8 +88,7 @@ export default Vue.extend({
           const elem = event.target as HTMLElement
           const pixelScaler = this.$refs.pixelScaler as HTMLElement
           if (pixelScaler !== undefined && pixelScaler.compareDocumentPosition(elem) & 16) {
-            // if (elem.className.includes('dragArea') || elem.className.includes('convert-button')) {
-            this.isShowOverlay = true
+            this.isShowDragOverlay = true
           } else if (event.dataTransfer !== null) {
             event.dataTransfer.dropEffect = 'none'
           }
@@ -90,7 +104,7 @@ export default Vue.extend({
         if (event !== null && event.target !== null) {
           const elem = event.target as HTMLElement
           if (elem.className.includes('drag-overlay-cover')) {
-            this.isShowOverlay = false
+            this.isShowDragOverlay = false
           }
         }
       },
@@ -101,32 +115,33 @@ export default Vue.extend({
       (event: DragEvent) => {
         event.stopPropagation()
         event.preventDefault()
-        if (event !== null) {
-          if (event.target !== null) {
-            const elem = event.target as HTMLElement
-            if (elem.className.includes('drag-overlay-cover')) {
-              this.isShowOverlay = false
+        this.closeErrorOverlay()
+        if (event !== null && event.target !== null) {
+          const elem = event.target as HTMLElement
+          if (elem.className.includes('drag-overlay-cover')) {
+            this.isShowDragOverlay = false
 
-              if (event.dataTransfer !== null && event.dataTransfer.files[0] !== undefined) {
-                const data = event.dataTransfer.files[0]
-                if (data.type === 'image/png') {
-                  // const blob = data.slice(0, data.size, data.type)
-                  const reader = new FileReader()
-                  reader.onload = async () => {
-                    if (reader.result !== null) {
-                      if (await this.isCheckImageSize(reader.result as string)) {
-                        this.inputData = reader.result as string
-                        this.imageLoaded = true
-                      } else {
-                        this.isShowImageSizeOver = true
-                      }
+            if (event.dataTransfer !== null && event.dataTransfer.files[0] !== undefined) {
+              const data = event.dataTransfer.files[0]
+              if (data.type === 'image/png') {
+                // const blob = data.slice(0, data.size, data.type)
+                const reader = new FileReader()
+                reader.onload = async () => {
+                  if (reader.result !== null) {
+                    if (await this.isCheckImageSize(reader.result as string)) {
+                      URL.revokeObjectURL(this.inputData)
+                      this.inputData = reader.result as string
+                      this.imageLoaded = true
+                    } else {
+                      this.showErrorOverlay(ErrorType.inputSizeOver)
                     }
+                  } else {
+                    this.showErrorOverlay(ErrorType.inputReadError)
                   }
-                  reader.readAsDataURL(data)
-
-                  // URL.revokeObjectURL(this.inputData)
-                  // this.inputData = URL.createObjectURL(data)
                 }
+                reader.readAsDataURL(data)
+              } else {
+                this.showErrorOverlay(ErrorType.inputTypeError)
               }
             }
           }
@@ -145,17 +160,19 @@ export default Vue.extend({
           reader.onload = async () => {
             if (reader.result !== null) {
               if (await this.isCheckImageSize(reader.result as string)) {
+                URL.revokeObjectURL(this.inputData)
                 this.inputData = reader.result as string
                 this.imageLoaded = true
               } else {
-                this.isShowImageSizeOver = true
+                this.showErrorOverlay(ErrorType.inputSizeOver)
               }
+            } else {
+              this.showErrorOverlay(ErrorType.inputReadError)
             }
           }
           reader.readAsDataURL(data)
-
-          // URL.revokeObjectURL(this.inputData)
-          // this.inputData = URL.createObjectURL(data)
+        } else {
+          this.showErrorOverlay(ErrorType.inputTypeError)
         }
       }
     },
@@ -175,9 +192,19 @@ export default Vue.extend({
         img.src = data
       })
     },
-    closeImageSizeOver(e: Event) {
-      e.preventDefault()
-      this.isShowImageSizeOver = false
+    closeErrorOverlay() {
+      this.isShowErrorOverlay = false
+    },
+    showErrorOverlay(type: ErrorType) {
+      this.isShowErrorOverlay = true
+
+      if (type === ErrorType.inputSizeOver) {
+        this.CurrentError = this.errorText.inputSizeOver
+      } else if (type === ErrorType.inputReadError) {
+        this.CurrentError = this.errorText.inputReadError
+      } else if (type === ErrorType.inputTypeError) {
+        this.CurrentError = this.errorText.inputTypeError
+      }
     }
   }
 })
@@ -186,14 +213,19 @@ export default Vue.extend({
 <style lang="scss">
 .pixel-scaler {
   position: relative;
-  // height: 700px;
   width: 100%;
   margin: 10px 0;
   @include flex-centering(column);
-  max-height: 80vh;
+  min-height: 500px;
+
+  @media (orientation: portrait) {
+    padding: 0 5px;
+    min-height: initial;
+    max-height: 80vh;
+  }
 }
 
-.image-size-over {
+.error-overlay {
   z-index: 1;
   @include absolute-centering;
   @include flex-centering(column);
@@ -212,7 +244,7 @@ export default Vue.extend({
   &-text {
     height: 100px;
     padding: 30px;
-    background: #eee;
+    background: $color-white;
     @include flex-centering(row);
     color: $color-red1;
     cursor: initial;
@@ -224,12 +256,12 @@ export default Vue.extend({
   z-index: 2;
   padding: 10px;
   opacity: 0.9;
-  background: #fff;
+  background: $color-white;
 
   &-inside {
     height: 100%;
-    border: dashed #eee 10px;
-    color: #999;
+    border: dashed $color-whiteE 10px;
+    color: $color-black9;
     font-size: 1.6em;
     @include flex-centering(row);
   }

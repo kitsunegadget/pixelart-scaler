@@ -1,16 +1,8 @@
 <template>
   <div class="pixel-scaler-inside">
-    <PixelScalerInsideAbove :output-data="outputData" :current-filter="currentFilter" />
+    <PixelScalerInsideAbove @click-save="clickSave" />
     <div class="pixel-scaler-inside-below">
       <PixelScalerType :converting="converting" @convert-start="convertClick" />
-      <!-- <div class="converting-status">
-        <v-progress-circular v-if="converting" indeterminate color="blue" :size="50">
-          <span class="sr-only">Loading...</span>
-        </v-progress-circular>
-        <div v-else class="converting-status-arrow">
-          <v-icon x-large color="orange">mdi-arrow-right-thick</v-icon>
-        </div>
-      </div> -->
       <div class="output-image" v-bind="{ expand: !canvasExpanded }" @click="changeCanvasExpand">
         <canvas ref="outputCanvas"></canvas>
         <!-- <img class="image" :src="outputData" draggable="false" /> -->
@@ -36,15 +28,11 @@ export default Vue.extend({
       type: String,
       default: '',
       required: true
-    },
-    imageLoaded: {
-      type: Boolean,
-      required: true
     }
   },
   data() {
     return {
-      outputData: '',
+      // outputData: '',
       converting: false,
       currentFilter: 'NoScale',
       canvasExpanded: false
@@ -181,7 +169,15 @@ export default Vue.extend({
     },
     changeCanvasExpand() {
       this.canvasExpanded = !this.canvasExpanded
-      // console.log(this.canvasExpanded)
+    },
+    clickSave() {
+      if (this.currentFilter !== 'NoScale') {
+        const c = this.$refs.outputCanvas as HTMLCanvasElement
+        const a = document.createElement('a')
+        a.href = c.toDataURL()
+        a.download = this.currentFilter
+        a.click()
+      }
     }
   }
 })
@@ -192,20 +188,22 @@ export default Vue.extend({
   padding-bottom: 10px;
   width: 100%;
   height: 100%;
+  // display: flex;
+  // flex-direction: column;
+  // align-content: space-between;
 }
 .pixel-scaler-inside-below {
-  // padding-top: 72px;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  flex-wrap: wrap;
+  // flex-wrap: wrap;
   width: 100%;
   height: 100%;
   transition: all 1s ease;
 
   @media (orientation: portrait) {
     flex-direction: column;
-    width: 100vw;
+    align-items: center;
   }
 }
 .output-image {
@@ -256,7 +254,7 @@ export default Vue.extend({
 
   @media (orientation: portrait) {
     height: 40vh;
-    width: 99vw;
+    width: calc(100% - 17px);
   }
 }
 .converting-status {

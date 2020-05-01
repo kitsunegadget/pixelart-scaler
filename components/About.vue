@@ -7,7 +7,7 @@
         <v-btn @click="changeCurrent('privacy')">プライバシーポリシー</v-btn>
       </v-btn-toggle> -->
       <v-icon color="white" large @click="$emit('show-about', $event)">
-        mdi-close-thick
+        {{ 'mdi-close-thick' }}
       </v-icon>
     </div>
     <div class="about-inside">
@@ -44,32 +44,33 @@ export default Vue.extend({
 .about {
   position: absolute;
   z-index: 2;
+  width: 100%;
   height: 100%;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  @include flex-centering(column);
+  justify-content: flex-start;
   padding: 60px;
-  // width: 100%;
-  // width: 90vw;
-  // height: 90vh;
-  background: #0006;
 
   @media (orientation: portrait) {
     padding: 60px 5px;
   }
 
   &-outside {
-    position: absolute;
+    width: 100vw;
+    position: fixed;
     z-index: -1;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+    background: #0006;
   }
 
   &-select {
+    width: 100%;
+    max-width: 1000px;
     margin-top: -10px;
     display: flex;
+    flex-direction: row;
     justify-content: flex-end;
 
     .v-icon {
@@ -82,9 +83,11 @@ export default Vue.extend({
   }
 
   &-inside {
+    width: 100%;
+    max-width: 1000px;
     padding: 30px;
     color: $color-black6;
-    background: #fff;
+    background: $color-white;
     max-height: 80vh;
     overflow-y: scroll;
 
@@ -102,23 +105,23 @@ export default Vue.extend({
         width: 10px;
       }
     }
-    &::-webkit-scrollbar-button {
-      // background-color: $color-blue1;
-      // // display: none;
-      // height: 1px;
-    }
-    &::-webkit-scrollbar-corner {
-      // background: #f00;
-    }
+    // &::-webkit-scrollbar-button {
+    //   // background-color: $color-blue1;
+    //   // // display: none;
+    //   // height: 1px;
+    // }
+    // &::-webkit-scrollbar-corner {
+    //   // background: #f00;
+    // }
     &::-webkit-scrollbar-thumb {
       background: $color-black3;
     }
-    &::-webkit-scrollbar-track {
-      // background: #000;
-    }
-    &::-webkit-scrollbar-track-piece {
-      // background: #00f;
-    }
+    // &::-webkit-scrollbar-track {
+    //   // background: #000;
+    // }
+    // &::-webkit-scrollbar-track-piece {
+    //   // background: #00f;
+    // }
   }
 }
 </style>

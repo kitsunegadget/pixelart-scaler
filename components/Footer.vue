@@ -2,11 +2,18 @@
   <footer class="footer">
     <div class="container">
       <span>
-        &copy; 2020 Kitsune Gadget
+        {{ '&copy; 2020 Kitsune Gadget' }}
       </span>
     </div>
   </footer>
 </template>
+
+<script lang="ts">
+import Vue from 'vue'
+export default Vue.extend({
+  //
+})
+</script>
 
 <style lang="scss">
 .footer {

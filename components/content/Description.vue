@@ -6,6 +6,16 @@
         <li>{{ note }}</li>
       </ul>
     </div>
+    <a
+      href="https://twitter.com/share?ref_src=twsrc%5Etfw"
+      class="twitter-share-button"
+      data-size="large"
+      data-text="「ドット絵スケーラー」で画像を拡大してみよう！"
+      data-url="https://pixelart-scaler.kitsunegadget.xyz/"
+      data-show-count="false"
+    >
+      {{ 'Tweet' }}
+    </a>
   </div>
 </template>
 
@@ -17,8 +27,7 @@ export default Vue.extend({
       description: {
         title: 'ドット絵の色々なスケーリングを試してみよう！',
         notes: ['入力最大解像度は 512x512 まで', 'png形式のみ対応しています']
-      },
-      loaded: 'loaded'
+      }
     }
   }
 })
@@ -69,6 +78,11 @@ export default Vue.extend({
         font-size: 0.9em;
       }
     }
+  }
+
+  .twitter-share-button {
+    position: absolute !important;
+    bottom: 30px;
   }
 }
 </style>

@@ -41,9 +41,7 @@ export default Vue.extend({
 .header {
   width: 100%;
   height: 50px;
-  background: {
-    color: $color-bluegray;
-  }
+  background: $color-bluegray;
   color: $color-white;
   z-index: 1;
   box-shadow: 0 0 5px #666a;
@@ -53,7 +51,7 @@ export default Vue.extend({
     font-weight: bold;
     @include flex-centering(row);
     margin: 0 10px;
-    //line-height: 1.3em;
+    // line-height: 1.3em;
     cursor: default;
   }
 }

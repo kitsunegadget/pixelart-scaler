@@ -19,10 +19,13 @@
       v-bind="{ disabled: imageConverting }"
       @click="fileSelect"
     >
-      <v-icon left>mdi-image</v-icon>画像を選択
+      <v-icon left>{{ 'mdi-image' }}</v-icon>
+      {{ '画像を選択' }}
     </v-btn>
     <p></p>
-    <p v-bind="{ loaded: imageLoaded }">もしくは、ドラッグ＆ドロップ</p>
+    <p v-bind="{ loaded: imageLoaded }">
+      {{ 'もしくは、ドラッグ＆ドロップ' }}
+    </p>
   </div>
 </template>
 
@@ -60,7 +63,6 @@ export default Vue.extend({
   overflow: hidden;
   height: 100px;
   margin-left: 1px;
-  // z-index: 0;
   top: 2.5px;
   transform: translateY(200px);
 

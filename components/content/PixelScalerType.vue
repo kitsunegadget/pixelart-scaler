@@ -22,7 +22,7 @@
           class="convert-button"
           @click="convertClick('NoScale')"
         >
-          No Scaling
+          {{ 'No Scaling' }}
         </v-btn>
         <hr />
 
@@ -33,7 +33,7 @@
           class="convert-button"
           @click="convertClick('Epx2')"
         >
-          EPX / Scale 2x
+          {{ 'EPX / Scale 2x' }}
         </v-btn>
         <v-btn
           :loading="loading.loadingEpx3"
@@ -42,7 +42,7 @@
           class="convert-button"
           @click="convertClick('Epx3')"
         >
-          Scale 3x
+          {{ 'Scale 3x' }}
         </v-btn>
         <v-btn
           :loading="loading.loadingEpx4"
@@ -51,7 +51,7 @@
           class="convert-button"
           @click="convertClick('Epx4')"
         >
-          Scale 4x
+          {{ 'Scale 4x' }}
         </v-btn>
         <hr />
 
@@ -62,7 +62,7 @@
           class="convert-button"
           @click="convertClick('EpxB')"
         >
-          EPXB 2x
+          {{ 'EPXB 2x' }}
         </v-btn>
         <v-btn
           :loading="loading.loadingEpxC"
@@ -71,7 +71,7 @@
           class="convert-button"
           @click="convertClick('EpxC')"
         >
-          EPXC 2x
+          {{ 'EPXC 2x' }}
         </v-btn>
         <v-btn
           :loading="loading.loadingEpx33"
@@ -80,7 +80,7 @@
           class="convert-button"
           @click="convertClick('Epx33')"
         >
-          EPX3 3x
+          {{ 'EPX3 3x' }}
         </v-btn>
         <hr />
 
@@ -91,7 +91,7 @@
           class="convert-button"
           @click="convertClick('Eagle2')"
         >
-          Eagle 2x
+          {{ 'Eagle 2x' }}
         </v-btn>
         <!-- <v-btn @click="$emit('convert-start', 'eagle3')">
           Eagle 3x
@@ -108,7 +108,7 @@
           class="convert-button"
           @click="convertClick('2xSaI')"
         >
-          SaI 2x
+          {{ 'SaI 2x' }}
         </v-btn>
         <v-btn
           :loading="loading.loadingSuper2xSaI"
@@ -117,7 +117,7 @@
           class="convert-button"
           @click="convertClick('Super2xSaI')"
         >
-          SuperSaI 2x
+          {{ 'SuperSaI 2x' }}
         </v-btn>
         <v-btn
           :loading="loading.loadingSuperEagle"
@@ -126,7 +126,7 @@
           class="convert-button"
           @click="convertClick('SuperEagle')"
         >
-          SuperEagle 2x
+          {{ 'SuperEagle 2x' }}
         </v-btn>
         <hr />
 
@@ -137,7 +137,7 @@
           class="convert-button"
           @click="convertClick('HQx2')"
         >
-          HQ 2x
+          {{ 'HQ 2x' }}
         </v-btn>
         <v-btn
           :loading="loading.loadingHQx3"
@@ -146,7 +146,7 @@
           class="convert-button"
           @click="convertClick('HQx3')"
         >
-          HQ 3x
+          {{ 'HQ 3x' }}
         </v-btn>
         <v-btn
           :loading="loading.loadingHQx4"
@@ -155,7 +155,7 @@
           class="convert-button"
           @click="convertClick('HQx4')"
         >
-          HQ 4x
+          {{ 'HQ 4x' }}
         </v-btn>
         <hr />
 
@@ -166,7 +166,7 @@
           class="convert-button"
           @click="convertClick('XBR2')"
         >
-          xBR 2x
+          {{ 'xBR 2x' }}
         </v-btn>
         <v-btn
           :loading="loading.loadingXBR3"
@@ -175,7 +175,7 @@
           class="convert-button"
           @click="convertClick('XBR3')"
         >
-          xBR 3x
+          {{ 'xBR 3x' }}
         </v-btn>
         <v-btn
           :loading="loading.loadingXBR4"
@@ -184,7 +184,7 @@
           class="convert-button"
           @click="convertClick('XBR4')"
         >
-          xBR 4x
+          {{ 'xBR 4x' }}
         </v-btn>
         <hr />
 
@@ -195,7 +195,7 @@
           class="convert-button"
           @click="convertClick('XBRz2')"
         >
-          xBRz 2x
+          {{ 'xBRz 2x' }}
         </v-btn>
         <v-btn
           :loading="loading.loadingXBRz3"
@@ -204,7 +204,7 @@
           class="convert-button"
           @click="convertClick('XBRz3')"
         >
-          xBRz 3x
+          {{ 'xBRz 3x' }}
         </v-btn>
         <v-btn
           :loading="loading.loadingXBRz4"
@@ -213,7 +213,7 @@
           class="convert-button"
           @click="convertClick('XBRz4')"
         >
-          xBRz 4x
+          {{ 'xBRz 4x' }}
         </v-btn>
         <v-btn
           :loading="loading.loadingXBRz5"
@@ -222,7 +222,7 @@
           class="convert-button"
           @click="convertClick('XBRz5')"
         >
-          xBRz 5x
+          {{ 'xBRz 5x' }}
         </v-btn>
         <v-btn
           :loading="loading.loadingXBRz6"
@@ -231,7 +231,7 @@
           class="convert-button"
           @click="convertClick('XBRz6')"
         >
-          xBRz 6x
+          {{ 'xBRz 6x' }}
         </v-btn>
 
         <!-- <v-btn tile text color="indigo" x-large active-class class="convert-button" @click="$emit('convert-start', '0')">
@@ -306,14 +306,13 @@ export default Vue.extend({
   height: calc(100vh - 350px);
   display: flex;
   flex-direction: column;
-  // justify-content: space-around;
   // background: #3344dd;
   color: white;
 
   @media (orientation: portrait) {
     min-height: initial;
     height: 30vh;
-    width: 100%;
+    width: calc(100% - 17px);
   }
 }
 
@@ -321,15 +320,12 @@ export default Vue.extend({
   @include absolute-centering;
   bottom: 0;
   z-index: 1;
-  // background: #00ff00;
   opacity: 0.5;
 }
 
 .scale-style {
-  // margin: 10px;
   display: flex;
   flex-direction: column;
-  // align-items: center;
   flex-wrap: wrap;
   // border: #3344dd solid 1px;
 
@@ -338,35 +334,35 @@ export default Vue.extend({
 
   // for firefox
   scrollbar-width: thin;
-  scrollbar-color: $color-blue2 $color-white;
+  scrollbar-color: $color-blue2 $color-graylight;
 
   // for webkit browser
   &::-webkit-scrollbar {
     display: block;
     overflow: hidden;
     width: 7px;
-
-    &:hover {
-      width: 10px;
-    }
   }
   &::-webkit-scrollbar-button {
     background-color: $color-blue1;
     // display: none;
     height: 1px;
   }
-  &::-webkit-scrollbar-corner {
-    background: #f00;
-  }
+  // &::-webkit-scrollbar-corner {
+  //   background: #f00;
+  // }
   &::-webkit-scrollbar-thumb {
     background: $color-blue2;
+
+    &:hover {
+      background: $color-blue1;
+    }
   }
-  &::-webkit-scrollbar-track {
-    // background: #000;
-  }
-  &::-webkit-scrollbar-track-piece {
-    // background: #00f;
-  }
+  // &::-webkit-scrollbar-track {
+  //   // background: #000;
+  // }
+  // &::-webkit-scrollbar-track-piece {
+  //   // background: #00f;
+  // }
 
   .type-button {
     display: flex;
