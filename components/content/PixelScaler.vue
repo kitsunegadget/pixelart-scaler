@@ -27,6 +27,7 @@
       <Description v-if="!imageLoaded" />
       <PixelScalerInside
         v-else
+        :input-name="inputName"
         :input-data="inputData"
         :image-converting="imageConverting"
         @converting-state="convertingState"
@@ -59,6 +60,7 @@ export default Vue.extend({
       isShowDragOverlay: false,
       inputAccept: 'image/png',
       inputData: '',
+      inputName: '',
       imageLoaded: false,
       imageConverting: false,
       CurrentError: '',
@@ -130,6 +132,7 @@ export default Vue.extend({
                   if (reader.result !== null) {
                     if (await this.isCheckImageSize(reader.result as string)) {
                       URL.revokeObjectURL(this.inputData)
+                      this.inputName = this.getFileName(data.name)
                       this.inputData = reader.result as string
                       this.imageLoaded = true
                     } else {
@@ -151,6 +154,10 @@ export default Vue.extend({
     )
   },
   methods: {
+    getFileName(str: string) {
+      const re = /\.[0-9a-zA-Z]+$/
+      return str.replace(re, '')
+    },
     inputChanged(event: any) {
       if (event !== null && event.target.files[0] !== undefined) {
         const data = event.target.files[0]
@@ -161,6 +168,7 @@ export default Vue.extend({
             if (reader.result !== null) {
               if (await this.isCheckImageSize(reader.result as string)) {
                 URL.revokeObjectURL(this.inputData)
+                this.inputName = this.getFileName(data.name)
                 this.inputData = reader.result as string
                 this.imageLoaded = true
               } else {

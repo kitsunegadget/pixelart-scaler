@@ -31,7 +31,7 @@
           text
           color="indigo"
           class="convert-button"
-          @click="convertClick('Epx2')"
+          @click="convertClick('Epx')"
         >
           {{ 'EPX / Scale 2x' }}
         </v-btn>
@@ -40,7 +40,7 @@
           text
           color="indigo"
           class="convert-button"
-          @click="convertClick('Epx3')"
+          @click="convertClick('Scale3x')"
         >
           {{ 'Scale 3x' }}
         </v-btn>
@@ -49,7 +49,7 @@
           text
           color="indigo"
           class="convert-button"
-          @click="convertClick('Epx4')"
+          @click="convertClick('Scale4x')"
         >
           {{ 'Scale 4x' }}
         </v-btn>
@@ -78,7 +78,7 @@
           text
           color="indigo"
           class="convert-button"
-          @click="convertClick('Epx33')"
+          @click="convertClick('Epx3')"
         >
           {{ 'EPX3 3x' }}
         </v-btn>
@@ -89,11 +89,11 @@
           text
           color="indigo"
           class="convert-button"
-          @click="convertClick('Eagle2')"
+          @click="convertClick('Eagle')"
         >
           {{ 'Eagle 2x' }}
         </v-btn>
-        <!-- <v-btn @click="$emit('convert-start', 'eagle3')">
+        <!-- <v-btn @click="$emit('convert-start', 'eagle3x')">
           Eagle 3x
         </v-btn> -->
         <!-- <v-btn @click="$emit('convert-start', 'eagle3xB')">
@@ -135,7 +135,7 @@
           text
           color="indigo"
           class="convert-button"
-          @click="convertClick('HQx2')"
+          @click="convertClick('HQ2x')"
         >
           {{ 'HQ 2x' }}
         </v-btn>
@@ -144,7 +144,7 @@
           text
           color="indigo"
           class="convert-button"
-          @click="convertClick('HQx3')"
+          @click="convertClick('HQ3x')"
         >
           {{ 'HQ 3x' }}
         </v-btn>
@@ -153,7 +153,7 @@
           text
           color="indigo"
           class="convert-button"
-          @click="convertClick('HQx4')"
+          @click="convertClick('HQ4x')"
         >
           {{ 'HQ 4x' }}
         </v-btn>
@@ -164,7 +164,7 @@
           text
           color="indigo"
           class="convert-button"
-          @click="convertClick('XBR2')"
+          @click="convertClick('XBR2x')"
         >
           {{ 'xBR 2x' }}
         </v-btn>
@@ -173,7 +173,7 @@
           text
           color="indigo"
           class="convert-button"
-          @click="convertClick('XBR3')"
+          @click="convertClick('XBR3x')"
         >
           {{ 'xBR 3x' }}
         </v-btn>
@@ -182,7 +182,7 @@
           text
           color="indigo"
           class="convert-button"
-          @click="convertClick('XBR4')"
+          @click="convertClick('XBR4x')"
         >
           {{ 'xBR 4x' }}
         </v-btn>
@@ -193,7 +193,7 @@
           text
           color="indigo"
           class="convert-button"
-          @click="convertClick('XBRz2')"
+          @click="convertClick('XBRz2x')"
         >
           {{ 'xBRz 2x' }}
         </v-btn>
@@ -202,7 +202,7 @@
           text
           color="indigo"
           class="convert-button"
-          @click="convertClick('XBRz3')"
+          @click="convertClick('XBRz3x')"
         >
           {{ 'xBRz 3x' }}
         </v-btn>
@@ -211,7 +211,7 @@
           text
           color="indigo"
           class="convert-button"
-          @click="convertClick('XBRz4')"
+          @click="convertClick('XBRz4x')"
         >
           {{ 'xBRz 4x' }}
         </v-btn>
@@ -220,7 +220,7 @@
           text
           color="indigo"
           class="convert-button"
-          @click="convertClick('XBRz5')"
+          @click="convertClick('XBRz5x')"
         >
           {{ 'xBRz 5x' }}
         </v-btn>
@@ -229,7 +229,7 @@
           text
           color="indigo"
           class="convert-button"
-          @click="convertClick('XBRz6')"
+          @click="convertClick('XBRz6x')"
         >
           {{ 'xBRz 6x' }}
         </v-btn>

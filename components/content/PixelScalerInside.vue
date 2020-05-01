@@ -24,6 +24,11 @@ export default Vue.extend({
     PixelScalerType
   },
   props: {
+    inputName: {
+      type: String,
+      default: '',
+      required: true
+    },
     inputData: {
       type: String,
       default: '',
@@ -88,13 +93,13 @@ export default Vue.extend({
             } else if (type === 'binarization') {
               newImageData = StandardFilter.binarization(imageData, 127)
               //
-            } else if (type === 'Epx2') {
+            } else if (type === 'Epx') {
               newImageData = PxFilter.EPX(ctx, imageData, 2)
               //
-            } else if (type === 'Epx3') {
+            } else if (type === 'Scale3x') {
               newImageData = PxFilter.EPX(ctx, imageData, 3)
               //
-            } else if (type === 'Epx4') {
+            } else if (type === 'Scale4x') {
               newImageData = PxFilter.EPX(ctx, imageData, 4)
               //
             } else if (type === 'EpxB') {
@@ -103,13 +108,13 @@ export default Vue.extend({
             } else if (type === 'EpxC') {
               newImageData = PxFilter.SNES9x(ctx, imageData, 2, 'C')
               //
-            } else if (type === 'Epx33') {
+            } else if (type === 'Epx3') {
               newImageData = PxFilter.SNES9x(ctx, imageData, 3, '3')
               //
-            } else if (type === 'Eagle2') {
+            } else if (type === 'Eagle') {
               newImageData = PxFilter.Eagle(ctx, imageData, 2)
               //
-            } else if (type === 'Eagle3') {
+            } else if (type === 'Eagle3x') {
               newImageData = PxFilter.Eagle(ctx, imageData, 3)
               //
             } else if (type === 'Eagle3xB') {
@@ -124,37 +129,37 @@ export default Vue.extend({
             } else if (type === 'SuperEagle') {
               newImageData = PxFilter.SuperEagle(ctx, imageData, 2)
               //
-            } else if (type === 'HQx2') {
+            } else if (type === 'HQ2x') {
               newImageData = PxFilter.HQx(ctx, img, 2)
               //
-            } else if (type === 'HQx3') {
+            } else if (type === 'HQ3x') {
               newImageData = PxFilter.HQx(ctx, img, 3)
               //
-            } else if (type === 'HQx4') {
+            } else if (type === 'HQ4x') {
               newImageData = PxFilter.HQx(ctx, img, 4)
               //
-            } else if (type === 'XBR2') {
+            } else if (type === 'XBR2x') {
               newImageData = PxFilter.XBR(ctx, imageData, 2)
               //
-            } else if (type === 'XBR3') {
+            } else if (type === 'XBR3x') {
               newImageData = PxFilter.XBR(ctx, imageData, 3)
               //
-            } else if (type === 'XBR4') {
+            } else if (type === 'XBR4x') {
               newImageData = PxFilter.XBR(ctx, imageData, 4)
               //
-            } else if (type === 'XBRz2') {
+            } else if (type === 'XBRz2x') {
               newImageData = PxFilter.XBRz(ctx, imageData, 2)
               //
-            } else if (type === 'XBRz3') {
+            } else if (type === 'XBRz3x') {
               newImageData = PxFilter.XBRz(ctx, imageData, 3)
               //
-            } else if (type === 'XBRz4') {
+            } else if (type === 'XBRz4x') {
               newImageData = PxFilter.XBRz(ctx, imageData, 4)
               //
-            } else if (type === 'XBRz5') {
+            } else if (type === 'XBRz5x') {
               newImageData = PxFilter.XBRz(ctx, imageData, 5)
               //
-            } else if (type === 'XBRz6') {
+            } else if (type === 'XBRz6x') {
               newImageData = PxFilter.XBRz(ctx, imageData, 6)
               //
             } else if (type === '0') {
@@ -175,7 +180,7 @@ export default Vue.extend({
         const c = this.$refs.outputCanvas as HTMLCanvasElement
         const a = document.createElement('a')
         a.href = c.toDataURL()
-        a.download = this.currentFilter
+        a.download = this.inputName + '_' + this.currentFilter
         a.click()
       }
     }
