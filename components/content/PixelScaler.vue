@@ -5,7 +5,7 @@
         <v-icon color="white" large>mdi-close-thick</v-icon>
       </div>
       <div class="error-overlay-text">
-        {{ errorOverlayText }}
+        {{ currentError }}
       </div>
     </div>
 
@@ -69,11 +69,6 @@ export default Vue.extend({
         inputReadError: '画像が読み込めませんでした。',
         inputTypeError: 'ファイル形式は「.png」のみ対応しています。'
       }
-    }
-  },
-  computed: {
-    errorOverlayText() {
-      return this.currentError
     }
   },
   mounted() {
