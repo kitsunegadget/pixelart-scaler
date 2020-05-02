@@ -18,8 +18,7 @@ export default {
     script: [
       { src: '/__/firebase/7.14.2/firebase-app.js' },
       { src: '/__/firebase/7.14.2/firebase-analytics.js' },
-      { src: '/__/firebase/init.js' },
-      { async: '', src: 'https://platform.twitter.com/widgets.js', charset: 'utf-8' }
+      { src: '/__/firebase/init.js' }
     ]
   },
   /*
@@ -37,7 +36,7 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ['@nuxt/typescript-build', '@nuxtjs/vuetify', 'worker-loader'],
+  buildModules: ['@nuxt/typescript-build', '@nuxtjs/vuetify'],
   /*
    ** Nuxt.js modules
    */
@@ -62,14 +61,17 @@ export default {
   build: {
     analayze: true,
     extend(config, { isDev, isClient }) {
+      config.module.rules.push({
+        test: /\.worker\.ts$/,
+        use: {
+          loader: 'worker-loader'
+        },
+        exclude: /(node_modules)/
+      })
       config.output.globalObject = 'this'
+
       if (isDev || isClient) {
         // config.devtool = 'source-map'
-        config.module.rules.push({
-          test: /\.worker\.ts$/,
-          use: { loader: 'worker-loader' },
-          exclude: /(node_modules)/
-        })
       }
     }
   }

@@ -27,9 +27,6 @@
       "@types/node",
       "@nuxt/types",
       "@nuxtjs/vuetify",
-    ],
-    "typeRoots": [
-      "./modules/types"
     ]
   },
   "exclude": [

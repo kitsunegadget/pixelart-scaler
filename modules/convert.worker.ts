@@ -117,3 +117,10 @@ ctx.addEventListener('message', (e: MessageEvent) => {
 
   ctx.postMessage({ imageData: newImageData, scales: scale })
 })
+
+// export dummy class
+export default class WebpackWorker extends Worker {
+  constructor() {
+    super('')
+  }
+}

@@ -1,7 +1,7 @@
 {
   "name": "pixel-scaler",
   "version": "1.0.0",
-  "description": "Web pixel scaling filter tool",
+  "description": "Web pixelart scaling filter tool",
   "author": "Kitsune Gadget",
   "private": true,
   "scripts": {
@@ -17,8 +17,7 @@
     "@nuxtjs/axios": "^5.3.6",
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.11.0",
-    "nuxt": "^2.0.0",
-    "worker-loader": "^2.0.0"
+    "nuxt": "^2.0.0"
   },
   "devDependencies": {
     "@nuxt/typescript-build": "^0.6.0",
@@ -39,6 +38,7 @@
     "sass-loader": "^8.0.2",
     "ts-jest": "^25.0.0",
     "vue-jest": "^4.0.0-0",
-    "webpack-bundle-analyzer": "^3.7.0"
+    "webpack-bundle-analyzer": "^3.7.0",
+    "worker-loader": "^2.0.0"
   }
 }
