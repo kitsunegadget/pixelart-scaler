@@ -18,7 +18,8 @@ export default {
     script: [
       { src: '/__/firebase/7.14.2/firebase-app.js' },
       { src: '/__/firebase/7.14.2/firebase-analytics.js' },
-      { src: '/__/firebase/init.js' }
+      { src: '/__/firebase/init.js' },
+      { async: '', src: 'https://platform.twitter.com/widgets.js', charset: 'utf-8' }
     ]
   },
   /*
@@ -36,15 +37,15 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ['@nuxt/typescript-build', '@nuxtjs/vuetify'],
+  buildModules: ['@nuxt/typescript-build', '@nuxtjs/vuetify', 'worker-loader'],
   /*
    ** Nuxt.js modules
    */
   modules: [
     // Doc: https://bootstrap-vue.js.org
-    'bootstrap-vue/nuxt',
+    // 'bootstrap-vue/nuxt',
     // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios',
+    // '@nuxtjs/axios',
     '@nuxtjs/style-resources'
   ],
   styleResources: {
@@ -59,8 +60,17 @@ export default {
    ** Build configuration
    */
   build: {
-    /*
-     ** You can extend webpack config here
-     */
+    analayze: true,
+    extend(config, { isDev, isClient }) {
+      config.output.globalObject = 'this'
+      if (isDev || isClient) {
+        // config.devtool = 'source-map'
+        config.module.rules.push({
+          test: /\.worker\.ts$/,
+          use: { loader: 'worker-loader' },
+          exclude: /(node_modules)/
+        })
+      }
+    }
   }
 }

@@ -10,15 +10,11 @@ import XBR from './PixelFilter/xBR'
 import XBRZ from './PixelFilter/xBRZ'
 // ImageDataをPixelData型にしてスケール変換するstaticクラス
 export default class PixelFilter {
-  static EPX(ctx: CanvasRenderingContext2D, imageData: ImageData, scale: number) {
-    ctx.canvas.width *= scale
-    ctx.canvas.height *= scale
+  static EPX(imageData: ImageData, scale: number) {
     return EPX.EPX(imageData, scale)
   }
 
-  static SNES9x(ctx: CanvasRenderingContext2D, imageData: ImageData, scale: number, mode = 'B') {
-    ctx.canvas.width *= scale
-    ctx.canvas.height *= scale
+  static SNES9x(imageData: ImageData, scale: number, mode = 'B') {
     if (mode === 'B') {
       return SNES9x.EPXB(imageData, scale)
     } else if (mode === '3') {
@@ -30,49 +26,34 @@ export default class PixelFilter {
   }
 
   static Eagle(
-    ctx: CanvasRenderingContext2D,
     imageData: ImageData,
     scale: number,
     mode = 'normal'
   ) {
-    ctx.canvas.width *= scale
-    ctx.canvas.height *= scale
     return Eagle.Eagle(imageData, scale, mode)
   }
 
-  static _2xSaI(ctx: CanvasRenderingContext2D, imageData: ImageData, scale: number) {
-    ctx.canvas.width *= scale
-    ctx.canvas.height *= scale
+  static _2xSaI(imageData: ImageData, scale: number) {
     return Kreed._2xSaI(imageData, scale)
   }
 
-  static Super2xSaI(ctx: CanvasRenderingContext2D, imageData: ImageData, scale: number) {
-    ctx.canvas.width *= scale
-    ctx.canvas.height *= scale
+  static Super2xSaI(imageData: ImageData, scale: number) {
     return Kreed.Super2xSaI(imageData, scale)
   }
 
-  static SuperEagle(ctx: CanvasRenderingContext2D, imageData: ImageData, scale: number) {
-    ctx.canvas.width *= scale
-    ctx.canvas.height *= scale
+  static SuperEagle(imageData: ImageData, scale: number) {
     return Kreed.SuperEagle(imageData, scale)
   }
 
-  static HQx(ctx: CanvasRenderingContext2D, image: HTMLImageElement, scale: number) {
-    ctx.canvas.width *= scale
-    ctx.canvas.height *= scale
-    return jsHQx(image, scale)
+  static HQx(imageData: ImageData, scale: number) {
+    return jsHQx(imageData, scale)
   }
 
-  static XBR(ctx: CanvasRenderingContext2D, imageData: ImageData, scale: number) {
-    ctx.canvas.width *= scale
-    ctx.canvas.height *= scale
+  static XBR(imageData: ImageData, scale: number) {
     return XBR.XBR(imageData, scale, true)
   }
 
-  static XBRz(ctx: CanvasRenderingContext2D, imageData: ImageData, scale: number) {
-    ctx.canvas.width *= scale
-    ctx.canvas.height *= scale
+  static XBRz(imageData: ImageData, scale: number) {
     return XBRZ.XBRZ(imageData, scale)
   }
 

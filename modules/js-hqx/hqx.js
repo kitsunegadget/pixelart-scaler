@@ -193,7 +193,8 @@ var getImagePixels = function( image, x, y, width, height ) {
 };
 
 // modified window.hqx to export default
-// and replace return ImageData
+// Add I/O ImageData
+// Use Uint32Array instead of Array
 export default function( img, scale ) {
 	// We can only scale with a factor of 2, 3 or 4
 	if( [2,3,4].indexOf(scale) === -1 ) {
@@ -201,7 +202,11 @@ export default function( img, scale ) {
 	}
 
     var orig, origCtx, scaled, origPixels;
-    if (img instanceof HTMLCanvasElement){
+    if (img instanceof ImageData) {
+        // for ImageDataInput
+        origPixels = img.data;
+    }
+    else if (img instanceof HTMLCanvasElement){
 		orig = img;
 		origCtx = orig.getContext('2d');
 		scaled = orig;
@@ -209,13 +214,12 @@ export default function( img, scale ) {
 	} else {
 		origPixels = getImagePixels( img, 0, 0, img.width, img.height ).data;
 		scaled = document.createElement('canvas');
-	}
-	
+    }
 	
 	// pack RGBA colors into integers
 	var count = img.width * img.height;
-	var src = _src = new Array(count);
-	var dest = _dest = new Array(count*scale*scale);
+	var src = _src = new Uint32Array(count);
+	var dest = _dest = new Uint32Array(count*scale*scale);
 	var index;
 	for(var i = 0; i < count; i++) {
 		src[i] = (origPixels[(index = i << 2)+3] << 24) +
@@ -228,7 +232,15 @@ export default function( img, scale ) {
 	if( scale === 2 ) hq2x( img.width, img.height );
 	else if( scale === 3 ) hq3x( img.width, img.height );
 	else if( scale === 4 ) hq4x( img.width, img.height );
-	// alternative: window['hq'+scale+'x']( img.width, img.height ); 
+    // alternative: window['hq'+scale+'x']( img.width, img.height ); 
+    
+    // if input is ImageData then also output is ImageData
+    if (img instanceof ImageData) {
+        const outData = new Uint8ClampedArray(_dest.buffer)
+        _src = src = null;
+        _dest = dest = null;
+        return new ImageData(outData, img.width * scale)
+    }
 
 	scaled.width = img.width * scale;
 	scaled.height = img.height * scale;
@@ -249,10 +261,8 @@ export default function( img, scale ) {
 	_src = src = null;
     _dest = dest = null;
 
-    return scaledPixels;
-
-    // scaledCtx.putImageData( scaledPixels, 0, 0 );
-    // return scaled;
+    scaledCtx.putImageData( scaledPixels, 0, 0 );
+    return scaled;
 };
 
 

@@ -2,7 +2,11 @@
   <div class="pixel-scaler-inside">
     <PixelScalerInsideAbove @click-save="clickSave" />
     <div class="pixel-scaler-inside-below">
-      <PixelScalerType :converting="converting" @convert-start="convertClick" />
+      <PixelScalerType
+        :converting="converting"
+        :current-filter="currentFilter"
+        @convert-start="convertClick"
+      />
       <div class="output-image" v-bind="{ expand: !canvasExpanded }" @click="changeCanvasExpand">
         <canvas ref="outputCanvas"></canvas>
         <!-- <img class="image" :src="outputData" draggable="false" /> -->
@@ -17,6 +21,10 @@ import Vue from 'vue'
 import PixelScalerInsideAbove from './PixelScalerInsideAbove.vue'
 import PixelScalerType from './PixelScalerType.vue'
 import PxFilter, { StandardFilter } from '@/modules/PixelFilter'
+import Worker from '@/modules/convert.worker'
+
+let worker: any
+let inputImageData: ImageData
 
 export default Vue.extend({
   components: {
@@ -44,15 +52,52 @@ export default Vue.extend({
     }
   },
   watch: {
+    // watchが変更されても初マウント時は反応しないので注意
+    // 初回はmountedで対処
     inputData() {
-      this.convertClick(this.currentFilter)
+      const img = new Image()
+      img.src = this.inputData
+      img.onload = () => {
+        const canvas = document.createElement('canvas')
+        const ctx = canvas.getContext('2d')
+        if (ctx) {
+          // 入力画像とキャンバスサイズを合わせないと
+          // ImageDataでcanvasをオーバーした画素が取得出来ない
+          ctx.canvas.width = img.width
+          ctx.canvas.height = img.height
+          ctx.drawImage(img, 0, 0)
+          img.style.display = 'none'
+          inputImageData = ctx.getImageData(0, 0, img.width, img.height)
+        }
+        this.convertClick(this.currentFilter)
+      }
     },
     converting() {
       this.$emit('converting-state', this.converting)
     }
   },
   mounted() {
-    this.convertClick(this.currentFilter)
+    worker = new Worker()
+
+    const img = new Image()
+    img.src = this.inputData
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      if (ctx) {
+        // 入力画像とキャンバスサイズを合わせないと
+        // ImageDataでcanvasをオーバーした画素が取得出来ない
+        ctx.canvas.width = img.width
+        ctx.canvas.height = img.height
+        ctx.drawImage(img, 0, 0)
+        img.style.display = 'none'
+        inputImageData = ctx.getImageData(0, 0, img.width, img.height)
+      }
+      this.convertClick(this.currentFilter)
+    }
+  },
+  destroyed() {
+    worker.terminate()
   },
   methods: {
     convertClick(type: string) {
@@ -63,114 +108,146 @@ export default Vue.extend({
       this.converting = true
       this.currentFilter = type
       setTimeout(() => {
-        // 仮想DOMのレンダーから逃れるためのタイムアウト
+        // 仮想DOMの一括レンダーから逃れるためのタイムアウト
         // const a = performance.now()
         const canvas = this.$refs.outputCanvas as HTMLCanvasElement
-        // const canvas = document.createElement('canvas')
-        const img = new Image()
-        img.src = this.inputData
-        img.onload = () => {
-          const ctx = canvas.getContext('2d')
-          if (ctx) {
-            // 入力画像とキャンバスサイズを合わせないと
-            // ImageDataでcanvasをオーバーした画素が取得出来ない
-            ctx.canvas.width = img.width
-            ctx.canvas.height = img.height
-            ctx.drawImage(img, 0, 0)
-            img.style.display = 'none'
-            const imageData = ctx.getImageData(0, 0, img.width, img.height)
-            let newImageData = imageData
+        const ctx = canvas.getContext('2d')
 
+        if (ctx) {
+          // webWorkerによる並列処理
+          if (window.Worker) {
+            worker.postMessage([inputImageData, type])
+
+            worker.onmessage = (e: MessageEvent) => {
+              ctx.canvas.width = inputImageData.width * e.data.scales
+              ctx.canvas.height = inputImageData.height * e.data.scales
+              ctx.putImageData(e.data.imageData, 0, 0)
+              this.converting = false
+
+              // const b = performance.now()
+              // console.log('displayTime: ', b - a)
+            }
+          } else {
+            // Workerが使えない場合
+            let newImageData
+            let scale = 1
             if (type === 'NoScale') {
               // this.outputData = this.inputData
               //
             } else if (type === 'invert') {
-              newImageData = StandardFilter.invert(imageData)
+              newImageData = StandardFilter.invert(inputImageData)
               //
             } else if (type === 'grayscale') {
-              newImageData = StandardFilter.grayScale(imageData)
+              newImageData = StandardFilter.grayScale(inputImageData)
               //
             } else if (type === 'binarization') {
-              newImageData = StandardFilter.binarization(imageData, 127)
+              newImageData = StandardFilter.binarization(inputImageData, 127)
               //
             } else if (type === 'Epx') {
-              newImageData = PxFilter.EPX(ctx, imageData, 2)
+              scale = 2
+              newImageData = PxFilter.EPX(inputImageData, 2)
               //
             } else if (type === 'Scale3x') {
-              newImageData = PxFilter.EPX(ctx, imageData, 3)
+              scale = 3
+              newImageData = PxFilter.EPX(inputImageData, 3)
               //
             } else if (type === 'Scale4x') {
-              newImageData = PxFilter.EPX(ctx, imageData, 4)
+              scale = 4
+              newImageData = PxFilter.EPX(inputImageData, 4)
               //
             } else if (type === 'EpxB') {
-              newImageData = PxFilter.SNES9x(ctx, imageData, 2, 'B')
+              scale = 2
+              newImageData = PxFilter.SNES9x(inputImageData, 2, 'B')
               //
             } else if (type === 'EpxC') {
-              newImageData = PxFilter.SNES9x(ctx, imageData, 2, 'C')
+              scale = 2
+              newImageData = PxFilter.SNES9x(inputImageData, 2, 'C')
               //
             } else if (type === 'Epx3') {
-              newImageData = PxFilter.SNES9x(ctx, imageData, 3, '3')
+              scale = 3
+              newImageData = PxFilter.SNES9x(inputImageData, 3, '3')
               //
             } else if (type === 'Eagle') {
-              newImageData = PxFilter.Eagle(ctx, imageData, 2)
+              scale = 2
+              newImageData = PxFilter.Eagle(inputImageData, 2)
               //
             } else if (type === 'Eagle3x') {
-              newImageData = PxFilter.Eagle(ctx, imageData, 3)
+              scale = 3
+              newImageData = PxFilter.Eagle(inputImageData, 3)
               //
             } else if (type === 'Eagle3xB') {
-              newImageData = PxFilter.Eagle(ctx, imageData, 3, 'B')
+              scale = 3
+              newImageData = PxFilter.Eagle(inputImageData, 3, 'B')
               //
             } else if (type === '2xSaI') {
-              newImageData = PxFilter._2xSaI(ctx, imageData, 2)
+              scale = 2
+              newImageData = PxFilter._2xSaI(inputImageData, 2)
               //
             } else if (type === 'Super2xSaI') {
-              newImageData = PxFilter.Super2xSaI(ctx, imageData, 2)
+              scale = 2
+              newImageData = PxFilter.Super2xSaI(inputImageData, 2)
               //
             } else if (type === 'SuperEagle') {
-              newImageData = PxFilter.SuperEagle(ctx, imageData, 2)
+              scale = 2
+              newImageData = PxFilter.SuperEagle(inputImageData, 2)
               //
             } else if (type === 'HQ2x') {
-              newImageData = PxFilter.HQx(ctx, img, 2)
+              scale = 2
+              newImageData = PxFilter.HQx(inputImageData, 2)
               //
             } else if (type === 'HQ3x') {
-              newImageData = PxFilter.HQx(ctx, img, 3)
+              scale = 3
+              newImageData = PxFilter.HQx(inputImageData, 3)
               //
             } else if (type === 'HQ4x') {
-              newImageData = PxFilter.HQx(ctx, img, 4)
+              scale = 4
+              newImageData = PxFilter.HQx(inputImageData, 4)
               //
             } else if (type === 'XBR2x') {
-              newImageData = PxFilter.XBR(ctx, imageData, 2)
+              scale = 2
+              newImageData = PxFilter.XBR(inputImageData, 2)
               //
             } else if (type === 'XBR3x') {
-              newImageData = PxFilter.XBR(ctx, imageData, 3)
+              scale = 3
+              newImageData = PxFilter.XBR(inputImageData, 3)
               //
             } else if (type === 'XBR4x') {
-              newImageData = PxFilter.XBR(ctx, imageData, 4)
+              scale = 4
+              newImageData = PxFilter.XBR(inputImageData, 4)
               //
             } else if (type === 'XBRz2x') {
-              newImageData = PxFilter.XBRz(ctx, imageData, 2)
+              scale = 2
+              newImageData = PxFilter.XBRz(inputImageData, 2)
               //
             } else if (type === 'XBRz3x') {
-              newImageData = PxFilter.XBRz(ctx, imageData, 3)
+              scale = 3
+              newImageData = PxFilter.XBRz(inputImageData, 3)
               //
             } else if (type === 'XBRz4x') {
-              newImageData = PxFilter.XBRz(ctx, imageData, 4)
+              scale = 4
+              newImageData = PxFilter.XBRz(inputImageData, 4)
               //
             } else if (type === 'XBRz5x') {
-              newImageData = PxFilter.XBRz(ctx, imageData, 5)
+              scale = 5
+              newImageData = PxFilter.XBRz(inputImageData, 5)
               //
             } else if (type === 'XBRz6x') {
-              newImageData = PxFilter.XBRz(ctx, imageData, 6)
+              scale = 6
+              newImageData = PxFilter.XBRz(inputImageData, 6)
               //
             } else if (type === '0') {
             }
+
+            ctx.canvas.width = inputImageData.width * scale
+            ctx.canvas.height = inputImageData.height * scale
             ctx.putImageData(newImageData, 0, 0)
             this.converting = false
+
+            // const b = performance.now()
+            // console.log('displayTime: ', b - a)
           }
-          // const b = performance.now()
-          // console.log('displayTime: ', b - a)
         }
-      }, 20)
+      }, 0)
     },
     changeCanvasExpand() {
       this.canvasExpanded = !this.canvasExpanded

@@ -63,7 +63,7 @@ export default Vue.extend({
       inputName: '',
       imageLoaded: false,
       imageConverting: false,
-      CurrentError: '',
+      currentError: '',
       errorText: {
         inputSizeOver: '画像が大きすぎます。最大サイズは 512x512 です。',
         inputReadError: '画像が読み込めませんでした。',
@@ -73,7 +73,7 @@ export default Vue.extend({
   },
   computed: {
     errorOverlayText() {
-      return this.CurrentError
+      return this.currentError
     }
   },
   mounted() {
@@ -207,11 +207,11 @@ export default Vue.extend({
       this.isShowErrorOverlay = true
 
       if (type === ErrorType.inputSizeOver) {
-        this.CurrentError = this.errorText.inputSizeOver
+        this.currentError = this.errorText.inputSizeOver
       } else if (type === ErrorType.inputReadError) {
-        this.CurrentError = this.errorText.inputReadError
+        this.currentError = this.errorText.inputReadError
       } else if (type === ErrorType.inputTypeError) {
-        this.CurrentError = this.errorText.inputTypeError
+        this.currentError = this.errorText.inputTypeError
       }
     }
   }

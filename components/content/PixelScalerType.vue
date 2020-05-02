@@ -27,7 +27,7 @@
         <hr />
 
         <v-btn
-          :loading="loading.loadingEpx2"
+          :loading="loading.loadingEpx"
           text
           color="indigo"
           class="convert-button"
@@ -36,7 +36,7 @@
           {{ 'EPX / Scale 2x' }}
         </v-btn>
         <v-btn
-          :loading="loading.loadingEpx3"
+          :loading="loading.loadingScale3x"
           text
           color="indigo"
           class="convert-button"
@@ -45,7 +45,7 @@
           {{ 'Scale 3x' }}
         </v-btn>
         <v-btn
-          :loading="loading.loadingEpx4"
+          :loading="loading.loadingScale4x"
           text
           color="indigo"
           class="convert-button"
@@ -74,7 +74,7 @@
           {{ 'EPXC 2x' }}
         </v-btn>
         <v-btn
-          :loading="loading.loadingEpx33"
+          :loading="loading.loadingEpx3"
           text
           color="indigo"
           class="convert-button"
@@ -85,7 +85,7 @@
         <hr />
 
         <v-btn
-          :loading="loading.loadingEagle2"
+          :loading="loading.loadingEagle"
           text
           color="indigo"
           class="convert-button"
@@ -131,7 +131,7 @@
         <hr />
 
         <v-btn
-          :loading="loading.loadingHQx2"
+          :loading="loading.loadingHQ2x"
           text
           color="indigo"
           class="convert-button"
@@ -140,7 +140,7 @@
           {{ 'HQ 2x' }}
         </v-btn>
         <v-btn
-          :loading="loading.loadingHQx3"
+          :loading="loading.loadingHQ3x"
           text
           color="indigo"
           class="convert-button"
@@ -149,7 +149,7 @@
           {{ 'HQ 3x' }}
         </v-btn>
         <v-btn
-          :loading="loading.loadingHQx4"
+          :loading="loading.loadingHQ4x"
           text
           color="indigo"
           class="convert-button"
@@ -160,7 +160,7 @@
         <hr />
 
         <v-btn
-          :loading="loading.loadingXBR2"
+          :loading="loading.loadingXBR2x"
           text
           color="indigo"
           class="convert-button"
@@ -169,7 +169,7 @@
           {{ 'xBR 2x' }}
         </v-btn>
         <v-btn
-          :loading="loading.loadingXBR3"
+          :loading="loading.loadingXBR3x"
           text
           color="indigo"
           class="convert-button"
@@ -178,7 +178,7 @@
           {{ 'xBR 3x' }}
         </v-btn>
         <v-btn
-          :loading="loading.loadingXBR4"
+          :loading="loading.loadingXBR4x"
           text
           color="indigo"
           class="convert-button"
@@ -189,7 +189,7 @@
         <hr />
 
         <v-btn
-          :loading="loading.loadingXBRz2"
+          :loading="loading.loadingXBRz2x"
           text
           color="indigo"
           class="convert-button"
@@ -198,7 +198,7 @@
           {{ 'xBRz 2x' }}
         </v-btn>
         <v-btn
-          :loading="loading.loadingXBRz3"
+          :loading="loading.loadingXBRz3x"
           text
           color="indigo"
           class="convert-button"
@@ -207,7 +207,7 @@
           {{ 'xBRz 3x' }}
         </v-btn>
         <v-btn
-          :loading="loading.loadingXBRz4"
+          :loading="loading.loadingXBRz4x"
           text
           color="indigo"
           class="convert-button"
@@ -216,7 +216,7 @@
           {{ 'xBRz 4x' }}
         </v-btn>
         <v-btn
-          :loading="loading.loadingXBRz5"
+          :loading="loading.loadingXBRz5x"
           text
           color="indigo"
           class="convert-button"
@@ -225,7 +225,7 @@
           {{ 'xBRz 5x' }}
         </v-btn>
         <v-btn
-          :loading="loading.loadingXBRz6"
+          :loading="loading.loadingXBRz6x"
           text
           color="indigo"
           class="convert-button"
@@ -248,6 +248,10 @@ export default Vue.extend({
   props: {
     converting: {
       type: Boolean
+    },
+    currentFilter: {
+      type: String,
+      default: 'NoScale'
     }
   },
   data() {
@@ -255,27 +259,27 @@ export default Vue.extend({
       loading: {
         // loader: null,
         loadingNoScale: false,
-        loadingEpx2: false,
-        loadingEpx3: false,
-        loadingEpx4: false,
+        loadingEpx: false,
+        loadingScale3: false,
+        loadingScale4: false,
         loadingEpxB: false,
         loadingEpxC: false,
-        loadingEpx33: false,
-        loadingEagle2: false,
+        loadingEpx3: false,
+        loadingEagle: false,
         loading2xSaI: false,
         loadingSuper2xSaI: false,
         loadingSuperEagle: false,
-        loadingHQx2: false,
-        loadingHQx3: false,
-        loadingHQx4: false,
-        loadingXBR2: false,
-        loadingXBR3: false,
-        loadingXBR4: false,
-        loadingXBRz2: false,
-        loadingXBRz3: false,
-        loadingXBRz4: false,
-        loadingXBRz5: false,
-        loadingXBRz6: false
+        loadingHQ2x: false,
+        loadingHQ3x: false,
+        loadingHQx4x: false,
+        loadingXBR2x: false,
+        loadingXBR3x: false,
+        loadingXBR4x: false,
+        loadingXBRz2x: false,
+        loadingXBRz3x: false,
+        loadingXBRz4x: false,
+        loadingXBRz5x: false,
+        loadingXBRz6x: false
       }
     }
   },
@@ -285,6 +289,9 @@ export default Vue.extend({
         for (const loading in this.loading) {
           this.$set(this.loading, loading, false)
         }
+      } else {
+        const l = 'loading' + this.currentFilter
+        this.$set(this.loading, l, true)
       }
     }
   },
