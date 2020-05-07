@@ -19,10 +19,10 @@ export default {
       { name: 'twitter:card', content: 'summary' },
       { name: 'twitter:site', content: '@kitsunegadget' },
       { name: 'twitter:creator', content: '@yuy_az_' },
-      { property: 'og:url', content: 'https://pixelart-scaler.kitsunegadget.xyz' },
+      { property: 'og:url', content: 'https://pixelart-scaler.web.app' },
       { property: 'og:title', content: 'ドット絵スケーラー -Pixelart Scaler-' },
       { property: 'og:description', content: "Let's scaling your pixel-arts!" },
-      { property: 'og:image', content: 'https://pixelart-scaler.kitsunegadget.xyz/card_min.png' }
+      { property: 'og:image', content: 'https://pixelart-scaler.web.app/card_min.png' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -31,7 +31,8 @@ export default {
     script: [
       { src: '/__/firebase/7.14.2/firebase-app.js' },
       { src: '/__/firebase/7.14.2/firebase-analytics.js' },
-      { src: '/__/firebase/init.js' }
+      { src: '/__/firebase/init.js' },
+      { src: '/analytics.js' }
     ]
   },
   /*

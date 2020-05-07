@@ -10,7 +10,7 @@
       class="twitter-share-button"
       data-size="large"
       data-text="「ドット絵スケーラー」"
-      data-url="https://pixelart-scaler.kitsunegadget.xyz/"
+      data-url="https://pixelart-scaler.web.app/"
       data-show-count="false"
     >
       {{ 'Tweet' }}

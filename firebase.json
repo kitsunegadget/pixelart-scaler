@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "pixelart-scaler",
     "public": "dist",
     "ignore": [
       "firebase.json",
