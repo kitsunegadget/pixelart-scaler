@@ -26,7 +26,7 @@ export default Vue.extend({
   data() {
     return {
       description: {
-        title: 'ドット絵の色々なスケーリングを試してみよう！',
+        title: 'ドット絵のスケーリングを試してみよう！',
         notes: ['入力最大解像度は 512x512 まで', 'png形式のみ対応しています']
       }
     }
@@ -57,16 +57,16 @@ export default Vue.extend({
     color: $color-black6;
 
     @media (max-width: 450px) {
-      font-size: 1.1em;
+      font-size: 1.5em;
     }
     @media (max-width: 425px) {
-      font-size: 1em;
+      font-size: 1.4em;
     }
     @media (max-width: 375px) {
-      font-size: 0.9em;
+      font-size: 1.3em;
     }
     @media (max-width: 350px) {
-      font-size: 0.8em;
+      font-size: 1.1em;
     }
   }
 
