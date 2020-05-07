@@ -10,7 +10,7 @@
       href="https://twitter.com/share?ref_src=twsrc%5Etfw"
       class="twitter-share-button"
       data-size="large"
-      data-text="「ドット絵スケーラー」で画像を拡大してみよう！"
+      data-text="「ドット絵スケーラー」"
       data-url="https://pixelart-scaler.kitsunegadget.xyz/"
       data-show-count="false"
     >
@@ -57,13 +57,16 @@ export default Vue.extend({
     color: $color-black6;
 
     @media (max-width: 450px) {
-      font-size: 1.2em;
-    }
-    @media (max-width: 400px) {
       font-size: 1.1em;
     }
-    @media (max-width: 350px) {
+    @media (max-width: 425px) {
       font-size: 1em;
+    }
+    @media (max-width: 375px) {
+      font-size: 0.9em;
+    }
+    @media (max-width: 350px) {
+      font-size: 0.8em;
     }
   }
 

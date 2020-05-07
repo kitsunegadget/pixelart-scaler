@@ -12,7 +12,17 @@ export default {
         hid: 'description',
         name: 'description',
         content: process.env.npm_package_description || ''
-      }
+      },
+      // color
+      { name: 'theme-color', content: '#000' },
+      // twitter card
+      { name: 'twitter:card', content: 'summary' },
+      { name: 'twitter:site', content: '@kitsunegadget' },
+      { name: 'twitter:creator', content: '@yuy_az_' },
+      { property: 'og:url', content: 'https://pixelart-scaler.kitsunegadget.xyz' },
+      { property: 'og:title', content: 'ドット絵スケーラー -Pixelart Scaler-' },
+      { property: 'og:description', content: "Let's scaling your pixel-arts!" },
+      { property: 'og:image', content: 'https://pixelart-scaler.kitsunegadget.xyz/card_min.png' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },

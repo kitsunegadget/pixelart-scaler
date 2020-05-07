@@ -9,7 +9,7 @@
       href="https://twitter.com/share?ref_src=twsrc%5Etfw"
       class="twitter-share-button"
       data-size="large"
-      data-text="「ドット絵スケーラー」で画像を拡大してみよう！"
+      data-text="「ドット絵スケーラー」"
       data-url="https://pixelart-scaler.kitsunegadget.xyz/"
       data-show-count="false"
     >
