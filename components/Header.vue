@@ -3,7 +3,7 @@
     <div class="container">
       <div class="header-content">
         <h1 class="title">
-          {{ title }}
+          <img :src="titleLogo" :alt="title" />
         </h1>
         <div class="right-nav">
           <ul>
@@ -25,6 +25,7 @@ export default Vue.extend({
   data() {
     return {
       title: nuxtConfig.head.title,
+      titleLogo: require('@/assets/titlelogo.png'),
       navItems: [
         {
           id: 0,
@@ -53,6 +54,16 @@ export default Vue.extend({
     margin: 0 10px;
     // line-height: 1.3em;
     cursor: default;
+
+    // &::before {
+    //   left: 0;
+    //   margin-right: 5px;
+    //   content: '';
+    //   height: 28px;
+    //   width: 28px;
+    //   background: url('../static/logo128.png');
+    //   background-size: cover;
+    // }
   }
 }
 
