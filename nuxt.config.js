@@ -31,8 +31,7 @@ export default {
     script: [
       { src: '/__/firebase/7.14.2/firebase-app.js' },
       { src: '/__/firebase/7.14.2/firebase-analytics.js' },
-      { src: '/__/firebase/init.js' },
-      { src: '/analytics.js' }
+      { src: '/__/firebase/init.js' }
     ]
   },
   /*
