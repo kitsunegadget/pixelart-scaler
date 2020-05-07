@@ -56,17 +56,17 @@ export default Vue.extend({
     font-weight: 600;
     color: $color-black6;
 
-    @media (max-width: 450px) {
-      font-size: 1.4em;
-    }
-    @media (max-width: 425px) {
+    @media (max-width: 525px) {
       font-size: 1.3em;
     }
+    @media (max-width: 425px) {
+      font-size: 1.15em;
+    }
     @media (max-width: 375px) {
-      font-size: 1.2em;
+      font-size: 1.1em;
     }
     @media (max-width: 350px) {
-      font-size: 1.1em;
+      font-size: 1em;
     }
   }
 
