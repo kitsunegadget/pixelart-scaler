@@ -57,13 +57,13 @@ export default Vue.extend({
     color: $color-black6;
 
     @media (max-width: 450px) {
-      font-size: 1.5em;
-    }
-    @media (max-width: 425px) {
       font-size: 1.4em;
     }
-    @media (max-width: 375px) {
+    @media (max-width: 425px) {
       font-size: 1.3em;
+    }
+    @media (max-width: 375px) {
+      font-size: 1.2em;
     }
     @media (max-width: 350px) {
       font-size: 1.1em;
