@@ -1,7 +1,7 @@
 <template>
   <div class="description">
     <div class="description-title">
-      <img src="/titleLogo.png" height="64" alt="ドット絵スケーラー" />
+      <img src="@/assets/titlelogo.png" height="64" alt="ドット絵スケーラー" />
       <h2>{{ description.title }}</h2>
     </div>
     <div class="description-note">

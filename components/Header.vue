@@ -3,7 +3,7 @@
     <div class="container">
       <div class="header-content">
         <h1 class="title">
-          <img src="/titleLogo.png" :alt="title" />
+          <img src="@/assets/titlelogo.png" :alt="title" />
         </h1>
         <div class="right-nav">
           <ul>
