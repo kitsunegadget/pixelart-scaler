@@ -1,7 +1,7 @@
 <template>
   <div class="description">
     <div class="description-title">
-      <img src="/titleLogo.png" height="64" />
+      <img src="/titleLogo.png" height="64" alt="ドット絵スケーラー" />
       <h2>{{ description.title }}</h2>
     </div>
     <div class="description-note">
@@ -58,6 +58,8 @@ export default Vue.extend({
     flex-wrap: nowrap;
 
     img {
+      font-size: 3rem;
+      font-weight: 500;
       image-rendering: pixelated;
     }
 
