@@ -13,6 +13,10 @@ export default {
         name: 'description',
         content: process.env.npm_package_description || ''
       },
+      {
+        name: 'keywords',
+        content: '画像,ドット絵,ピクセルアート,Pixelart,拡大,スケールアップ'
+      },
       // color
       { name: 'theme-color', content: '#000' },
       // twitter card

@@ -380,6 +380,7 @@ export default Vue.extend({
     .convert-button {
       font-weight: bold;
       text-transform: capitalize;
+      font-size: 1.4rem;
     }
   }
 

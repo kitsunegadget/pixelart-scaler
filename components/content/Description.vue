@@ -1,6 +1,9 @@
 <template>
   <div class="description">
-    <h2>{{ description.title }}</h2>
+    <div class="description-title">
+      <img src="/titleLogo.png" height="64" />
+      <h2>{{ description.title }}</h2>
+    </div>
     <div class="description-note">
       <ul v-for="note in description.notes" :key="note">
         <li>{{ note }}</li>
@@ -49,24 +52,34 @@ export default Vue.extend({
   }
   overflow: hidden;
 
-  > h2 {
-    @include flex-centering(row);
-    margin: 15px 0;
-    font-size: 1.6em;
-    font-weight: 600;
-    color: $color-black6;
+  .description-title {
+    margin-top: -40px;
+    @include flex-centering(column);
+    flex-wrap: nowrap;
 
-    @media (max-width: 525px) {
-      font-size: 1.3em;
+    img {
+      image-rendering: pixelated;
     }
-    @media (max-width: 425px) {
-      font-size: 1.15em;
-    }
-    @media (max-width: 375px) {
-      font-size: 1.1em;
-    }
-    @media (max-width: 350px) {
-      font-size: 1em;
+
+    h2 {
+      @include flex-centering(row);
+      margin: 15px 0;
+      font-size: 2.4rem;
+      font-weight: 500;
+      color: $color-black5;
+
+      @media (max-width: 525px) {
+        font-size: 2rem;
+      }
+      @media (max-width: 425px) {
+        font-size: 1.7rem;
+      }
+      @media (max-width: 375px) {
+        font-size: 1.6rem;
+      }
+      @media (max-width: 350px) {
+        font-size: 1.5rem;
+      }
     }
   }
 
@@ -79,7 +92,7 @@ export default Vue.extend({
       // margin-left: -20px;
       > li {
         margin: 5px 10px;
-        font-size: 0.9em;
+        font-size: 1.4rem;
       }
     }
   }

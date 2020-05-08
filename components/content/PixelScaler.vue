@@ -245,6 +245,7 @@ export default Vue.extend({
   }
 
   &-text {
+    font-size: 1.6rem;
     height: 100px;
     padding: 30px;
     background: $color-white;
@@ -265,7 +266,7 @@ export default Vue.extend({
     height: 100%;
     border: dashed $color-whiteE 10px;
     color: $color-black9;
-    font-size: 1.6em;
+    font-size: 3rem;
     @include flex-centering(row);
   }
 

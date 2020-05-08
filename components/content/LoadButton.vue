@@ -17,6 +17,7 @@
       color="teal"
       class="ma-2"
       v-bind="{ disabled: imageConverting }"
+      style="font-size: 1.4rem;"
       @click="fileSelect"
     >
       <v-icon left>{{ 'mdi-image' }}</v-icon>
@@ -71,6 +72,7 @@ export default Vue.extend({
   }
 
   > p {
+    font-size: 1.4rem;
     margin: 0;
     padding: 5px 0;
     transition: all 0.5s ease;

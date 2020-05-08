@@ -34,7 +34,7 @@
       </h3>
       <div class="about-content-author">
         <span>
-          {{ 'Kitsune Gadget' }}
+          {{ '@yuy_az_ : Kitsune Gadget' }}
         </span>
         <a href="https://twitter.com/kitsunegadget/" target="_blank" rel="noopener noreferer">
           <v-icon left dense color="blue">{{ 'mdi-twitter' }}</v-icon>
@@ -92,10 +92,12 @@ export default Vue.extend({
 <style lang="scss">
 .about-content {
   > h2 {
+    font-size: 2.4rem;
     margin-bottom: 10px;
   }
 
   h3 {
+    font-size: 2rem;
     margin-top: 30px;
     margin-bottom: 10px;
     padding-left: 10px;
@@ -103,8 +105,12 @@ export default Vue.extend({
     border-bottom: solid 1px $color-black3;
   }
 
-  > article > p {
+  article {
     margin-left: 10px;
+  }
+
+  p {
+    font-size: 1.5rem;
   }
 
   &-productBy {
@@ -118,6 +124,7 @@ export default Vue.extend({
     justify-content: flex-start;
 
     > span {
+      font-size: 1.4rem;
       margin-right: 10px;
     }
 
@@ -132,9 +139,8 @@ export default Vue.extend({
 }
 
 .about-end {
-  font-size: 0.9em;
-
   > p {
+    font-size: 1.3rem;
     margin: 0;
   }
 

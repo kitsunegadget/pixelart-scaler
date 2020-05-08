@@ -86,7 +86,7 @@ export default Vue.extend({
     width: 100%;
     max-width: 1000px;
     padding: 30px;
-    color: $color-black6;
+    color: $color-black5;
     background: $color-white;
     max-height: 80vh;
     overflow-y: scroll;

@@ -1,6 +1,6 @@
 <template>
   <div class="pixel-scaler-inside-above">
-    <v-btn color="success" small depressed @click="$emit('click-save')">
+    <v-btn color="success" small depressed style="font-size: 1.3rem;" @click="$emit('click-save')">
       <v-icon left small>{{ 'mdi-content-save' }}</v-icon>
       {{ 'Save' }}
     </v-btn>

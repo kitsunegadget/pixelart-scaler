@@ -23,7 +23,7 @@ export default Vue.extend({
 
   span {
     @include flex-centering(row);
-    font-size: 0.75em;
+    font-size: 1.2rem;
   }
 }
 </style>

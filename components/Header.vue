@@ -3,7 +3,7 @@
     <div class="container">
       <div class="header-content">
         <h1 class="title">
-          <img :src="titleLogo" :alt="title" />
+          <img src="/titleLogo.png" :alt="title" />
         </h1>
         <div class="right-nav">
           <ul>
@@ -25,7 +25,6 @@ export default Vue.extend({
   data() {
     return {
       title: nuxtConfig.head.title,
-      titleLogo: require('@/assets/titlelogo.png'),
       navItems: [
         {
           id: 0,
@@ -72,6 +71,11 @@ export default Vue.extend({
   flex-direction: row;
   justify-content: space-between;
   height: 100%;
+
+  > h1 > img {
+    font-size: 2rem;
+    image-rendering: pixelated;
+  }
 }
 
 .right-nav {
@@ -89,7 +93,7 @@ export default Vue.extend({
     @include flex-centering(row);
   }
   span {
-    font-size: 0.8em;
+    font-size: 1.3rem;
     display: block;
     cursor: pointer;
 
