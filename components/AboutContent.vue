@@ -36,7 +36,7 @@
         <span>
           {{ '@yuy_az_ : Kitsune Gadget' }}
         </span>
-        <a href="https://twitter.com/kitsunegadget/" target="_blank" rel="noopener noreferer">
+        <a href="https://twitter.com/kitsunegadget" target="_blank" rel="noopener noreferer">
           <v-icon left dense color="blue">{{ 'mdi-twitter' }}</v-icon>
         </a>
       </div>
@@ -49,7 +49,11 @@
         {{
           'Most original Scale Filters are under the GPL license, and so I publish source code of this application.'
         }}
-        <a :href="githubLink" target="_blank" rel="noopener noreferer">
+        <a
+          href="https://github.com/kitsunegadget/PixelArt-Scaler"
+          target="_blank"
+          rel="noopener noreferer"
+        >
           <v-icon left dense color="black">{{ 'mdi-github' }}</v-icon>
         </a>
       </p>
@@ -75,7 +79,6 @@ export default Vue.extend({
         '左上の Save ボタンを押すと選択されたスケーリングでの拡大画像を保存することが出来ます。（「No Scaling」選択時は機能しません。）',
         '稀に処理が極端に遅くなることがあります。その場合はページを再読み込みしてみてください。'
       ],
-      githubLink: '',
       filterName: [
         '2xSaI, Super2xSaI, SuperEagle (https://vdnoort.home.xs4all.nl/emulation/2xsai/)',
         'HQx (Maxim Stepin)',
