@@ -9,31 +9,26 @@
         <li>{{ note }}</li>
       </ul>
     </div>
-    <a
-      href="https://twitter.com/share?ref_src=twsrc%5Etfw"
-      class="twitter-share-button"
-      data-size="large"
-      data-text="「ドット絵スケーラー」"
-      data-url="https://pixelart-scaler.web.app/"
-      data-show-count="false"
-    >
-      {{ 'Tweet' }}
-    </a>
-    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <TwitterButton class="twitter-share-absolute" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import TwitterButton from './TwitterButton.vue'
+
 export default Vue.extend({
+  components: {
+    TwitterButton,
+  },
   data() {
     return {
       description: {
         title: 'ドット絵のスケーリングを試してみよう！',
-        notes: ['入力最大解像度は 512x512 まで', 'png形式のみ対応しています']
-      }
+        notes: ['入力最大解像度は 512x512 まで', 'png形式のみ対応しています'],
+      },
     }
-  }
+  },
 })
 </script>
 
@@ -97,11 +92,6 @@ export default Vue.extend({
         font-size: 1.4rem;
       }
     }
-  }
-
-  .twitter-share-button {
-    position: absolute !important;
-    bottom: 30px;
   }
 }
 </style>
