@@ -19,19 +19,19 @@ export default Vue.extend({
     Header,
     About,
     Content,
-    Footer
+    Footer,
   },
   data() {
     return {
-      isShowAbout: false
+      isShowAbout: false,
     }
   },
   methods: {
     showAbout(e: Event) {
       e.stopPropagation()
       this.isShowAbout = !this.isShowAbout
-    }
-  }
+    },
+  },
 })
 </script>
 
