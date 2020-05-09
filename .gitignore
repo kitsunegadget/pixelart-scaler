@@ -95,3 +95,4 @@ modules/PixelFilter/Vector.ts
 firebase_with_function.json
 functions/
 middleware/
+deploy.bat
