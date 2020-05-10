@@ -1,8 +1,10 @@
 export default {
   mode: 'universal',
-
   router: {
-    base: '/pixelart-scaler/',
+    base: process.env.DEPLOY_ENV === 'GH_PAGES' ? '/pixelart-scaler/' : '/',
+  },
+  render: {
+    prefix: true,
   },
   /*
    ** Headers of the page
@@ -21,6 +23,7 @@ export default {
         content: process.env.npm_package_description || '',
       },
       {
+        hid: 'keywords',
         name: 'keywords',
         content: '画像,ドット絵,ピクセルアート,Pixelart,拡大,スケールアップ',
       },
@@ -36,8 +39,8 @@ export default {
       { property: 'og:image', content: 'https://kitsunegadget.xyz/pixelart-scaler/card_min.png' },
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/pixelart-scaler/favicon.ico' },
-      { rel: 'apple-touch-icon', type: 'image/png', href: '/pixelart-scaler/icon128.png' },
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'apple-touch-icon', type: 'image/png', href: '/icon128.png' },
     ],
     script: [
       //
@@ -58,7 +61,7 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ['@nuxt/typescript-build', '@nuxtjs/vuetify'],
+  buildModules: ['@nuxt/typescript-build', '@nuxtjs/vuetify', '@nuxtjs/google-analytics'],
   /*
    ** Nuxt.js modules
    */
@@ -77,6 +80,9 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {},
+  googleAnalytics: {
+    id: 'UA-155410099-1',
+  },
   /*
    ** Build configuration
    */
