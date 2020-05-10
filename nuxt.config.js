@@ -3,9 +3,6 @@ export default {
   router: {
     base: process.env.DEPLOY_ENV === 'GH_PAGES' ? '/pixelart-scaler/' : '/',
   },
-  render: {
-    prefix: true,
-  },
   /*
    ** Headers of the page
    */
@@ -39,8 +36,8 @@ export default {
       { property: 'og:image', content: 'https://kitsunegadget.xyz/pixelart-scaler/card_min.png' },
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      { rel: 'apple-touch-icon', type: 'image/png', href: '/icon128.png' },
+      { rel: 'icon', type: 'image/x-icon', href: '/pixelart-scaler/favicon.ico' },
+      { rel: 'apple-touch-icon', type: 'image/png', href: '/pixelart-scaler/icon128.png' },
     ],
     script: [
       //

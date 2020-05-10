@@ -50,7 +50,7 @@
           'Most original Scale Filters are under the GPL license, and so I publish source code of this application.'
         }}
         <a
-          href="https://github.com/kitsunegadget/PixelArt-Scaler"
+          href="https://github.com/kitsunegadget/pixelart-scaler"
           target="_blank"
           rel="noopener noreferer"
         >
