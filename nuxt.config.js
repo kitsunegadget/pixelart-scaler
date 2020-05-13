@@ -95,11 +95,10 @@ export default {
    */
   axios: {},
   googleAnalytics: {
-    debug: {
-      enabled: true,
-      sendHitTask: true,
-    },
-
+    // debug: {
+    //   enabled: true,
+    //   sendHitTask: true,
+    // },
     id: process.env.GOOGLE_ANALYTICS_ID, // your analytics ID
   },
   /*
