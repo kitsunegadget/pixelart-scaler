@@ -1,6 +1,6 @@
 # PixelArt Scaler
 
-ドット絵の基本的なスケーリングができるWebアプリ。
+主なスケールフィルターによるドット画像拡大ができるWebアプリ。
 
 I refer to C language source and I rewritten for Typescript.
 Thanks All Open Source Pixel Filters.
