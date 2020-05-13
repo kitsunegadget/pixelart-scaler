@@ -24,7 +24,7 @@ export default Vue.extend({
   data() {
     return {
       description: {
-        title: 'ドット絵のスケーリングを試してみよう！',
+        title: 'スケールフィルターでドット絵を拡大してみよう！',
         notes: ['入力最大解像度は 512x512 まで', 'png形式のみ対応しています'],
       },
     }
@@ -61,21 +61,21 @@ export default Vue.extend({
     h2 {
       @include flex-centering(row);
       margin: 15px 0;
-      font-size: 2.4rem;
+      font-size: 2rem;
       font-weight: 500;
       color: $color-black5;
 
       @media (max-width: 525px) {
-        font-size: 2rem;
-      }
-      @media (max-width: 425px) {
         font-size: 1.7rem;
       }
+      @media (max-width: 425px) {
+        font-size: 1.5rem;
+      }
       @media (max-width: 375px) {
-        font-size: 1.6rem;
+        font-size: 1.4rem;
       }
       @media (max-width: 350px) {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
       }
     }
   }

@@ -13,3 +13,11 @@ Thanks All Open Source Pixel Filters.
 + XBRz (<https://sourceforge.net/projects/xbrz/)>
 + 2dImageFilter (<https://github.com/Hawkynt/2dimagefilter)>
 + js-hqx (<https://github.com/phoboslab/js-hqx)>
+
+## Build
+
+Install npm.
+
+For SSR `npm run build`.
+
+For static `npm run generate`.
