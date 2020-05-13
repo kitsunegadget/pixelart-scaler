@@ -46,7 +46,7 @@ export default {
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: '#0f0' },
+  loading: { color: '#60d3a3' },
   /*
    ** Global CSS
    */
@@ -78,7 +78,7 @@ export default {
    */
   axios: {},
   googleAnalytics: {
-    id: 'UA-155410099-1',
+    id: 'UA-155410099-1', // your analytics ID
   },
   /*
    ** Build configuration
