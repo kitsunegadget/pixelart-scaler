@@ -1,7 +1,11 @@
+// const environment = process.env.NODE_ENV || 'development'
+require('dotenv').config()
+const route = process.env.DEPLOY_ENV === 'GH_PAGES' ? '/pixelart-scaler/' : '/'
+
 export default {
   mode: 'universal',
   router: {
-    base: process.env.DEPLOY_ENV === 'GH_PAGES' ? '/pixelart-scaler/' : '/',
+    base: route,
   },
   /*
    ** Headers of the page
@@ -27,17 +31,25 @@ export default {
       // color
       { name: 'theme-color', content: '#000' },
       // twitter card
-      { name: 'twitter:card', content: 'summary' },
-      { name: 'twitter:site', content: '@kitsunegadget' },
-      { name: 'twitter:creator', content: '@yuy_az_' },
-      { property: 'og:url', content: 'https://kitsunegadget.xyz/' },
-      { property: 'og:title', content: 'ドット絵スケーラー -Pixelart Scaler-' },
-      { property: 'og:description', content: "Let's scaling your pixel-arts!" },
-      { property: 'og:image', content: 'https://kitsunegadget.xyz/pixelart-scaler/card_min.png' },
+      { hid: 'twitter:card', name: 'twitter:card', content: 'summary' },
+      { hid: 'twitter:site', name: 'twitter:site', content: '@kitsunegadget' },
+      { hid: 'twitter:creator', name: 'twitter:creator', content: '@yuy_az_' },
+      { hid: 'og:url', property: 'og:url', content: 'https://kitsunegadget.xyz/' },
+      { hid: 'og:title', property: 'og:title', content: 'ドット絵スケーラー -Pixelart Scaler-' },
+      {
+        hid: 'og:description',
+        property: 'og:description',
+        content: "Let's scaling your pixel-arts!",
+      },
+      {
+        hid: 'og:image',
+        property: 'og:image',
+        content: 'https://kitsunegadget.xyz/pixelart-scaler/card_min.png',
+      },
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/pixelart-scaler/favicon.ico' },
-      { rel: 'apple-touch-icon', type: 'image/png', href: '/pixelart-scaler/icon128.png' },
+      { rel: 'icon', type: 'image/x-icon', href: `${route}favicon.ico` },
+      { rel: 'apple-touch-icon', type: 'image/png', href: `${route}icon128.png` },
     ],
     script: [
       //
@@ -58,7 +70,12 @@ export default {
   /*
    ** Nuxt.js dev-modules
    */
-  buildModules: ['@nuxt/typescript-build', '@nuxtjs/vuetify', '@nuxtjs/google-analytics'],
+  buildModules: [
+    '@nuxt/typescript-build',
+    '@nuxtjs/vuetify',
+    '@nuxtjs/dotenv',
+    '@nuxtjs/google-analytics',
+  ],
   /*
    ** Nuxt.js modules
    */
@@ -78,7 +95,12 @@ export default {
    */
   axios: {},
   googleAnalytics: {
-    id: 'UA-155410099-1', // your analytics ID
+    debug: {
+      enabled: true,
+      sendHitTask: true,
+    },
+
+    id: process.env.GOOGLE_ANALYTICS_ID, // your analytics ID
   },
   /*
    ** Build configuration
@@ -94,6 +116,11 @@ export default {
         exclude: /(node_modules)/,
       })
       config.output.globalObject = 'this'
+
+      // avoid dotenv error
+      config.node = {
+        fs: 'empty',
+      }
 
       if (isDev || isClient) {
         // config.devtool = 'source-map'

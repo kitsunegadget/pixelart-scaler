@@ -1,6 +1,6 @@
 {
   "name": "pixelart-scaler",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Web pixelart scaling filter tool",
   "author": "Kitsune Gadget",
   "private": true,
@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@nuxt/typescript-build": "^0.6.6",
+    "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/eslint-config-typescript": "^1.0.2",
     "@nuxtjs/eslint-module": "^2.0.0",
     "@nuxtjs/google-analytics": "^2.2.3",
