@@ -5,9 +5,7 @@
     </h2>
     <article>
       <p>
-        {{
-          'ドット画像の拡大に使われる基本的なスケールフィルターを手元にある画像で簡単に触れることができます。'
-        }}
+        {{ 'ピクセルアートに使われる主なスケールフィルターで画像の拡大ができます。' }}
       </p>
     </article>
     <h3>
@@ -77,7 +75,7 @@ export default Vue.extend({
         '表示された画像をクリックすると原寸表示と全体表示を切り替えることができます。',
         '読み込める最大サイズは、スケーリング倍率を考慮して 512x512 までとしています。',
         '左上の Save ボタンを押すと選択されたスケーリングでの拡大画像を保存することが出来ます。（「No Scaling」選択時は機能しません。）',
-        '稀に処理が極端に遅くなることがあります。その場合はページを再読み込みしてみてください。'
+        '稀に処理が極端に遅くなることがあります。その場合はページを再読み込みしてみてください。',
       ],
       filterName: [
         '2xSaI, Super2xSaI, SuperEagle (https://vdnoort.home.xs4all.nl/emulation/2xsai/)',
@@ -85,10 +83,10 @@ export default Vue.extend({
         'XBR (Hyllian)',
         'XBRz (https://sourceforge.net/projects/xbrz/)',
         '2dImageFilter (https://github.com/Hawkynt/2dimagefilter)',
-        'js-hqx (https://github.com/phoboslab/js-hqx)'
-      ]
+        'js-hqx (https://github.com/phoboslab/js-hqx)',
+      ],
     }
-  }
+  },
 })
 </script>
 
