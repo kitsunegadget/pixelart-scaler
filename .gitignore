@@ -92,7 +92,9 @@ sw.*
 README_default.md
 .firebase
 modules/PixelFilter/Vector.ts
+modules/PixelFilter/xBRm.ts
 firebase_with_function.json
 functions/
 middleware/
 deploy.bat
+static/card.png
