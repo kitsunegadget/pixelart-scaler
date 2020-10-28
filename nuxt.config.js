@@ -34,7 +34,7 @@ export default {
       { hid: 'twitter:card', name: 'twitter:card', content: 'summary' },
       { hid: 'twitter:site', name: 'twitter:site', content: '@kitsunegadget' },
       { hid: 'twitter:creator', name: 'twitter:creator', content: '@yuy_az_' },
-      { hid: 'og:url', property: 'og:url', content: 'https://kitsunegadget.xyz/' },
+      { hid: 'og:url', property: 'og:url', content: 'https://kitsunegadget.github.io/' },
       { hid: 'og:title', property: 'og:title', content: 'ドット絵スケーラー -Pixelart Scaler-' },
       {
         hid: 'og:description',
@@ -44,7 +44,7 @@ export default {
       {
         hid: 'og:image',
         property: 'og:image',
-        content: 'https://kitsunegadget.xyz/pixelart-scaler/card_min.png',
+        content: 'https://kitsunegadget.github.io/pixelart-scaler/card_min.png',
       },
     ],
     link: [
